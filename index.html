@@ -282,6 +282,86 @@
     .card { background-image: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), var(--star-soft), transparent 70%); }
   }
 
+  /* ---- Creative layer ---- */
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+  .orbit { position: relative; width: min(380px, 100%); aspect-ratio: 1; margin-left: auto; }
+  @media (max-width: 900px) { .orbit { width: min(300px, 100%); margin: 8px auto 0; } }
+  .orb { position: absolute; border: 1px dashed var(--line); border-radius: 50%; animation: spin linear infinite; }
+  .orb.o1 { inset: 26%; animation-duration: 20s; }
+  .orb.o2 { inset: 13%; animation-duration: 32s; animation-direction: reverse; }
+  .orb.o3 { inset: 0; animation-duration: 46s; }
+  .planet { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); }
+  .planet.bottom { top: 100%; }
+  .planet > a { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--ink);
+    font: 600 0.78rem var(--font-display); white-space: nowrap; padding: 5px 10px 5px 6px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--line); animation: spin linear infinite; }
+  .planet > a::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--star)); box-shadow: 0 0 10px var(--c, var(--star)); }
+  .planet > a:hover { border-color: var(--c, var(--star)); }
+  .o1 .planet > a { animation-duration: 20s; animation-direction: reverse; }
+  .o2 .planet > a { animation-duration: 32s; }
+  .o3 .planet > a { animation-duration: 46s; animation-direction: reverse; }
+  .orbit:hover .orb, .orbit:hover .planet > a { animation-play-state: paused; }
+  .core { position: absolute; inset: 39%; border-radius: 50%; display: grid; place-items: center;
+    background: radial-gradient(circle at 35% 30%, var(--star), var(--star-soft) 70%); box-shadow: 0 0 40px var(--star-soft);
+    font: 700 1.5rem var(--font-display); color: var(--bg); animation: breathe 4s ease-in-out infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes breathe { 50% { box-shadow: 0 0 70px var(--star-soft); transform: scale(1.04); } }
+
+  .terminal { padding: 0; overflow: hidden; gap: 0; }
+  .term-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+  .term-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .term-bar i:first-child { background: var(--danger); } .term-bar i:nth-child(2) { background: var(--star); } .term-bar i:nth-child(3) { background: var(--nebula); }
+  .term-bar span { margin-left: 8px; font-size: 0.74rem; color: var(--muted); }
+  .term { margin: 0; padding: 16px 18px; font: 500 0.84rem/1.75 var(--font-mono); color: var(--ink); min-height: 13.5em; white-space: pre-wrap; overflow-x: auto; }
+  .term .cmd { color: var(--star); } .term .ok { color: var(--nebula); } .term .live { color: var(--ink); font-weight: 600; }
+  .caret { display: inline-block; width: 8px; height: 1em; vertical-align: -2px; background: var(--star); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .raid-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; }
+  .btn { font: 600 0.88rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--danger); background: transparent; color: var(--danger); transition: background .15s ease, color .15s ease; }
+  .btn:hover:not(:disabled) { background: var(--danger); color: var(--bg); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .raid-log { font: 500 0.8rem var(--font-mono); color: var(--muted); min-width: 0; }
+  svg .raider { fill: var(--danger); }
+  svg .raider.hit { animation: burst .6s ease-out forwards; transform-box: fill-box; transform-origin: center; }
+  @keyframes burst { to { transform: scale(3.2); opacity: 0; } }
+
+  .beat-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
+  .beat-time { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { position: relative; height: 76px; border-radius: 10px; background: var(--surface-2); overflow: hidden; }
+  .wave { position: absolute; inset: 8px 6px; display: flex; align-items: center; gap: 2px; }
+  .wave i { flex: 1; border-radius: 2px; background: var(--nebula); opacity: .45; transition: opacity .2s ease; }
+  .wave i.past { opacity: .95; }
+  .marker { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--star); opacity: .55; }
+  .marker.hit { animation: hit .5s ease-out; }
+  @keyframes hit { 0% { opacity: 1; box-shadow: 0 0 14px 3px var(--star); } 100% { opacity: .55; box-shadow: none; } }
+  .playhead { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: var(--ink); box-shadow: 0 0 10px var(--ink); }
+  .clips { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
+  .clips span { font: 500 0.68rem var(--font-mono); color: var(--muted); text-align: center; padding: 6px 2px; border-radius: 6px;
+    background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s ease; }
+  .clips span.on { color: var(--bg); background: var(--star); border-color: var(--star); transform: translateY(-2px); }
+  @media (max-width: 560px) { .clips span { font-size: 0.6rem; } }
+
+  .inventory { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+  @media (max-width: 480px) { .inventory { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .slot { position: relative; isolation: isolate; overflow: hidden; border-radius: 12px; padding: 12px 10px; text-align: center; min-width: 0; }
+  .slot::before { content: ""; position: absolute; inset: -60%; z-index: -2;
+    background: conic-gradient(from 0deg, transparent 0 65%, var(--star) 82%, var(--nebula) 92%, transparent 100%);
+    animation: spin 5s linear infinite; animation-delay: calc(var(--i) * -0.8s); }
+  .slot::after { content: ""; position: absolute; inset: 1.5px; border-radius: 10.5px; background: var(--surface-2); z-index: -1; }
+  .slot b { display: block; font: 600 0.84rem/1.25 var(--font-display); }
+  .slot span { font-size: 0.7rem; color: var(--muted); }
+  .slot.wide { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; text-align: left; padding: 12px 14px; }
+  .slot.wide b { font-size: 1.3rem; color: var(--star); font-variant-numeric: tabular-nums; }
+
+  .spark { position: fixed; left: 0; top: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%;
+    background: var(--star); pointer-events: none; z-index: 12; opacity: 0; }
+  .spark.teal { background: var(--nebula); }
+  .spark.go { animation: spark .7s ease-out forwards; }
+  @keyframes spark { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: translateY(12px) scale(.2); } }
+
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
@@ -311,12 +391,30 @@
 <header class="hero" id="top">
   <canvas id="sky" aria-hidden="true"></canvas>
   <div class="wrap">
+   <div class="hero-grid">
+    <div class="hero-copy">
     <div class="eyebrow">Builder · Community founder · Creator</div>
     <h1>I build <span class="rotator" id="rotator">health AI</span><br />and run communities at scale.</h1>
     <p class="lede">
       I design health AI tools, engineer Discord bots, prototype full-stack web apps and lead the Galaxy
       Discord network. I've moderated communities of up to 90,000 members and built the security that keeps them safe.
     </p>
+    </div>
+    <div class="orbit" aria-label="My five areas of work, orbiting">
+      <div class="orb o3">
+        <span class="planet"><a href="#creative" style="--c: var(--nebula)">Creative</a></span>
+        <span class="planet bottom"><a href="#gaming">Gaming</a></span>
+      </div>
+      <div class="orb o2">
+        <span class="planet"><a href="#community">Community</a></span>
+        <span class="planet bottom"><a href="#security" style="--c: var(--danger)">Security</a></span>
+      </div>
+      <div class="orb o1">
+        <span class="planet"><a href="#ai" style="--c: var(--nebula)">AI</a></span>
+      </div>
+      <div class="core" aria-hidden="true">V</div>
+    </div>
+   </div>
     <div class="stats">
       <div class="stat"><b data-count="90000">90,000</b><span>largest community moderated</span></div>
       <div class="stat"><b data-count="40000">40,000</b><span>Fruity Blox members</span></div>
@@ -475,6 +573,11 @@
           <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
           <p>Multi-device workflow on a Lenovo ThinkPad X270 (Core i5, 16GB RAM) with an external monitor.</p>
           <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
+        </article>
+
+        <article class="card terminal reveal" style="grid-column: 1 / -1;">
+          <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
+          <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
         </article>
 
         <figure class="diagram span reveal">
@@ -674,7 +777,12 @@
             <line class="attack-x" x1="80" y1="348" x2="96" y2="364" />
             <line class="attack-x" x1="96" y1="348" x2="80" y2="364" />
             <text class="t-danger" x="14" y="408">raid / nuke</text>
+            <g id="raidLayer"></g>
           </svg>
+          <div class="raid-bar">
+            <button class="btn" id="raidBtn" type="button">Simulate a raid</button>
+            <span class="raid-log" id="raidLog" aria-live="polite">12 attackers are waiting.</span>
+          </div>
           <figcaption><b>Four rings of defense.</b> Attacks are stopped at the outer anti-nuke layer, misbehaving users are handled by automod and JailBot, and ownership stays out of reach in the Vault Account.</figcaption>
         </figure>
         <div style="display:grid; gap:16px; align-content:start; min-width:0;">
@@ -723,6 +831,13 @@
           <p>Custom background scores and audio tracks for my edits, produced with Google Flow Music Premium.</p>
           <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </article>
+
+        <figure class="diagram span reveal" id="beat">
+          <div class="beat-head"><span class="kicker">Edit timeline · illustration</span><span class="beat-time mono" id="beatTime">00:00.0</span></div>
+          <div class="track" id="track"><div class="wave" id="wave"></div><div class="playhead" id="playhead"></div></div>
+          <div class="clips" id="clips"></div>
+          <figcaption><b>Cutting on the beat.</b> Each gold marker is a beat drop, and the clip changes the moment the playhead crosses it.</figcaption>
+        </figure>
 
         <figure class="diagram span reveal">
           <div class="diagram-scroll">
@@ -781,10 +896,14 @@
           <span class="kicker">Roblox · Blox Fruits</span>
           <h3>Endgame operations</h3>
           <p>Max-level (2800) veteran running several endgame accounts. Active in high-tier PvP, Sea Events and structured item trading and middleman work.</p>
-          <div class="pills">
-            <span class="pill">Human V4 (max)</span><span class="pill">Cursed Dual Katana</span><span class="pill">Soul Guitar</span>
-            <span class="pill">Shark Anchor</span><span class="pill">Spiky Trident</span><span class="pill">Strong Grip Gravity Cane</span>
-            <span class="pill">40k+ Fragments</span>
+          <div class="inventory">
+            <div class="slot" style="--i:0"><b>Human V4</b><span>maxed</span></div>
+            <div class="slot" style="--i:1"><b>Cursed Dual Katana</b><span>owned</span></div>
+            <div class="slot" style="--i:2"><b>Soul Guitar</b><span>owned</span></div>
+            <div class="slot" style="--i:3"><b>Shark Anchor</b><span>owned</span></div>
+            <div class="slot" style="--i:4"><b>Spiky Trident</b><span>owned</span></div>
+            <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
+            <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
           </div>
         </article>
       </div>
@@ -847,7 +966,12 @@
     document.querySelectorAll("[data-count]").forEach(function (el) { countIO.observe(el); });
 
     var revIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); revIO.unobserve(en.target); } });
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add("in"); revIO.unobserve(en.target);
+          if (en.target.classList.contains("sec-head") && window.__scramble) window.__scramble(en.target.querySelector(".eyebrow"));
+        }
+      });
     }, { rootMargin: "0px 0px -40px 0px" });
     document.querySelectorAll(".reveal").forEach(function (el) {
       var r = el.getBoundingClientRect();
@@ -875,6 +999,134 @@
       });
       c.addEventListener("pointerleave", function () { c.style.setProperty("--mx", "-999px"); });
     });
+  }
+
+  function onVisible(el, cb) {
+    if (!("IntersectionObserver" in window)) { cb(true); return; }
+    new IntersectionObserver(function (en) { cb(en[0].isIntersecting); }).observe(el);
+  }
+
+  // Nova terminal
+  try {
+    var term = document.getElementById("term");
+    var tl = [["cmd", "$ python nova.py"], ["ok", "✓ verification views ready"], ["ok", "✓ leveling progression online"],
+      ["ok", "✓ anti-spam shield armed"], ["ok", "✓ AFK tracker listening"], ["cmd", "$ deploy --to render"],
+      ["live", "● live · UptimeRobot watching uptime & latency"]];
+    function full() { return tl.map(function (l) { return '<span class="' + l[0] + '">' + l[1] + "</span>"; }).join("\n"); }
+    term.innerHTML = full() + ' <span class="caret"></span>';
+    var tVisible = false, tRunning = false;
+    function typeAll() {
+      if (tRunning) return; tRunning = true;
+      var li = 0, ci = 0, out = "";
+      (function next() {
+        if (!tVisible) { tRunning = false; term.innerHTML = full() + ' <span class="caret"></span>'; return; }
+        if (li >= tl.length) { setTimeout(function () { tRunning = false; if (tVisible) typeAll(); }, 3500); return; }
+        var l = tl[li]; ci++;
+        var cur = '<span class="' + l[0] + '">' + l[1].slice(0, ci) + "</span>";
+        term.innerHTML = out + cur + '<span class="caret"></span>';
+        if (ci >= l[1].length) { out += cur + "\n"; li++; ci = 0; setTimeout(next, 280); } else setTimeout(next, 22);
+      })();
+    }
+    if (!reduce) onVisible(term, function (v) { tVisible = v; if (v) typeAll(); });
+  } catch (e) {}
+
+  // Raid simulator
+  try {
+    var raidBtn = document.getElementById("raidBtn"), raidLayer = document.getElementById("raidLayer"), raidLog = document.getElementById("raidLog");
+    var NS = "http://www.w3.org/2000/svg";
+    raidBtn.addEventListener("click", function () {
+      raidBtn.disabled = true; raidLayer.innerHTML = "";
+      var plan = [200, 200, 200, 200, 200, 200, 200, 200, 200, 148, 148, 96], c = { 200: 0, 148: 0, 96: 0 };
+      var ps = plan.map(function (stop, i) {
+        var el = document.createElementNS(NS, "circle"); el.setAttribute("r", "4"); el.setAttribute("class", "raider"); el.setAttribute("opacity", "0");
+        raidLayer.appendChild(el);
+        return { a: Math.random() * 6.283, stop: stop, delay: reduce ? 0 : i * 110 + Math.random() * 150, done: false, el: el };
+      });
+      raidLog.textContent = "Raid incoming…";
+      var t0 = performance.now();
+      (function step(now) {
+        var all = true;
+        ps.forEach(function (p) {
+          if (p.done) return;
+          var t = now - t0 - p.delay; if (t < 0) { all = false; return; }
+          var r = reduce ? p.stop : Math.max(p.stop, 250 - t / 1000 * 110);
+          p.el.setAttribute("opacity", "1");
+          p.el.setAttribute("cx", (230 + Math.cos(p.a) * r).toFixed(1));
+          p.el.setAttribute("cy", (220 + Math.sin(p.a) * r).toFixed(1));
+          if (r <= p.stop) { p.done = true; c[p.stop]++; p.el.setAttribute("class", "raider hit"); } else all = false;
+        });
+        raidLog.textContent = "Anti-nuke stopped " + c[200] + " · automod caught " + c[148] + " · JailBot contained " + c[96];
+        if (!all) requestAnimationFrame(step);
+        else setTimeout(function () {
+          raidLog.textContent = "Raid over: 12 attackers stopped. Vault ownership untouched ✓";
+          raidBtn.disabled = false; raidBtn.textContent = "Run it again";
+        }, 500);
+      })(t0);
+    });
+  } catch (e) {}
+
+  // Beat timeline
+  try {
+    var wave = document.getElementById("wave"), track = document.getElementById("track"), ph = document.getElementById("playhead");
+    var clipsEl = document.getElementById("clips"), beatTime = document.getElementById("beatTime");
+    var BARS = 64, SEG = 8, names = ["Build-up", "Dribble", "Skill move", "Through ball", "Shot", "Goal", "Celebration", "Replay"];
+    var bars = [], marks = [], clips = [];
+    for (var i = 0; i < BARS; i++) {
+      var k = i % SEG, h = 18 + 70 * Math.abs(Math.sin(i * 1.7)) * (k === 0 ? 1 : 0.35 + k / SEG * 0.5);
+      var b = document.createElement("i"); b.style.height = Math.min(100, h).toFixed(0) + "%"; wave.appendChild(b); bars.push(b);
+    }
+    for (var m = 1; m < SEG; m++) {
+      var mk = document.createElement("div"); mk.className = "marker"; mk.style.left = (m / SEG * 100) + "%"; track.appendChild(mk); marks.push(mk);
+    }
+    names.forEach(function (n) { var sp = document.createElement("span"); sp.textContent = n; clipsEl.appendChild(sp); clips.push(sp); });
+    clips[0].classList.add("on");
+    var DUR = 8000, bVisible = false, bRunning = false, bStart = 0, lastSeg = 0;
+    function frame(now) {
+      if (!bVisible) { bRunning = false; return; }
+      var p = ((now - bStart) % DUR) / DUR, seg = Math.floor(p * SEG), bi = Math.floor(p * BARS);
+      ph.style.transform = "translateX(" + (p * track.clientWidth) + "px)";
+      beatTime.textContent = "00:0" + (p * 8).toFixed(1);
+      for (var j = 0; j < BARS; j++) bars[j].classList.toggle("past", j <= bi);
+      if (seg !== lastSeg) {
+        clips[lastSeg].classList.remove("on"); clips[seg].classList.add("on");
+        if (seg > 0) { var mk = marks[seg - 1]; mk.classList.remove("hit"); void mk.offsetWidth; mk.classList.add("hit"); }
+        lastSeg = seg;
+      }
+      requestAnimationFrame(frame);
+    }
+    if (!reduce) onVisible(track, function (v) {
+      bVisible = v;
+      if (v && !bRunning) { bRunning = true; bStart = performance.now(); lastSeg = 0; clips.forEach(function (c, i) { c.classList.toggle("on", i === 0); }); requestAnimationFrame(frame); }
+    });
+  } catch (e) {}
+
+  // Heading scramble
+  var GLYPHS = "✦✧★·+*#<>/\\=ABCDEFGHJKLMNPRSTUVWXYZ0123456789";
+  function scramble(el) {
+    if (reduce || !el || el.dataset.done) return; el.dataset.done = "1";
+    var txt = el.textContent, f = 0, total = 16;
+    (function tick() {
+      f++;
+      var reveal = Math.floor(txt.length * f / total);
+      el.textContent = txt.split("").map(function (ch, i) {
+        return i < reveal || ch === " " ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      }).join("");
+      if (f < total) setTimeout(tick, 35); else el.textContent = txt;
+    })();
+  }
+
+  window.__scramble = scramble;
+
+  // Sparkle trail
+  if (!reduce && window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    var pool = [], pi = 0, lastSp = 0;
+    for (var q = 0; q < 16; q++) { var d = document.createElement("span"); d.className = "spark" + (q % 2 ? " teal" : ""); d.setAttribute("aria-hidden", "true"); document.body.appendChild(d); pool.push(d); }
+    window.addEventListener("pointermove", function (e) {
+      var n = performance.now(); if (n - lastSp < 45) return; lastSp = n;
+      var sp = pool[pi++ % pool.length];
+      sp.style.left = e.clientX + "px"; sp.style.top = e.clientY + "px";
+      sp.classList.remove("go"); void sp.offsetWidth; sp.classList.add("go");
+    }, { passive: true });
   }
 
   // Run diagram animations only while visible
