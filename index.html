@@ -236,6 +236,52 @@
   .reveal.in { animation: rise .6s ease both; }
   @keyframes rise { from { opacity: .25; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
+
+  /* ---- Extra motion ---- */
+  .progress { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: 3px; z-index: 11;
+    background: linear-gradient(90deg, var(--star), var(--nebula)); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+  .brand i { animation: beacon 2.4s ease-in-out infinite; }
+  @keyframes beacon { 0%, 100% { box-shadow: 0 0 4px var(--star); } 50% { box-shadow: 0 0 16px var(--star); } }
+
+  .hero .eyebrow, .hero h1, .hero .lede, .hero .stat { animation: enter .7s cubic-bezier(.2,.7,.2,1) both; }
+  .hero h1 { animation-delay: .08s; } .hero .lede { animation-delay: .18s; }
+  .hero .stat:nth-child(1) { animation-delay: .26s; } .hero .stat:nth-child(2) { animation-delay: .32s; }
+  .hero .stat:nth-child(3) { animation-delay: .38s; } .hero .stat:nth-child(4) { animation-delay: .44s; }
+  .hero .stat:nth-child(5) { animation-delay: .50s; } .hero .stat:nth-child(6) { animation-delay: .56s; }
+  @keyframes enter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  .rotator { background: linear-gradient(90deg, var(--star), var(--nebula), var(--star)); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 4s linear infinite; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  .stat { position: relative; overflow: hidden; }
+  .stat::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, var(--star-soft) 50%, transparent 70%);
+    transform: translateX(-100%); animation: sweep 1.2s ease .9s 1 both; pointer-events: none; }
+  @keyframes sweep { to { transform: translateX(100%); } }
+
+  .sec-head h2 { position: relative; padding-bottom: 10px; }
+  .sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 56px;
+    background: linear-gradient(90deg, var(--star), var(--nebula)); transform-origin: 0 50%; }
+  .sec-head.in h2::after { animation: grow .8s cubic-bezier(.2,.7,.2,1) .15s both; }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  .skill-group.in li { animation: rise .45s ease both; }
+  .skill-group.in li:nth-child(2) { animation-delay: .05s; } .skill-group.in li:nth-child(3) { animation-delay: .1s; }
+  .skill-group.in li:nth-child(4) { animation-delay: .15s; } .skill-group.in li:nth-child(5) { animation-delay: .2s; }
+  .skill-group.in li:nth-child(6) { animation-delay: .25s; } .skill-group.in li:nth-child(7) { animation-delay: .3s; }
+
+  .diagram.in svg .node, .diagram.in svg .hub, .diagram.in svg .core, .diagram.in svg .ring { animation: pop .55s cubic-bezier(.2,.8,.3,1.2) both; transform-box: fill-box; transform-origin: center; }
+  .diagram.in svg .ring2 { animation-delay: .08s; } .diagram.in svg .ring3 { animation-delay: .16s; } .diagram.in svg .core { animation-delay: .24s; }
+  @keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+  .diagram svg .node:hover { stroke: var(--star); }
+
+  .pill { transition: transform .15s ease, border-color .15s ease, color .15s ease; }
+  .pill:hover { transform: translateY(-2px); border-color: var(--star); color: var(--star); }
+
+  @media (hover: hover) {
+    .card { background-image: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), var(--star-soft), transparent 70%); }
+  }
+
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
@@ -246,6 +292,7 @@
 </style>
 </head>
 <body>
+<div class="progress" id="progress" aria-hidden="true"></div>
 <nav>
   <div class="wrap">
     <a class="brand" href="#top"><i></i>Vini</a>
@@ -804,7 +851,29 @@
     }, { rootMargin: "0px 0px -40px 0px" });
     document.querySelectorAll(".reveal").forEach(function (el) {
       var r = el.getBoundingClientRect();
-      if (r.top > innerHeight) revIO.observe(el);
+      if (r.top > innerHeight) revIO.observe(el); else el.classList.add("in");
+    });
+  }
+
+
+  // Scroll progress bar
+  var bar = document.getElementById("progress"), ticking = false;
+  function prog() {
+    var max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scrollY / max) : 0) + ")"; ticking = false;
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(prog); } }, { passive: true });
+  prog();
+
+  // Card spotlight follows the pointer
+  if (!reduce && window.matchMedia && matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll(".card").forEach(function (c) {
+      c.addEventListener("pointermove", function (e) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        c.style.setProperty("--my", (e.clientY - r.top) + "px");
+      });
+      c.addEventListener("pointerleave", function () { c.style.setProperty("--mx", "-999px"); });
     });
   }
 
@@ -822,6 +891,7 @@
   try {
     var cv = document.getElementById("sky"), ctx = cv.getContext("2d"), stars = [], w = 0, h = 0;
     var colors = { ink: "#e8ebf7", star: "#ffb547" }, heroVisible = true, last = 0, running = false;
+    var meteor = null, lastMeteor = 0;
     function readColors() {
       var cs = getComputedStyle(root);
       colors.ink = cs.getPropertyValue("--ink").trim() || colors.ink;
@@ -845,6 +915,19 @@
         ctx.fillRect(s.x, s.y, s.r * 1.5, s.r * 1.5);
       }
       ctx.globalAlpha = 1;
+      if (!reduce) {
+        if (!meteor && t - lastMeteor > 3500 + Math.random() * 3000) {
+          meteor = { x: Math.random() * w * 0.8 + w * 0.2, y: Math.random() * h * 0.4, life: 0 }; lastMeteor = t;
+        }
+        if (meteor) {
+          meteor.life += 1; var mx = meteor.x - meteor.life * 9, my = meteor.y + meteor.life * 4.5;
+          var g = ctx.createLinearGradient(mx, my, mx + 70, my - 35);
+          g.addColorStop(0, colors.star); g.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.globalAlpha = Math.max(0, 1 - meteor.life / 28); ctx.strokeStyle = g; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx + 70, my - 35); ctx.stroke(); ctx.globalAlpha = 1;
+          if (meteor.life > 28) meteor = null;
+        }
+      }
     }
     function loop(t) {
       if (!heroVisible || document.hidden) { running = false; return; }
