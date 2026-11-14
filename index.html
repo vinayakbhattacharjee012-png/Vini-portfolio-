@@ -76,6 +76,7 @@
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
@@ -401,6 +402,40 @@
   .hint { font: 500 0.78rem var(--font-mono); color: var(--muted); }
   .hint kbd { font: inherit; color: var(--star); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
 
+  /* ---- Skills ---- */
+  .skill-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 28px; align-items: start; }
+  @media (max-width: 900px) { .skill-wrap { grid-template-columns: minmax(0, 1fr); } }
+  .constellation svg { max-width: 480px; margin: 0 auto; }
+  svg .cnode { cursor: pointer; }
+  svg .cnode circle.dot { fill: var(--surface-2); stroke: var(--line); stroke-width: 1.5; transition: fill .2s ease, stroke .2s ease; }
+  svg .cnode:hover circle.dot, svg .cnode.on circle.dot { fill: var(--star-soft); stroke: var(--star); stroke-width: 2.2; }
+  svg .cnode .code { font: 600 12px var(--font-mono); fill: currentColor; }
+  svg .cnode .num { font: 700 15px var(--font-display); fill: var(--star); }
+  svg .cnode .lbl { font: 500 11px var(--font-body); fill: var(--muted); }
+  svg .cnode.on .lbl { fill: var(--ink); }
+  svg .cnode .halo { fill: none; stroke: var(--star); stroke-width: 1.2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .diagram.live svg .cnode.on .halo { animation: pulse 2.2s ease-out infinite; }
+  svg .cnode:focus { outline: none; }
+  svg .cnode:focus-visible circle.dot { stroke: var(--star); stroke-width: 3; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .filters button { font: 500 0.8rem var(--font-body); padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
+  .filters button:hover { color: var(--ink); border-color: var(--star); }
+  .filters button[aria-pressed="true"] { background: var(--star); border-color: var(--star); color: var(--bg); }
+  .filters button b { font-weight: 600; margin-left: 4px; opacity: .7; font-variant-numeric: tabular-nums; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr)); gap: 8px; }
+  .tile { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; min-width: 0;
+    background: var(--surface); border: 1px solid var(--line); font-size: 0.88rem; transition: border-color .15s ease, transform .15s ease; }
+  .tile:hover { border-color: var(--star); transform: translateY(-2px); }
+  .tile code { flex: none; font: 600 0.64rem var(--font-mono); letter-spacing: .04em; padding: 3px 6px; border-radius: 5px;
+    color: var(--star); background: var(--star-soft); }
+  .tile.alt code { color: var(--nebula); background: var(--surface-2); }
+  .tile span { min-width: 0; overflow-wrap: anywhere; }
+  .tile.pop { animation: tilepop .42s cubic-bezier(.2,.8,.3,1.2) both; }
+  @keyframes tilepop { from { opacity: 0; transform: scale(.9) translateY(8px); } to { opacity: 1; transform: none; } }
+  .skill-count { margin: 12px 0 0; font: 500 0.8rem var(--font-mono); color: var(--muted); }
+
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
@@ -478,98 +513,19 @@
   <section id="skills">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">Skill map</span>
-        <h2>Everything I work with</h2>
-        <p>Grouped by the kind of work. The projects behind each group are further down the page.</p>
+        <span class="eyebrow">Skills</span>
+        <h2>55 skills across 8 areas</h2>
+        <p>Tap a star in the constellation or a filter to explore one area. Bigger stars hold more skills.</p>
       </div>
-      <div class="skills">
-        <div class="skill-group reveal">
-          <h3>AI product</h3>
-          <ul>
-            <li>Health AI product design</li>
-            <li>Structured wellness workflows</li>
-            <li>Clinical safety guardrails</li>
-            <li>AI-assisted prototyping</li>
-            <li>Prompting with Claude Pro</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Engineering</h3>
-          <ul>
-            <li>Python</li>
-            <li>Discord bot development</li>
-            <li>Interactive button views</li>
-            <li>Leveling &amp; XP systems</li>
-            <li>Anti-spam logic</li>
-            <li>AFK tracking</li>
-            <li>UI architecture</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>AI builder tools</h3>
-          <ul>
-            <li>Bolt.new</li>
-            <li>Manus.space</li>
-            <li>Base44</li>
-            <li>Lovable</li>
-            <li>Replit Agent</li>
-            <li>Google AI Studio</li>
-            <li>Claude Pro</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Deploy &amp; monitor</h3>
-          <ul>
-            <li>Render deployments</li>
-            <li>UptimeRobot monitoring</li>
-            <li>Uptime &amp; latency alerts</li>
-            <li>Keeping live services running</li>
-            <li>Multi-device dev workflow</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Community leadership</h3>
-          <ul>
-            <li>Founding &amp; growing communities</li>
-            <li>Multi-brand network management</li>
-            <li>Governance frameworks</li>
-            <li>Mergers &amp; treaty drafting</li>
-            <li>Partnerships</li>
-            <li>Staff leadership</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Moderation &amp; security</h3>
-          <ul>
-            <li>Large-scale moderation</li>
-            <li>Server administration</li>
-            <li>Anti-nuke &amp; raid defense</li>
-            <li>Permission architecture</li>
-            <li>Vault Account ownership isolation</li>
-            <li>Wick, Bravers, Security Bot, Krypton</li>
-            <li>Dyno, Carl-bot, Sapphire, JailBot</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Creative production</h3>
-          <ul>
-            <li>Football highlight editing</li>
-            <li>Sourcing raw match footage</li>
-            <li>Beat-synced cutting</li>
-            <li>Velocity curves &amp; speed ramps</li>
-            <li>Original soundtrack composition</li>
-            <li>Google Flow Music Premium</li>
-          </ul>
-        </div>
-        <div class="skill-group reveal">
-          <h3>Gaming operations</h3>
-          <ul>
-            <li>Minecraft SMP administration</li>
-            <li>Cross-platform servers (PC &amp; mobile)</li>
-            <li>Blox Fruits endgame play</li>
-            <li>High-tier PvP &amp; Sea Events</li>
-            <li>Item trading &amp; middleman work</li>
-          </ul>
+      <div class="skill-wrap">
+        <figure class="diagram constellation reveal" id="constellation">
+          <svg id="cSvg" viewBox="0 0 520 520" role="img" aria-label="Skill constellation: eight skill areas around Vini, sized by number of skills."></svg>
+          <figcaption><b>Skill constellation.</b> Security has the most skills, 13, because of the layered bot setup.</figcaption>
+        </figure>
+        <div class="reveal" style="min-width: 0;">
+          <div class="filters" id="filters" role="group" aria-label="Filter skills by area"></div>
+          <div class="tiles" id="tiles"></div>
+          <p class="skill-count" id="skillCount" aria-live="polite"></p>
         </div>
       </div>
     </div>
@@ -1230,6 +1186,87 @@
       window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     }
   });
+
+  // Skills: constellation + filters + tiles
+  try {
+    var CATS = [
+      { id: "ai", code: "AI", name: "AI product", skills: ["Health AI product design", "Structured wellness workflows", "Clinical safety guardrails", "AI-assisted prototyping", "Prompting with Claude Pro"] },
+      { id: "dev", code: "DEV", name: "Engineering", skills: ["Python", "Discord bot development", "Interactive button views", "Leveling & XP systems", "Anti-spam logic", "AFK tracking", "UI architecture"] },
+      { id: "tools", code: "TLS", name: "AI builder tools", skills: ["Bolt.new", "Manus.space", "Base44", "Lovable", "Replit Agent", "Google AI Studio", "Claude Pro"] },
+      { id: "ops", code: "OPS", name: "Deploy & monitor", skills: ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts", "Live service upkeep", "Multi-device dev workflow"] },
+      { id: "lead", code: "LDR", name: "Leadership", skills: ["Founding communities", "Multi-brand network management", "Governance frameworks", "Mergers & treaty drafting", "Partnerships", "Staff leadership"] },
+      { id: "sec", code: "SEC", name: "Moderation & security", skills: ["Large-scale moderation", "Server administration", "Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot"] },
+      { id: "art", code: "ART", name: "Creative", skills: ["Football highlight editing", "Match footage sourcing", "Beat-synced cutting", "Velocity curves", "Soundtrack composition", "Google Flow Music"] },
+      { id: "game", code: "GMG", name: "Gaming", skills: ["Minecraft SMP admin", "Cross-platform servers", "Blox Fruits endgame", "High-tier PvP", "Sea Events", "Trading & middleman"] }
+    ];
+    var TOTAL = CATS.reduce(function (n, c) { return n + c.skills.length; }, 0);
+    var svgNS = "http://www.w3.org/2000/svg", cSvg = document.getElementById("cSvg");
+    var filtersEl = document.getElementById("filters"), tilesEl = document.getElementById("tiles"), countEl = document.getElementById("skillCount");
+    var CX = 260, CY = 250, RAD = 170, nodes = {}, fbtns = {}, tiles = [];
+    function el(tag, attrs, parent) { var e = document.createElementNS(svgNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+
+    var pts = CATS.map(function (c, i) { var a = -Math.PI / 2 + i * Math.PI * 2 / CATS.length; return { x: CX + Math.cos(a) * RAD, y: CY + Math.sin(a) * RAD }; });
+    el("polygon", { points: pts.map(function (p) { return p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" "), class: "edge dashed" }, cSvg);
+    pts.forEach(function (p) { el("line", { x1: CX, y1: CY, x2: p.x.toFixed(1), y2: p.y.toFixed(1), class: "edge flow" }, cSvg); });
+    el("circle", { cx: CX, cy: CY, r: 44, style: "fill: var(--surface)" }, cSvg);
+    el("circle", { cx: CX, cy: CY, r: 44, class: "hub" }, cSvg);
+    var t1 = el("text", { x: CX, y: CY - 2, "text-anchor": "middle", class: "t-title" }, cSvg); t1.textContent = "Vini";
+    var t2 = el("text", { x: CX, y: CY + 16, "text-anchor": "middle", class: "t-sub" }, cSvg); t2.textContent = TOTAL + " skills";
+
+    CATS.forEach(function (c, i) {
+      var p = pts[i], r = 17 + c.skills.length * 1.4;
+      var g = el("g", { class: "cnode", tabindex: "0", role: "button", "aria-label": c.name + ", " + c.skills.length + " skills" }, cSvg);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r + 6, class: "halo" }, g);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, style: "fill: var(--surface)" }, g);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, class: "dot" }, g);
+      var n = el("text", { x: p.x.toFixed(1), y: (p.y + 2).toFixed(1), "text-anchor": "middle", class: "num" }, g); n.textContent = c.skills.length;
+      var cd = el("text", { x: p.x.toFixed(1), y: (p.y + 15).toFixed(1), "text-anchor": "middle", class: "code" }, g); cd.textContent = c.code;
+      var below = p.y >= CY - 1;
+      var lb = el("text", { x: p.x.toFixed(1), y: (below ? p.y + r + 16 : p.y - r - 9).toFixed(1), "text-anchor": "middle", class: "lbl" }, g); lb.textContent = c.name;
+      g.addEventListener("click", function () { setCat(current === c.id ? "all" : c.id); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setCat(current === c.id ? "all" : c.id); } });
+      nodes[c.id] = g;
+    });
+
+    function addFilter(id, label, count) {
+      var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = label + "<b>" + count + "</b>";
+      b.addEventListener("click", function () { setCat(id); });
+      filtersEl.appendChild(b); fbtns[id] = b;
+    }
+    addFilter("all", "All", TOTAL);
+    CATS.forEach(function (c) { addFilter(c.id, c.name, c.skills.length); });
+
+    CATS.forEach(function (c, ci) {
+      c.skills.forEach(function (sk) {
+        var d = document.createElement("div"); d.className = "tile" + (ci % 2 ? " alt" : ""); d.setAttribute("data-cat", c.id);
+        var code = document.createElement("code"); code.textContent = c.code;
+        var sp = document.createElement("span"); sp.textContent = sk;
+        d.appendChild(code); d.appendChild(sp); tilesEl.appendChild(d); tiles.push(d);
+      });
+    });
+
+    var current = "all";
+    function setCat(id) {
+      current = id;
+      Object.keys(fbtns).forEach(function (k) { fbtns[k].setAttribute("aria-pressed", k === id ? "true" : "false"); });
+      Object.keys(nodes).forEach(function (k) { nodes[k].classList.toggle("on", k === id); });
+      var shown = 0;
+      tiles.forEach(function (t) {
+        var show = id === "all" || t.getAttribute("data-cat") === id;
+        t.hidden = !show;
+        t.classList.remove("pop");
+        if (show) {
+          if (!reduce) { void t.offsetWidth; t.style.animationDelay = Math.min(shown, 20) * 0.025 + "s"; t.classList.add("pop"); }
+          shown++;
+        }
+      });
+      var cat = CATS.filter(function (c) { return c.id === id; })[0];
+      countEl.textContent = cat ? "Showing " + shown + " of " + TOTAL + " skills · " + cat.name : "Showing all " + TOTAL + " skills";
+    }
+    setCat("all");
+    tiles.forEach(function (t) { t.classList.remove("pop"); });
+  } catch (e) {}
 
   // Run diagram animations only while visible
   if ("IntersectionObserver" in window) {
