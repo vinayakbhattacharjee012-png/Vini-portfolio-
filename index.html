@@ -23,6 +23,7 @@
     --danger: #c0392b;
     --star-soft: rgba(184, 110, 0, 0.1);
     --nav-bg: rgba(244, 245, 250, 0.86);
+    --glow: 0 10px 30px rgba(16, 20, 42, 0.08);
     --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
     --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -55,6 +56,22 @@
     --danger: #ff6b5e;
     --star-soft: rgba(255, 181, 71, 0.12);
     --nav-bg: rgba(8, 11, 26, 0.82);
+    color-scheme: dark;
+  }
+
+  :root[data-theme="black"] {
+    --bg: #000000;
+    --surface: #0a0a0a;
+    --surface-2: #141414;
+    --ink: #f4f4f4;
+    --muted: #9b9b9b;
+    --line: #222222;
+    --star: #ffc24d;
+    --nebula: #4ee9d8;
+    --danger: #ff6b5e;
+    --star-soft: rgba(255, 194, 77, 0.14);
+    --nav-bg: rgba(0, 0, 0, 0.88);
+    --glow: 0 0 34px rgba(255, 194, 77, 0.18);
     color-scheme: dark;
   }
 
@@ -362,6 +379,28 @@
   .spark.go { animation: spark .7s ease-out forwards; }
   @keyframes spark { 0% { opacity: .9; transform: scale(1); } 100% { opacity: 0; transform: translateY(12px) scale(.2); } }
 
+  /* ---- Theme switch, bursts, toast ---- */
+  .themes { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+  .themes button { width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--muted);
+    cursor: pointer; font-size: 0.85rem; display: grid; place-items: center; transition: background .2s ease, color .2s ease; }
+  .themes button:hover { color: var(--ink); }
+  .themes button[aria-pressed="true"] { background: var(--star); color: var(--bg); }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  .card:hover { box-shadow: var(--glow); }
+
+  .burst { position: fixed; left: 0; top: 0; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%;
+    background: var(--star); pointer-events: none; z-index: 12; animation: burst2 .65s ease-out forwards; }
+  .burst.teal { background: var(--nebula); }
+  @keyframes burst2 { to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; } }
+
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 13;
+    transform: translate(-50%, 30px); opacity: 0; pointer-events: none; transition: all .35s cubic-bezier(.2,.7,.2,1);
+    background: var(--surface); color: var(--ink); border: 1px solid var(--star); border-radius: 999px;
+    padding: 10px 18px; font: 600 0.9rem var(--font-display); box-shadow: var(--glow); white-space: nowrap; }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+  .hint { font: 500 0.78rem var(--font-mono); color: var(--muted); }
+  .hint kbd { font: inherit; color: var(--star); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
@@ -383,7 +422,11 @@
       <a href="#security">Security</a>
       <a href="#creative">Creative</a>
       <a href="#gaming">Gaming</a>
-      <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch light or dark theme">◐</button>
+      <div class="themes" role="group" aria-label="Colour theme">
+        <button type="button" data-set="light" aria-label="Light theme" title="Light" aria-pressed="false"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.1" y2="4.9"/></g></svg></button>
+        <button type="button" data-set="dark" aria-label="Dark theme" title="Dark" aria-pressed="false"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg></button>
+        <button type="button" data-set="black" aria-label="Black theme" title="Black" aria-pressed="false"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="currentColor"/><circle cx="12" cy="12" r="8.5" fill="none" stroke="var(--line)" stroke-width="1.5"/></svg></button>
+      </div>
     </div>
   </div>
 </nav>
@@ -914,9 +957,11 @@
 <footer>
   <div class="wrap">
     <span>© <span id="yr">2026</span> Vini</span>
+    <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
@@ -926,12 +971,33 @@
 
   // Theme toggle
   try { var saved = localStorage.getItem("theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
-  document.getElementById("themeBtn").addEventListener("click", function () {
-    var cur = root.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    var next = cur === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    try { localStorage.setItem("theme", next); } catch (e) {}
+  var themeBtns = document.querySelectorAll(".themes button");
+  function currentTheme() {
+    return root.getAttribute("data-theme") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  }
+  function syncThemeBtns() {
+    var t = currentTheme();
+    themeBtns.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-set") === t ? "true" : "false"); });
+  }
+  function setTheme(t, x, y) {
+    function apply() { root.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {} syncThemeBtns(); }
+    if (document.startViewTransition && !reduce) {
+      var vt = document.startViewTransition(apply);
+      vt.ready.then(function () {
+        var r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        root.animate({ clipPath: ["circle(0px at " + x + "px " + y + "px)", "circle(" + r + "px at " + x + "px " + y + "px)"] },
+          { duration: 600, easing: "ease-in-out", pseudoElement: "::view-transition-new(root)" });
+      }).catch(function () {});
+    } else apply();
+  }
+  themeBtns.forEach(function (b) {
+    b.addEventListener("click", function (e) {
+      var r = b.getBoundingClientRect();
+      setTheme(b.getAttribute("data-set"), e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2);
+    });
   });
+  syncThemeBtns();
+  if (window.matchMedia) { var mqT = matchMedia("(prefers-color-scheme: dark)"); if (mqT.addEventListener) mqT.addEventListener("change", syncThemeBtns); }
 
   // Ticker
   var skills = ["Health AI", "Python", "Discord bots", "Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space",
@@ -996,8 +1062,10 @@
         var r = c.getBoundingClientRect();
         c.style.setProperty("--mx", (e.clientX - r.left) + "px");
         c.style.setProperty("--my", (e.clientY - r.top) + "px");
+        var rx = ((e.clientY - r.top) / r.height - 0.5) * -5, ry = ((e.clientX - r.left) / r.width - 0.5) * 5;
+        c.style.transform = "perspective(900px) rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) translateY(-2px)";
       });
-      c.addEventListener("pointerleave", function () { c.style.setProperty("--mx", "-999px"); });
+      c.addEventListener("pointerleave", function () { c.style.setProperty("--mx", "-999px"); c.style.transform = ""; });
     });
   }
 
@@ -1129,6 +1197,40 @@
     }, { passive: true });
   }
 
+  // Click burst
+  if (!reduce) {
+    window.addEventListener("pointerdown", function (e) {
+      if (e.target.closest && e.target.closest("button, a")) return;
+      for (var i = 0; i < 10; i++) {
+        var d = document.createElement("span"), a = i / 10 * 6.283 + Math.random() * 0.4, dist = 26 + Math.random() * 26;
+        d.className = "burst" + (i % 2 ? " teal" : "");
+        d.style.left = e.clientX + "px"; d.style.top = e.clientY + "px";
+        d.style.setProperty("--dx", (Math.cos(a) * dist).toFixed(1) + "px");
+        d.style.setProperty("--dy", (Math.sin(a) * dist).toFixed(1) + "px");
+        document.body.appendChild(d);
+        setTimeout(function (el) { el.remove(); }, 700, d);
+      }
+    }, { passive: true });
+  }
+
+  // Toast + "galaxy" easter egg
+  var toast = document.getElementById("toast"), toastT;
+  function showToast(msg) {
+    toast.textContent = msg; toast.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(function () { toast.classList.remove("show"); }, 2600);
+  }
+  var keys = "";
+  window.addEventListener("keydown", function (e) {
+    if (!e.key || e.key.length !== 1) return;
+    keys = (keys + e.key.toLowerCase()).slice(-6);
+    if (keys === "galaxy") {
+      keys = "";
+      showToast("✦ Welcome to the Galaxy ✦");
+      if (window.__meteorShower) window.__meteorShower();
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    }
+  });
+
   // Run diagram animations only while visible
   if ("IntersectionObserver" in window) {
     var liveIO = new IntersectionObserver(function (entries) {
@@ -1139,24 +1241,29 @@
     document.querySelectorAll(".diagram, .eq").forEach(function (el) { el.classList.add("live"); });
   }
 
-  // Starfield: light, capped, 30fps, paused when off screen or tab hidden
+  // Starfield: capped, 30fps, paused off screen; constellation lines to the pointer; meteors
   try {
     var cv = document.getElementById("sky"), ctx = cv.getContext("2d"), stars = [], w = 0, h = 0;
     var colors = { ink: "#e8ebf7", star: "#ffb547" }, heroVisible = true, last = 0, running = false;
-    var meteor = null, lastMeteor = 0;
+    var meteors = [], lastMeteor = 0, ptr = null, hero = document.querySelector(".hero");
     function readColors() {
       var cs = getComputedStyle(root);
       colors.ink = cs.getPropertyValue("--ink").trim() || colors.ink;
       colors.star = cs.getPropertyValue("--star").trim() || colors.star;
     }
     function size() {
-      w = cv.offsetWidth; h = cv.offsetHeight;
-      cv.width = w; cv.height = h;
+      w = cv.offsetWidth; h = cv.offsetHeight; cv.width = w; cv.height = h;
       var n = Math.min(120, Math.round(w * h / 9000));
       stars = [];
       for (var i = 0; i < n; i++) stars.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1.3 + 0.4,
         p: Math.random() * 6.28, s: 0.6 + Math.random() * 1.4, warm: Math.random() < 0.18, v: 0.03 + Math.random() * 0.1 });
     }
+    function addMeteor() { meteors.push({ x: Math.random() * w * 0.9 + w * 0.2, y: Math.random() * h * 0.5, life: 0, len: 50 + Math.random() * 50 }); }
+    window.__meteorShower = function () {
+      if (reduce) return;
+      for (var i = 0; i < 24; i++) setTimeout(addMeteor, i * 110);
+      start();
+    };
     function paint(t) {
       ctx.clearRect(0, 0, w, h);
       for (var i = 0; i < stars.length; i++) {
@@ -1166,19 +1273,29 @@
         ctx.fillStyle = s.warm ? colors.star : colors.ink;
         ctx.fillRect(s.x, s.y, s.r * 1.5, s.r * 1.5);
       }
+      if (ptr) {
+        ctx.strokeStyle = colors.star; ctx.lineWidth = 0.7;
+        for (var j = 0; j < stars.length; j++) {
+          var st = stars[j], dx = st.x - ptr.x, dy = st.y - ptr.y, d2 = dx * dx + dy * dy;
+          if (d2 < 16900) {
+            ctx.globalAlpha = 0.55 * (1 - Math.sqrt(d2) / 130);
+            ctx.beginPath(); ctx.moveTo(ptr.x, ptr.y); ctx.lineTo(st.x, st.y); ctx.stroke();
+          }
+        }
+      }
       ctx.globalAlpha = 1;
       if (!reduce) {
-        if (!meteor && t - lastMeteor > 3500 + Math.random() * 3000) {
-          meteor = { x: Math.random() * w * 0.8 + w * 0.2, y: Math.random() * h * 0.4, life: 0 }; lastMeteor = t;
-        }
-        if (meteor) {
-          meteor.life += 1; var mx = meteor.x - meteor.life * 9, my = meteor.y + meteor.life * 4.5;
-          var g = ctx.createLinearGradient(mx, my, mx + 70, my - 35);
+        if (t - lastMeteor > 3500 + Math.random() * 3000) { addMeteor(); lastMeteor = t; }
+        for (var k = meteors.length - 1; k >= 0; k--) {
+          var m = meteors[k]; m.life += 1;
+          var mx = m.x - m.life * 9, my = m.y + m.life * 4.5, ex = mx + m.len, ey = my - m.len / 2;
+          var g = ctx.createLinearGradient(mx, my, ex, ey);
           g.addColorStop(0, colors.star); g.addColorStop(1, "rgba(0,0,0,0)");
-          ctx.globalAlpha = Math.max(0, 1 - meteor.life / 28); ctx.strokeStyle = g; ctx.lineWidth = 1.6;
-          ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx + 70, my - 35); ctx.stroke(); ctx.globalAlpha = 1;
-          if (meteor.life > 28) meteor = null;
+          ctx.globalAlpha = Math.max(0, 1 - m.life / 30); ctx.strokeStyle = g; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(ex, ey); ctx.stroke();
+          if (m.life > 30) meteors.splice(k, 1);
         }
+        ctx.globalAlpha = 1;
       }
     }
     function loop(t) {
@@ -1188,9 +1305,12 @@
     }
     function start() { if (!reduce && !running) { running = true; requestAnimationFrame(loop); } }
     readColors(); size(); paint(0); start();
+    if (!reduce) {
+      hero.addEventListener("pointermove", function (e) { var r = cv.getBoundingClientRect(); ptr = { x: e.clientX - r.left, y: e.clientY - r.top }; }, { passive: true });
+      hero.addEventListener("pointerleave", function () { ptr = null; });
+    }
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (en) { heroVisible = en[0].isIntersecting; if (heroVisible) start(); })
-        .observe(document.querySelector(".hero"));
+      new IntersectionObserver(function (en) { heroVisible = en[0].isIntersecting; if (heroVisible) start(); }).observe(hero);
     }
     document.addEventListener("visibilitychange", function () { if (!document.hidden) start(); });
     new MutationObserver(function () { readColors(); paint(0); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
