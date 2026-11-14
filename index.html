@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vini — Portfolio</title>
+  <meta name="description" content="Vini — AI & software builder, Discord community founder, server security architect, video editor and gaming operations veteran." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --surface: #ffffff;
+      --surface-2: #f0f0f7;
+      --text: #14141f;
+      --muted: #5b5b70;
+      --border: #e2e2ec;
+      --accent: #6d4aff;
+      --accent-2: #0ea5e9;
+      --accent-soft: rgba(109, 74, 255, 0.1);
+      --shadow: 0 1px 2px rgba(20, 20, 40, 0.04), 0 8px 24px rgba(20, 20, 40, 0.06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0b0b14;
+        --surface: #13131f;
+        --surface-2: #1a1a2a;
+        --text: #ececf5;
+        --muted: #9a9ab3;
+        --border: #26263a;
+        --accent: #9b85ff;
+        --accent-2: #38bdf8;
+        --accent-soft: rgba(155, 133, 255, 0.14);
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0b0b14;
+      --surface: #13131f;
+      --surface-2: #1a1a2a;
+      --text: #ececf5;
+      --muted: #9a9ab3;
+      --border: #26263a;
+      --accent: #9b85ff;
+      --accent-2: #38bdf8;
+      --accent-soft: rgba(155, 133, 255, 0.14);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+    .brand { font-weight: 800; letter-spacing: -0.02em; color: var(--text); font-size: 1.1rem; }
+    .brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: 0.92rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .theme-btn {
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 999px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem;
+      display: grid; place-items: center;
+    }
+    @media (max-width: 760px) { .nav-links a { display: none; } }
+
+    /* Hero */
+    header.hero { padding: 88px 0 64px; position: relative; overflow: hidden; }
+    header.hero::before {
+      content: ""; position: absolute; inset: -40% -10% auto auto; width: 620px; height: 620px;
+      background: radial-gradient(circle, var(--accent-soft), transparent 65%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace; font-size: 0.82rem; color: var(--accent);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.05; letter-spacing: -0.035em;
+      margin: 14px 0 18px; font-weight: 800; max-width: 16ch;
+    }
+    h1 .grad {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .lede { font-size: 1.15rem; color: var(--muted); max-width: 60ch; margin: 0 0 28px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 0.82rem; padding: 6px 12px; border-radius: 999px;
+      background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-weight: 500;
+    }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 48px; }
+    .stat {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 18px; box-shadow: var(--shadow);
+    }
+    .stat b { display: block; font-size: 1.6rem; letter-spacing: -0.02em; }
+    .stat span { color: var(--muted); font-size: 0.86rem; }
+    @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+    /* Sections */
+    section { padding: 56px 0; border-top: 1px solid var(--border); }
+    .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+    .sec-num { font-family: "JetBrains Mono", monospace; color: var(--accent); font-size: 0.9rem; }
+    h2 { font-size: clamp(1.5rem, 3.2vw, 2rem); margin: 0; letter-spacing: -0.025em; }
+
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 22px; box-shadow: var(--shadow);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .card:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+    .card.wide { grid-column: 1 / -1; }
+    .card h3 { margin: 0 0 4px; font-size: 1.08rem; letter-spacing: -0.01em; }
+    .card .tag {
+      display: inline-block; font-family: "JetBrains Mono", monospace; font-size: 0.74rem;
+      color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; margin-bottom: 10px;
+    }
+    .card p { margin: 8px 0 0; color: var(--muted); }
+    .card ul { margin: 10px 0 0; padding-left: 18px; color: var(--muted); }
+    .card li { margin: 4px 0; }
+    .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .pill {
+      font-size: 0.76rem; padding: 3px 10px; border-radius: 999px;
+      background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+    }
+
+    /* Role list */
+    .roles { display: grid; gap: 10px; margin-top: 12px; }
+    .role {
+      display: flex; justify-content: space-between; gap: 12px; align-items: center;
+      padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .role b { font-weight: 600; }
+    .role span { color: var(--muted); font-size: 0.88rem; }
+
+    footer { padding: 40px 0 56px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <a class="brand" href="#top">Vini<span>.</span></a>
+      <div class="nav-links">
+        <a href="#ai">AI &amp; Software</a>
+        <a href="#community">Community</a>
+        <a href="#creative">Creative</a>
+        <a href="#gaming">Gaming</a>
+        <button class="theme-btn" id="themeBtn" aria-label="Toggle color theme">◐</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div class="eyebrow">Builder · Community Founder · Creator</div>
+      <h1>Shipping <span class="grad">AI products</span> and running communities at scale.</h1>
+      <p class="lede">
+        I design health AI tools, engineer Discord bots, prototype full-stack web apps, and lead a
+        multi-brand Discord network — with hands-on moderation experience in communities of up to 90,000 members.
+      </p>
+      <div class="chips">
+        <span class="chip">Health AI</span>
+        <span class="chip">Python Bots</span>
+        <span class="chip">AI Prototyping</span>
+        <span class="chip">Server Security</span>
+        <span class="chip">Video Editing</span>
+        <span class="chip">Music Production</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><b>1.5k–2k</b><span>members across my network</span></div>
+        <div class="stat"><b>90k</b><span>largest community moderated</span></div>
+        <div class="stat"><b>5</b><span>community brands founded</span></div>
+        <div class="stat"><b>2800</b><span>max level, Blox Fruits</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="ai">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-num">01</span><h2>AI &amp; Software Development</h2></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Product</span>
+            <h3>Polo — Health AI</h3>
+            <p>Designing and building Polo, a health AI application focused on structured wellness workflows and clinical safety guardrails.</p>
+            <div class="pills"><span class="pill">Wellness workflows</span><span class="pill">Safety guardrails</span></div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Python</span>
+            <h3>Nova 3.0 Ultimate — Discord Bot</h3>
+            <p>A multi-purpose Python bot running across live communities.</p>
+            <ul>
+              <li>Interactive verification views</li>
+              <li>Leveling progression</li>
+              <li>Anti-spam protection</li>
+              <li>AFK tracking</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <span class="tag">Web</span>
+            <h3>Full-Stack AI Prototyping</h3>
+            <p>Shipping rapid web prototypes and UI architectures, including <strong>Apex Sports Hub</strong>.</p>
+            <div class="pills">
+              <span class="pill">Bolt.new</span><span class="pill">Manus.space</span><span class="pill">Base44</span>
+              <span class="pill">Lovable</span><span class="pill">Replit Agent</span><span class="pill">Google AI Studio</span>
+              <span class="pill">Claude Pro</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Ops</span>
+            <h3>Deployment &amp; Monitoring</h3>
+            <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
+            <p>Multi-device dev workflow on a Lenovo ThinkPad X270 (Core i5, 16GB RAM) with an external monitor setup.</p>
+            <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="community">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-num">02</span><h2>Community Leadership &amp; Server Security</h2></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Founder &amp; Director</span>
+            <h3>Galaxy Network</h3>
+            <p>Founded and run a multi-brand Discord ecosystem of 1.5k–2k members.</p>
+            <div class="pills">
+              <span class="pill">Galaxy Empire</span><span class="pill">Galaxy Studios</span>
+              <span class="pill">Galaxy Ad Solutions</span><span class="pill">Celestial Services</span>
+              <span class="pill">Blox Donate</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Governance</span>
+            <h3>Mergers &amp; Treaties</h3>
+            <p>Structured inter-community partnerships and governance frameworks:</p>
+            <ul>
+              <li>Galaxy Empire &amp; Zen Services Merger Charter</li>
+              <li>Project RMC Treaty of Declaration</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <span class="tag">Moderation</span>
+            <h3>Large-Scale Moderation &amp; Administration</h3>
+            <div class="roles">
+              <div class="role"><b>Senior Moderator</b><span>Fruity Blox · 40,000 members</span></div>
+              <div class="role"><b>Junior Moderator</b><span>Roblox community · 90,000 members</span></div>
+              <div class="role"><b>Head Administrator</b><span>Owned network hubs</span></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <span class="tag">Security</span>
+            <h3>Anti-Nuke &amp; Permission Security</h3>
+            <p>Architected multi-layered Discord defense grids, and isolated technical server ownership inside a dedicated Vault Account to prevent raids and permission escalations.</p>
+            <div class="pills">
+              <span class="pill">Wick</span><span class="pill">Bravers</span><span class="pill">Security Bot</span>
+              <span class="pill">Dyno</span><span class="pill">Carl-bot</span><span class="pill">Krypton</span>
+              <span class="pill">Sapphire</span><span class="pill">JailBot</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="creative">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-num">03</span><h2>Creative Production &amp; Digital Media</h2></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Video</span>
+            <h3>Football Video Editing</h3>
+            <p>European football and La Liga highlight edits — sourcing raw match footage and syncing cuts to beat drops and velocity curves.</p>
+          </article>
+          <article class="card">
+            <span class="tag">Audio</span>
+            <h3>Original Soundtrack Composition</h3>
+            <p>Custom background scores and audio tracks for edits, produced with Google Flow Music Premium.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="gaming">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-num">04</span><h2>Gaming Operations &amp; Multiplayer Servers</h2></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Minecraft</span>
+            <h3>SMP Server Administration</h3>
+            <p>Set up and managed cross-platform (PC and mobile) Survival Multiplayer community servers.</p>
+          </article>
+          <article class="card">
+            <span class="tag">Roblox</span>
+            <h3>Endgame Blox Fruits Operations</h3>
+            <p>Max-level (2800) veteran managing multiple endgame accounts; active in high-tier PvP, Sea Events, and structured item trading / middleman workflows.</p>
+            <div class="pills">
+              <span class="pill">Human V4 (max)</span><span class="pill">Cursed Dual Katana</span>
+              <span class="pill">Soul Guitar</span><span class="pill">Shark Anchor</span>
+              <span class="pill">Spiky Trident</span><span class="pill">Strong Grip Gravity Cane</span>
+              <span class="pill">40k+ Fragments</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="yr"></span> Vini</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("yr").textContent = new Date().getFullYear();
+    (function () {
+      var root = document.documentElement;
+      try {
+        var saved = localStorage.getItem("theme");
+        if (saved) root.setAttribute("data-theme", saved);
+      } catch (e) {}
+      document.getElementById("themeBtn").addEventListener("click", function () {
+        var current = root.getAttribute("data-theme") ||
+          (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        var next = current === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>
