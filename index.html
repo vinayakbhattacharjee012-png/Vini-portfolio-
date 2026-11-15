@@ -712,6 +712,29 @@
   .diagram.span .diagram-scroll svg { min-width: 0; }
   @media (max-width: 820px) { .diagram.span .diagram-scroll svg { min-width: 640px; } }
   .diagram figcaption { line-height: 1.5; }
+  /* ---- Declutter pass ---- */
+  section { padding-block: 96px; }
+  .sec-head { margin-bottom: 44px; gap: 14px; }
+  .sec-head p { font-size: 1.05rem; line-height: 1.65; max-width: 60ch; }
+  .grid { gap: 22px; }
+  .card { padding: 28px; gap: 12px; }
+  .card:hover { transform: none; }
+  .card p { line-height: 1.6; }
+  .card ul li { margin-bottom: 2px; }
+  .pills { margin-top: 8px; gap: 8px; }
+  .pill { padding: 4px 12px; }
+  section:nth-of-type(even) { background: none; }
+  .diagram { padding: 24px; }
+  figcaption { margin-top: 16px; }
+  .skillrow { margin-bottom: 36px; gap: 12px; }
+  .skb { padding: 14px; }
+  .test-grid { gap: 14px; margin-bottom: 52px; }
+  .tcard { padding: 20px; }
+  .xp { gap: 22px; }
+  .ticker { display: none; }
+  .bg-fx .grid-lines { display: none; }
+  .bg-fx .blob { opacity: .35; }
+  @media (max-width: 820px) { section { padding-block: 72px; } .sec-head { margin-bottom: 32px; } .card { padding: 22px; } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
