@@ -65,10 +65,20 @@ export function sampleStandings(league: League): Envelope<StandingRow[]> {
   return { data, source: 'sample', fetchedAt: new Date().toISOString(), note: NOTE };
 }
 
+/** Offline fallback, used only when the ESPN news feeds are blocked. Clearly labelled as sample. */
 export function sampleNews(sport: Sport): Envelope<NewsItem[]> {
-  const data: NewsItem[] = [
-    { headline: 'AI news feed is off', summary: 'Add GEMINI_API_KEY on the server to stream Search-grounded transfer, injury and squad news here.', tag: 'News' },
-    { headline: sport === 'cricket' ? 'Scores still update from ESPN' : 'Scores and tables still update from ESPN', summary: 'Public ESPN and TheSportsDB feeds need no keys and keep working without Gemini.', tag: 'News' },
-  ];
-  return { data, source: 'sample', fetchedAt: new Date().toISOString(), note: NOTE };
+  const data: NewsItem[] = sport === 'cricket'
+    ? [
+        { headline: 'Sample: squad update ahead of the next T20 series', summary: 'Sample story. Live headlines return when the ESPN news feed is reachable.', tag: 'Squad', league: 'Cricket' },
+        { headline: 'Sample: fitness doubt for an opening batter', summary: 'Sample story. A hamstring scan is expected before the match.', tag: 'Injury', league: 'IPL' },
+        { headline: 'Sample: franchise completes overseas signing', summary: 'Sample story. Transfer news appears here when it is live.', tag: 'Transfer', league: 'IPL' },
+        { headline: 'Sample: preview of the weekend fixtures', summary: 'Sample story. Match previews and reports show here.', tag: 'Match News', league: 'Cricket' },
+      ]
+    : [
+        { headline: 'Sample: striker ruled out with a knee injury', summary: 'Sample story. Live headlines return when the ESPN news feed is reachable.', tag: 'Injury', league: 'Premier League' },
+        { headline: 'Sample: club agrees fee for midfielder', summary: 'Sample story. Transfer news appears here when it is live.', tag: 'Transfer', league: 'La Liga' },
+        { headline: 'Sample: manager names his squad for Europe', summary: 'Sample story. Squad news shows here.', tag: 'Squad', league: 'Champions League' },
+        { headline: 'Sample: late winner seals the derby', summary: 'Sample story. Match reports show here.', tag: 'Match News', league: 'Premier League' },
+      ];
+  return { data, source: 'sample', fetchedAt: new Date().toISOString(), note: 'Sample headlines: ESPN news feed unreachable from the server.' };
 }

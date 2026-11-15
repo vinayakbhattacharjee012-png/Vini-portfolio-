@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { classifyNews } from './news.ts';
 import type { Citation, Envelope, League, Match, NewsItem, Sport, StandingRow } from '../src/lib/types.ts';
 
 let client: GoogleGenAI | null = null;
@@ -111,14 +112,14 @@ export async function geminiNews(sport: Sport): Promise<Envelope<NewsItem[]>> {
       : 'football: Premier League, La Liga, UEFA Champions League and the Indian Super League';
   const { data, citations } = await grounded<any[]>(
     `Find the 8 most important breaking stories from the last 48 hours in ${scope} — transfers, injuries, squad/roster changes, big results.
-Return a JSON array: {"headline": string (max 90 chars), "summary": one sentence, "tag": "Transfer"|"Injury"|"Result"|"Squad"|"Preview"|"News", "league": short league name, "url": source article URL or null}`,
+Return a JSON array: {"headline": string (max 90 chars), "summary": one sentence, "tag": "Transfer"|"Injury"|"Squad"|"Match News", "league": short league name, "url": source article URL or null}`,
   );
   if (!Array.isArray(data)) throw new Error('bad shape');
   return env(
     data.slice(0, 10).map((n) => ({
       headline: String(n.headline),
       summary: String(n.summary ?? ''),
-      tag: n.tag ?? 'News',
+      tag: classifyNews(`${n.headline} ${n.summary ?? ''}`),
       league: n.league ?? undefined,
       url: typeof n.url === 'string' && n.url.startsWith('http') ? n.url : undefined,
     })),

@@ -49,12 +49,16 @@ export interface StandingRow {
   points: number;
 }
 
+export type NewsTag = 'Transfer' | 'Injury' | 'Squad' | 'Match News';
+
 export interface NewsItem {
   headline: string;
   summary: string;
-  tag: 'Transfer' | 'Injury' | 'Result' | 'Squad' | 'Preview' | 'News';
+  tag: NewsTag;
   league?: string;
   url?: string;
+  image?: string;
+  published?: string;
 }
 
 export interface TeamProfile {

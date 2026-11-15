@@ -39,7 +39,7 @@ export default function App() {
 
   const scores = useApi<Match[]>(`/api/scoreboard?league=${league}`, pollScores);
   const table = useApi<StandingRow[]>(lg.hasTable ? `/api/standings?league=${league}` : null, 10 * 60_000);
-  const news = useApi<NewsItem[]>(`/api/news?sport=${sport}`, 5 * 60_000);
+  const news = useApi<NewsItem[]>(`/api/news?sport=${sport}`, 2 * 60_000);
   const [gemini, setGemini] = useState<boolean | null>(null);
   useEffect(() => {
     fetch('/api/health')
@@ -95,8 +95,19 @@ export default function App() {
   );
 
   const newsPanel = (
-    <Panel title="Breaking" icon={<Newspaper className="size-4 text-violet-300" />} right={<SourceBadge source={news.data?.source} at={news.data?.fetchedAt} now={now} note={news.data?.note} />}>
-      <News items={news.data?.data} citations={news.data?.citations} loading={news.loading} />
+    <Panel
+      title="Breaking"
+      icon={<Newspaper className="size-4 text-violet-300" />}
+      right={
+        <>
+          <SourceBadge source={news.data?.source} at={news.data?.fetchedAt} now={now} note={news.data?.note} />
+          <button onClick={news.refresh} className="rounded-md p-1 text-slate-500 hover:bg-white/5 hover:text-slate-200" aria-label="Refresh news">
+            <RefreshCw className={cx('size-3.5', news.refreshing && 'animate-spin')} />
+          </button>
+        </>
+      }
+    >
+      <News items={news.data?.data} citations={news.data?.citations} loading={news.loading} now={now} />
     </Panel>
   );
 

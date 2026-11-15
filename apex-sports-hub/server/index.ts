@@ -9,6 +9,7 @@ import { geminiAnswer, geminiEnabled, geminiNews, geminiScoreboard, geminiStandi
 import { espnMatchCentre } from './match.ts';
 import { matchCount, recordFor, resultsFor, syncStatus, teamNames } from './db.ts';
 import { startIngest } from './ingest.ts';
+import { espnNews } from './news.ts';
 import { sampleNews, sampleScoreboard, sampleStandings } from './sample.ts';
 
 try {
@@ -92,7 +93,8 @@ async function api(url: URL): Promise<unknown> {
 
     case '/api/news': {
       const sport = (q('sport') === 'cricket' ? 'cricket' : 'football') as Sport;
-      return cached(`news:${sport}`, 5 * 60_000, [
+      return cached(`news:${sport}`, 2 * 60_000, [
+        { name: 'ESPN', run: () => espnNews(sport) },
         ...(geminiEnabled() ? [{ name: 'Gemini', run: () => geminiNews(sport) }] : []),
         { name: 'sample', run: async () => sampleNews(sport) },
       ]);
