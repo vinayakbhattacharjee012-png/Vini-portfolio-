@@ -742,12 +742,33 @@
   .loader-glow b { animation-duration: 2s; }
   .loader-sparks i { animation-duration: calc(var(--d, 3s) * .5); animation-delay: calc(var(--dl, 0s) * .3); }
   .loader { animation: loaderSafety .4s ease 3s forwards; }
-  .loader.done { animation: loaderOut .45s cubic-bezier(.6,0,.3,1) forwards; }
-  .loader.done .loader-inner { animation: loaderZoom .45s cubic-bezier(.6,0,.3,1) forwards; }
+  /* ---- v4: counter, greeting, curtain exit ---- */
+  .loader { background: transparent; }
+  .curtain { position: absolute; left: 0; right: 0; height: 50.5%; background: var(--bg); transition: transform .7s cubic-bezier(.77,0,.18,1) .18s; }
+  .curtain.top { top: 0; } .curtain.bot { bottom: 0; }
+  .curtain::after { content: ""; position: absolute; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity .2s;
+    background: linear-gradient(90deg, transparent, var(--star), var(--nebula), transparent); box-shadow: 0 0 18px var(--star); }
+  .curtain.top::after { bottom: 0; } .curtain.bot::after { top: 0; }
+  .loader-greet { font: 500 0.95rem var(--font-body); color: var(--muted); opacity: 0; animation: fadeIn .4s ease .15s forwards; }
+  .loader-greet b { color: var(--ink); font-weight: 600; }
+  .loader-count { position: absolute; right: max(24px, 4vw); bottom: max(20px, 4vh); font: 700 clamp(3rem, 11vw, 8rem)/1 var(--font-display);
+    letter-spacing: -.05em; font-variant-numeric: tabular-nums; color: transparent; -webkit-text-stroke: 1px color-mix(in srgb, var(--ink) 35%, transparent);
+    pointer-events: none; }
+  .loader-count i { font-style: normal; font-size: .35em; vertical-align: top; margin-left: 4px; -webkit-text-stroke: 0; color: var(--star); }
+  .loader-count b { font-weight: inherit; background: linear-gradient(180deg, var(--star), var(--nebula)); -webkit-background-clip: text; background-clip: text;
+    -webkit-text-stroke: 0; color: transparent; }
+  .loader-count .ghost { visibility: visible; }
+  .loader.done { animation: loaderOut .01s linear .9s forwards; }
+  .loader.done .curtain::after { opacity: 1; }
+  .loader.done .curtain.top { transform: translateY(-100%); } .loader.done .curtain.bot { transform: translateY(100%); }
+  .loader.done .loader-inner, .loader.done .loader-bg, .loader.done .loader-sparks, .loader.done .loader-count { animation: loaderZoom .25s cubic-bezier(.6,0,.3,1) forwards; }
+  .loader.done.x { }
+  .loader.donex { animation: loaderOut .45s cubic-bezier(.6,0,.3,1) forwards; }
+  
   .loader.quick .lg-ring, .loader.quick .lg-v { animation-duration: .35s; animation-delay: 0s; }
   .loader.quick .lg-star, .loader.quick .loader-word span, .loader.quick .loader-tag, .loader.quick .lg-orbit { animation-delay: .2s; }
   @keyframes loaderOut { to { opacity: 0; visibility: hidden; } }
-  @keyframes loaderZoom { to { transform: scale(1.6); filter: blur(6px); } }
+  @keyframes loaderZoom { to { transform: scale(1.4); filter: blur(6px); opacity: 0; } }
   @keyframes loaderSafety { to { opacity: 0; visibility: hidden; } }
   html.loading body { overflow: hidden; }
   html.loading .hero .eyebrow, html.loading .hero h1, html.loading .hero .lede, html.loading .hero .stat, html.loading .hero .stat::after { animation-play-state: paused; }
@@ -762,7 +783,7 @@
 <script>document.documentElement.classList.add("loading");</script>
 </head>
 <body>
-<div class="loader" id="loader" role="status" aria-label="Loading Vini's portfolio"><div class="loader-sparks" aria-hidden="true"><i style="left:8%;--d:3.4s;--dl:0.2s;--dx:20px"></i><i style="left:17%;--d:2.8s;--dl:1.1s;--dx:-15px"></i><i style="left:26%;--d:3.8s;--dl:0.6s;--dx:30px"></i><i style="left:35%;--d:3.1s;--dl:1.6s;--dx:-25px"></i><i style="left:44%;--d:2.6s;--dl:0.3s;--dx:10px"></i><i style="left:53%;--d:3.5s;--dl:1.2s;--dx:-10px"></i><i style="left:62%;--d:2.9s;--dl:0.8s;--dx:25px"></i><i style="left:71%;--d:3.7s;--dl:0.1s;--dx:-30px"></i><i style="left:80%;--d:3.0s;--dl:1.4s;--dx:15px"></i><i style="left:89%;--d:3.3s;--dl:0.5s;--dx:-20px"></i><i style="left:48%;--d:2.7s;--dl:2.0s;--dx:0px"></i><i style="left:22%;--d:3.2s;--dl:2.2s;--dx:12px"></i></div><div class="loader-bg" aria-hidden="true"><div class="sweep"></div><div class="rays"></div><div class="warp"></div></div><div class="loader-inner"><div class="loader-glow" aria-hidden="true"><b></b><i></i><i></i><i></i></div><svg class="logo " viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="lgL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--star)"/><stop offset="1" style="stop-color: var(--nebula)"/></linearGradient></defs><path class="lg-ring" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="url(#lgL)" stroke-width="2.6" stroke-linecap="round"/><path class="lg-comet" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path class="lg-v" d="M19,21 L32,45 L45,21" fill="none" stroke="url(#lgL)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path class="lg-star" d="M48,2.5 Q48.9,8.1 54.5,9 Q48.9,9.9 48,15.5 Q47.1,9.9 41.5,9 Q47.1,8.1 48,2.5Z" style="fill: var(--star)"/><g class="lg-orbit"><circle cx="32" cy="4" r="2.2" style="fill: var(--nebula)"/></g></svg><div class="loader-word" aria-hidden="true"><span>V</span><span>I</span><span>N</span><span>I</span></div><div class="loader-tag" aria-hidden="true">Builder · Founder · Creator</div><div class="loader-bar" aria-hidden="true"><i id="loaderBar"></i></div></div></div>
+<div class="loader" id="loader" role="status" aria-label="Loading Vini's portfolio"><div class="curtain top"></div><div class="curtain bot"></div><div class="loader-count" aria-hidden="true"><b id="loaderPct" style="--p:0%">0</b><i>%</i></div><div class="loader-sparks" aria-hidden="true"><i style="left:8%;--d:3.4s;--dl:0.2s;--dx:20px"></i><i style="left:17%;--d:2.8s;--dl:1.1s;--dx:-15px"></i><i style="left:26%;--d:3.8s;--dl:0.6s;--dx:30px"></i><i style="left:35%;--d:3.1s;--dl:1.6s;--dx:-25px"></i><i style="left:44%;--d:2.6s;--dl:0.3s;--dx:10px"></i><i style="left:53%;--d:3.5s;--dl:1.2s;--dx:-10px"></i><i style="left:62%;--d:2.9s;--dl:0.8s;--dx:25px"></i><i style="left:71%;--d:3.7s;--dl:0.1s;--dx:-30px"></i><i style="left:80%;--d:3.0s;--dl:1.4s;--dx:15px"></i><i style="left:89%;--d:3.3s;--dl:0.5s;--dx:-20px"></i><i style="left:48%;--d:2.7s;--dl:2.0s;--dx:0px"></i><i style="left:22%;--d:3.2s;--dl:2.2s;--dx:12px"></i></div><div class="loader-bg" aria-hidden="true"><div class="sweep"></div><div class="rays"></div><div class="warp"></div></div><div class="loader-inner"><div class="loader-glow" aria-hidden="true"><b></b><i></i><i></i><i></i></div><svg class="logo " viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="lgL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--star)"/><stop offset="1" style="stop-color: var(--nebula)"/></linearGradient></defs><path class="lg-ring" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="url(#lgL)" stroke-width="2.6" stroke-linecap="round"/><path class="lg-comet" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path class="lg-v" d="M19,21 L32,45 L45,21" fill="none" stroke="url(#lgL)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path class="lg-star" d="M48,2.5 Q48.9,8.1 54.5,9 Q48.9,9.9 48,15.5 Q47.1,9.9 41.5,9 Q47.1,8.1 48,2.5Z" style="fill: var(--star)"/><g class="lg-orbit"><circle cx="32" cy="4" r="2.2" style="fill: var(--nebula)"/></g></svg><div class="loader-greet" id="loaderGreet">Welcome to the <b>Galaxy</b></div><div class="loader-word" aria-hidden="true"><span>V</span><span>I</span><span>N</span><span>I</span></div><div class="loader-tag" aria-hidden="true">Builder · Founder · Creator</div><div class="loader-bar" aria-hidden="true"><i id="loaderBar"></i></div></div></div>
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grid-lines"></div><canvas id="bgStars"></canvas></div>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
@@ -1568,14 +1589,19 @@
     if (seen) loader.classList.add("quick");
     var minTime = seen ? 350 : 1300, t0 = Date.now(), finished = false;
     var lprog = 0.1; lbar.style.transform = "scaleX(.1)";
-    var pTimer = setInterval(function () { lprog = Math.min(.9, lprog + (0.9 - lprog) * 0.18); lbar.style.transform = "scaleX(" + lprog + ")"; }, 120);
+    var pctEl = document.getElementById("loaderPct");
+    function showPct(v) { var n = Math.round(v * 100); pctEl.textContent = n; pctEl.style.setProperty("--p", n + "%"); }
+    var hr = new Date().getHours(), greet = hr < 5 ? "Up late? Welcome to the" : hr < 12 ? "Good morning, welcome to the" : hr < 17 ? "Good afternoon, welcome to the" : "Good evening, welcome to the";
+    document.getElementById("loaderGreet").innerHTML = greet + " <b>Galaxy</b> ✦";
+    var pTimer = setInterval(function () { lprog = Math.min(.92, lprog + (0.92 - lprog) * 0.2); lbar.style.transform = "scaleX(" + lprog + ")"; showPct(lprog); }, 60);
     function finish() {
       if (finished) return; finished = true; clearInterval(pTimer);
-      lbar.style.transform = "scaleX(1)";
+      var from = lprog, ts = performance.now();
+      (function up(now) { var k = Math.min(1, (now - ts) / 250); var v = from + (1 - from) * k; lbar.style.transform = "scaleX(" + v + ")"; showPct(v); if (k < 1) requestAnimationFrame(up); })(ts);
       setTimeout(function () {
         loader.classList.add("done"); root.classList.remove("loading");
-        setTimeout(function () { loader.remove(); }, 650);
-      }, Math.max(250, minTime - (Date.now() - t0)));
+        setTimeout(function () { loader.remove(); }, 900);
+      }, Math.max(300, minTime - (Date.now() - t0)));
     }
     if (document.readyState === "complete") finish(); else window.addEventListener("load", finish);
     setTimeout(finish, 2000);
