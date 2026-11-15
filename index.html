@@ -436,6 +436,47 @@
   @keyframes tilepop { from { opacity: 0; transform: scale(.9) translateY(8px); } to { opacity: 1; transform: none; } }
   .skill-count { margin: 12px 0 0; font: 500 0.8rem var(--font-mono); color: var(--muted); }
 
+  /* ---- CTAs, advertise, contact ---- */
+  .ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: 600 0.92rem var(--font-display);
+    padding: 11px 20px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    text-decoration: none; cursor: pointer; transition: transform .15s ease, border-color .15s ease, box-shadow .2s ease; }
+  .cta:hover { transform: translateY(-2px); border-color: var(--star); text-decoration: none; }
+  .cta.primary { background: var(--star); border-color: var(--star); color: var(--bg); animation: ctaGlow 3s ease-in-out infinite; }
+  @keyframes ctaGlow { 50% { box-shadow: 0 0 26px var(--star-soft), 0 0 0 4px var(--star-soft); } }
+  .cta:disabled { opacity: .6; cursor: default; transform: none; }
+
+  .ad-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line);
+    border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+  .ad-stats div { background: var(--surface); padding: 16px; }
+  .ad-stats b { display: block; font: 700 1.5rem/1.15 var(--font-display); color: var(--star); }
+  .ad-stats span { font-size: 0.82rem; color: var(--muted); }
+  @media (max-width: 520px) { .ad-stats b { font-size: 1.15rem; } }
+  .ad-grid { margin-bottom: 16px; }
+  .rate { margin-top: auto; font: 500 0.78rem var(--font-mono); color: var(--star); }
+  .steps ol { margin: 0; padding-left: 20px; color: var(--muted); display: grid; gap: 6px; }
+  .steps b { color: var(--ink); font-weight: 600; }
+
+  .ad-form h3 { margin-bottom: 4px; }
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 640px) { .fields { grid-template-columns: minmax(0, 1fr); } }
+  .fields label { display: grid; gap: 6px; font-size: 0.84rem; font-weight: 500; color: var(--muted); min-width: 0; }
+  .fields .full { grid-column: 1 / -1; }
+  .fields input, .fields select, .fields textarea { font: 400 0.95rem var(--font-body); color: var(--ink); background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%; min-width: 0; }
+  .fields textarea { resize: vertical; }
+  .fields input:focus, .fields select:focus, .fields textarea:focus { outline: none; border-color: var(--star); box-shadow: 0 0 0 3px var(--star-soft); }
+  .form-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 6px; }
+  .form-status { font-size: 0.88rem; color: var(--muted); min-width: 0; overflow-wrap: anywhere; }
+  .form-status.ok { color: var(--nebula); }
+
+  .contact { align-items: flex-start; padding: 32px; position: relative; overflow: hidden; }
+  .contact h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); letter-spacing: -0.03em; }
+  .contact::after { content: ""; position: absolute; right: -80px; top: -80px; width: 260px; height: 260px; border-radius: 50%;
+    background: radial-gradient(circle, var(--star-soft), transparent 70%); pointer-events: none; animation: breathe 5s ease-in-out infinite; }
+  .mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; position: relative; z-index: 1; }
+  .mail { font: 600 clamp(1rem, 2.6vw, 1.35rem) var(--font-mono); color: var(--star); user-select: all; overflow-wrap: anywhere; min-width: 0; }
+
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
@@ -457,6 +498,8 @@
       <a href="#security">Security</a>
       <a href="#creative">Creative</a>
       <a href="#gaming">Gaming</a>
+      <a href="#advertise">Advertise</a>
+      <a href="#contact">Contact</a>
       <div class="themes" role="group" aria-label="Colour theme">
         <button type="button" data-set="light" aria-label="Light theme" title="Light" aria-pressed="false"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22"/><line x1="2" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.1" y2="4.9"/></g></svg></button>
         <button type="button" data-set="dark" aria-label="Dark theme" title="Dark" aria-pressed="false"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor"/></svg></button>
@@ -477,6 +520,10 @@
       I design health AI tools, engineer Discord bots, prototype full-stack web apps and lead the Galaxy
       Discord network. I've moderated communities of up to 90,000 members and built the security that keeps them safe.
     </p>
+    <div class="ctas">
+      <a class="cta primary" href="#advertise">Advertise with me</a>
+      <a class="cta" href="#contact">Contact</a>
+    </div>
     </div>
     <div class="orbit" aria-label="My five areas of work, orbiting">
       <div class="orb o3">
@@ -908,12 +955,108 @@
       </div>
     </div>
   </section>
+  <!-- ADVERTISE -->
+  <section id="advertise">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Galaxy Ad Solutions</span>
+        <h2>Advertise with me</h2>
+        <p>Put your server, brand or project in front of the Galaxy network: 1.5k–2k members across five communities. Send an enquiry and I'll reply with options and rates.</p>
+      </div>
+
+      <div class="ad-stats reveal">
+        <div><b>1.5k–2k</b><span>members reached</span></div>
+        <div><b>5</b><span>community brands</span></div>
+        <div><b>Roblox</b><span>&amp; gaming audience</span></div>
+      </div>
+
+      <div class="grid ad-grid">
+        <article class="card ad reveal">
+          <span class="kicker">Option 1</span>
+          <h3>Announcement post</h3>
+          <p>Your ad posted in the network's announcement channels.</p>
+          <span class="rate">Rates on request</span>
+        </article>
+        <article class="card ad reveal">
+          <span class="kicker">Option 2</span>
+          <h3>Partnership</h3>
+          <p>An ongoing partnership between your community and the Galaxy network.</p>
+          <span class="rate">Rates on request</span>
+        </article>
+        <article class="card ad reveal">
+          <span class="kicker">Option 3</span>
+          <h3>Custom campaign</h3>
+          <p>A promotion planned around your launch, event or giveaway.</p>
+          <span class="rate">Rates on request</span>
+        </article>
+        <article class="card ad steps reveal">
+          <span class="kicker">How it works</span>
+          <ol>
+            <li><b>Send an enquiry</b> with the form below or by email.</li>
+            <li><b>Agree the details</b>: placement, timing and rate.</li>
+            <li><b>Your ad goes live</b> across the network.</li>
+          </ol>
+        </article>
+      </div>
+
+      <form class="ad-form card reveal" id="adForm" name="advertise" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="advertise" />
+        <p hidden><label>Leave this empty <input name="bot-field" id="botField" /></label></p>
+        <h3>Ad enquiry</h3>
+        <div class="fields">
+          <label for="adName">Your name<input id="adName" name="name" required autocomplete="name" /></label>
+          <label for="adEmail">Your email<input id="adEmail" name="email" type="email" required autocomplete="email" /></label>
+          <label for="adBrand">Server, brand or project<input id="adBrand" name="brand" placeholder="e.g. my Discord server or Roblox group" /></label>
+          <label for="adType">What do you want to promote?
+            <select id="adType" name="type">
+              <option>Discord server</option>
+              <option>Roblox game or group</option>
+              <option>YouTube or content creator</option>
+              <option>Shop or service</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label for="adOption">Ad option
+            <select id="adOption" name="option">
+              <option>Announcement post</option>
+              <option>Partnership</option>
+              <option>Custom campaign</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+          <label for="adBudget">Budget (optional)<input id="adBudget" name="budget" placeholder="e.g. Robux, USD or INR amount" /></label>
+          <label class="full" for="adMsg">Details<textarea id="adMsg" name="message" rows="4" placeholder="What you want to advertise and when"></textarea></label>
+        </div>
+        <div class="form-foot">
+          <button class="cta primary" type="submit" id="adSubmit">Send enquiry</button>
+          <span class="form-status" id="adStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact card reveal">
+        <span class="eyebrow">Contact</span>
+        <h2>Let's work together</h2>
+        <p>For projects, collaborations, moderation roles or ads, email me directly.</p>
+        <div class="mail-row">
+          <span class="mail" id="mailText">vini.official.netops@gmail.com</span>
+          <button class="cta" type="button" id="copyMail">Copy email</button>
+          <a class="cta primary" href="mailto:vini.official.netops@gmail.com">Send an email</a>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>
   <div class="wrap">
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
+    <span class="hint">vini.official.netops@gmail.com</span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -1268,6 +1411,45 @@
     tiles.forEach(function (t) { t.classList.remove("pop"); });
   } catch (e) {}
 
+  // Copy email
+  try {
+    var copyBtn = document.getElementById("copyMail"), mailText = document.getElementById("mailText");
+    copyBtn.addEventListener("click", function () {
+      var txt = mailText.textContent;
+      function selectIt() { var r = document.createRange(); r.selectNodeContents(mailText); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
+      function done(msg) { copyBtn.textContent = msg; setTimeout(function () { copyBtn.textContent = "Copy email"; }, 2000); }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function () { done("Copied ✓"); showToast("Email copied"); }, function () { selectIt(); done("Selected, press copy"); });
+      } else { selectIt(); done("Selected, press copy"); }
+    });
+  } catch (e) {}
+
+  // Ad enquiry form: Netlify Forms, with an email fallback
+  try {
+    var form = document.getElementById("adForm"), status = document.getElementById("adStatus"), submitBtn = document.getElementById("adSubmit");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      var data = new FormData(form);
+      submitBtn.disabled = true; status.className = "form-status"; status.textContent = "Sending…";
+      function fallback() {
+        var body = ["Name: " + data.get("name"), "Email: " + data.get("email"), "Brand: " + data.get("brand"), "Promoting: " + data.get("type"),
+          "Option: " + data.get("option"), "Budget: " + data.get("budget"), "", data.get("message")].join("\n");
+        status.textContent = "The form couldn't send from here. Email vini.official.netops@gmail.com instead; a new email with your details should open.";
+        location.href = "mailto:vini.official.netops@gmail.com?subject=" + encodeURIComponent("Ad enquiry from " + data.get("name")) + "&body=" + encodeURIComponent(body);
+        submitBtn.disabled = false;
+      }
+      fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(data).toString() })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          form.reset(); submitBtn.disabled = false;
+          status.className = "form-status ok"; status.textContent = "Sent ✓ I'll reply by email soon.";
+          showToast("✦ Enquiry sent ✦");
+        })
+        .catch(fallback);
+    });
+  } catch (e) {}
+
   // Run diagram animations only while visible
   if ("IntersectionObserver" in window) {
     var liveIO = new IntersectionObserver(function (entries) {
@@ -1361,3 +1543,4 @@
 </script>
 </body>
 </html>
+
