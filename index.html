@@ -776,6 +776,16 @@
   @keyframes diagFade { from { opacity: .2; transform: scale(.96); } to { opacity: 1; transform: none; } }
   .hero-copy, .orbit { will-change: transform; }
   @media (prefers-reduced-motion: reduce) { @supports (animation-timeline: view()) { .card, .tcard, .skb, .sec-head, .diagram { animation: none !important; } } }
+  /* ---- Project spec sheet ---- */
+  .specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+  @media (max-width: 760px) { .specs { grid-template-columns: minmax(0, 1fr); } }
+  .spec { padding: 24px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
+  .spec header { display: grid; gap: 6px; margin-bottom: 14px; }
+  .spec h3 { font-size: 1.2rem; }
+  .spec dl { display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr); gap: 8px 14px; margin: 0; }
+  .spec dt { font: 500 .72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .spec dd { margin: 0; font-size: .92rem; color: var(--ink); }
+  @media (max-width: 420px) { .spec dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } .spec dt { margin-top: 8px; } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1665,6 +1675,32 @@
         </div>
         <figcaption><b>How a health AI product gets built.</b> Safety guardrails come before the prototype, not after, and every product is tested before launch.</figcaption>
       </figure>
+      <div class="specs reveal" aria-label="Project details">
+        <article class="spec">
+          <header><span class="kicker">App · in progress</span><h3>Polo</h3></header>
+          <dl><dt>What it is</dt><dd>A health AI app for structured wellness workflows.</dd>
+          <dt>Built for</dt><dd>Safety first: clinical safety guardrails are part of the design.</dd>
+          <dt>Stage</dt><dd>Product design and build</dd></dl>
+        </article>
+        <article class="spec">
+          <header><span class="kicker">Discord bot · live</span><h3>Nova 3.0 Ultimate</h3></header>
+          <dl><dt>What it is</dt><dd>A multi-purpose Python bot for live communities.</dd>
+          <dt>Features</dt><dd>Verification views, leveling, anti-spam and AFK tracking.</dd>
+          <dt>Stage</dt><dd>Running in live servers</dd></dl>
+        </article>
+        <article class="spec">
+          <header><span class="kicker">Website · prototype</span><h3>Apex Sports Hub</h3></header>
+          <dl><dt>What it is</dt><dd>A sports web app prototype.</dd>
+          <dt>Built with</dt><dd>AI-assisted builders, shipped as a fast web prototype.</dd>
+          <dt>Stage</dt><dd>Prototype</dd></dl>
+        </article>
+        <article class="spec">
+          <header><span class="kicker">Website · live</span><h3>This portfolio</h3></header>
+          <dl><dt>What it is</dt><dd>This site: one page with search, diagrams and a contact flow.</dd>
+          <dt>Hosting</dt><dd>Static site on Render, updated straight from GitHub.</dd>
+          <dt>Stage</dt><dd>Live</dd></dl>
+        </article>
+      </div>
     </div>
   </section>
 
