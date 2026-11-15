@@ -582,6 +582,57 @@
   .sbox:nth-child(even) .dhead code { color: var(--nebula); background: color-mix(in srgb, var(--nebula) 12%, transparent); }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chips span { font-size: 0.8rem; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+  /* ---- Skill diagrams ---- */
+  .tree { padding: 28px 22px 20px; }
+  .hub-node { display: flex; align-items: center; gap: 12px; width: max-content; max-width: 100%; margin: 0 auto; padding: 12px 20px 12px 14px; border-radius: 16px;
+    background: var(--star-soft); border: 1.5px solid var(--star); box-shadow: 0 0 24px var(--star-soft); position: relative; z-index: 1; }
+  .hub-node .dc { width: 34px; height: 34px; color: var(--star); flex: none; }
+  .hub-node b { display: block; font: 700 1.2rem var(--font-display); }
+  .hub-node span { font-size: 0.8rem; color: var(--muted); }
+  .hub-node.alt { background: color-mix(in srgb, var(--nebula) 10%, transparent); border-color: var(--nebula); box-shadow: 0 0 24px color-mix(in srgb, var(--nebula) 15%, transparent); margin: 0; }
+  .branches { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-top: 34px; margin-top: 0; }
+  .branches::before { content: ""; position: absolute; top: 0; left: 50%; width: 2px; height: 17px; margin-left: -1px; background: var(--line); }
+  .branches::after { content: ""; position: absolute; top: 17px; left: calc(100% / 6); right: calc(100% / 6); height: 2px;
+    background: linear-gradient(90deg, var(--star), var(--danger), var(--nebula)); opacity: .7; }
+  .br { position: relative; min-width: 0; --c: var(--star); }
+  .br-sec { --c: var(--danger); } .br-bots { --c: var(--nebula); }
+  .br::before { content: ""; position: absolute; top: -17px; left: 50%; width: 2px; height: 17px; margin-left: -1px; background: var(--c); opacity: .7; }
+  .node { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1.5px solid var(--c, var(--line)); }
+  .node code { flex: none; font: 600 0.66rem var(--font-mono); padding: 6px 7px; border-radius: 8px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+  .node h4 { margin: 0; font: 600 1rem var(--font-display); }
+  .node span { font-size: 0.78rem; color: var(--muted); }
+  .leaves { list-style: none; margin: 0 0 0 22px; padding: 10px 0 0; position: relative; display: grid; gap: 8px; }
+  .leaves::before { content: ""; position: absolute; left: 0; top: 0; bottom: 18px; width: 2px; background: var(--c); opacity: .45; }
+  .leaves li { position: relative; padding-left: 18px; }
+  .leaves li::before { content: ""; position: absolute; left: 0; top: 50%; width: 14px; height: 2px; background: var(--c); opacity: .45; }
+  .leaves li::after { content: ""; position: absolute; left: 12px; top: 50%; width: 6px; height: 6px; margin-top: -2px; border-radius: 50%; background: var(--c); }
+  .leaves li span { display: block; padding: 7px 12px 7px 14px; border-radius: 9px; background: var(--surface); border: 1px solid var(--line); font-size: 0.86rem; transition: border-color .15s, transform .15s; }
+  .leaves li:hover span { border-color: var(--c); transform: translateX(3px); }
+  .stack-node { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 18px; padding: 12px 14px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--danger) 50%, var(--line)); }
+  .stack-node span { font: 500 0.7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--danger); margin-right: 6px; }
+  .stack-node i { font-style: normal; font: 600 0.8rem var(--font-display); padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+  @media (max-width: 860px) {
+    .hub-node { margin: 0; }
+    .branches { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px 0 0 22px; }
+    .branches::before { left: 22px; top: 0; bottom: 30px; height: auto; margin: 0; }
+    .branches::after { display: none; }
+    .br::before { top: 24px; left: -21px; width: 21px; height: 2px; margin: 0; }
+  }
+  .htree { margin-top: 16px; padding: 24px 22px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 34px; align-items: center; }
+  .hrows { position: relative; display: grid; gap: 10px; padding-left: 26px; }
+  .hrows::before { content: ""; position: absolute; left: 0; top: 24px; bottom: 24px; width: 2px; background: var(--nebula); opacity: .5; }
+  .htree .hub-node.alt::after { content: ""; position: absolute; right: -36px; top: 50%; width: 36px; height: 2px; background: var(--nebula); opacity: .5; }
+  .hrow { position: relative; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 12px; align-items: center; --c: var(--nebula); }
+  .hrow:nth-child(odd) { --c: var(--star); }
+  .hrow::before { content: ""; position: absolute; left: -26px; top: 50%; width: 26px; height: 2px; background: var(--c); opacity: .6; }
+  .node.small { padding: 9px 12px; } .node.small h4 { font-size: 0.92rem; }
+  @media (max-width: 860px) {
+    .htree { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .htree .hub-node.alt::after { right: auto; left: 22px; top: 100%; width: 2px; height: 14px; }
+    .hrow { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .hrows { margin-left: 22px; padding-left: 20px; } .hrows::before { top: -14px; }
+    .hrow::before { left: -20px; width: 20px; top: 22px; }
+  }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -977,14 +1028,18 @@
       <div class="sec-head reveal">
         <span class="eyebrow">Skills</span>
         <h2>What I'm good at</h2>
-        <p>Discord first: that's where most of my work lives. Everything else is grouped into small boxes below.</p>
+        <p>Discord first: that's where most of my work lives. The second map shows everything else.</p>
       </div>
-      <article class="dbox reveal" data-skill-box="discord">
-        <div class="dbox-top"><span class="kicker">Main skill set</span><h3>Discord: moderation, security &amp; bots</h3></div>
-        <div class="dgrid"><div class="dcol" data-skill-box="mod"><div class="dhead"><code>MOD</code><div><h4>Moderation</h4><span>Keeping big servers healthy</span></div></div><ul><li>Large-scale moderation (90k)</li><li>Server administration</li><li>Staff leadership</li><li>Automod rule tuning</li><li>Case logs &amp; appeals</li></ul></div><div class="dcol" data-skill-box="sec"><div class="dhead"><code>SEC</code><div><h4>Security</h4><span>Stopping raids before they land</span></div></div><ul><li>Anti-nuke &amp; raid defense</li><li>Permission architecture</li><li>Vault Account isolation</li><li>Raid &amp; spam simulation</li><li>Bot testing in sandboxes</li></ul></div><div class="dcol" data-skill-box="bots"><div class="dhead"><code>BOT</code><div><h4>Bots I build</h4><span>Python, live in real servers</span></div></div><ul><li>Python</li><li>Discord bot development</li><li>Interactive button views</li><li>Leveling &amp; XP systems</li><li>Anti-spam &amp; AFK tracking</li></ul></div></div>
-        <div class="dbots"><span>Security stack I run</span><i>Wick</i><i>Bravers</i><i>Security Bot</i><i>Krypton</i><i>Dyno</i><i>Carl-bot</i><i>Sapphire</i><i>JailBot</i></div>
-      </article>
-      <div class="sgrid"><article class="sbox reveal" data-skill-box="lead"><div class="dhead"><code>LDR</code><h4>Community leadership</h4><b>5</b></div><div class="chips"><span>Founding communities</span><span>Multi-brand network</span><span>Governance frameworks</span><span>Mergers &amp; treaties</span><span>Partnerships</span></div></article><article class="sbox reveal" data-skill-box="ai"><div class="dhead"><code>AI</code><h4>AI product</h4><b>4</b></div><div class="chips"><span>Health AI product design</span><span>Wellness workflows</span><span>Clinical safety guardrails</span><span>AI-assisted prototyping</span></div></article><article class="sbox reveal" data-skill-box="tools"><div class="dhead"><code>TLS</code><h4>AI builder tools</h4><b>7</b></div><div class="chips"><span>Bolt.new</span><span>Lovable</span><span>Replit Agent</span><span>Base44</span><span>Manus.space</span><span>Google AI Studio</span><span>Claude Pro</span></div></article><article class="sbox reveal" data-skill-box="ops"><div class="dhead"><code>OPS</code><h4>Deploy &amp; monitor</h4><b>3</b></div><div class="chips"><span>Render deployments</span><span>UptimeRobot monitoring</span><span>Uptime &amp; latency alerts</span></div></article><article class="sbox reveal" data-skill-box="art"><div class="dhead"><code>ART</code><h4>Creative</h4><b>4</b></div><div class="chips"><span>Football highlight editing</span><span>Beat-synced cutting</span><span>Velocity curves</span><span>Original soundtracks</span></div></article><article class="sbox reveal" data-skill-box="game"><div class="dhead"><code>GMG</code><h4>Gaming</h4><b>4</b></div><div class="chips"><span>Minecraft SMP admin</span><span>Blox Fruits endgame</span><span>High-tier PvP &amp; Sea Events</span><span>Trading &amp; middleman</span></div></article></div>
+      <figure class="diagram tree reveal" data-skill-box="discord">
+        <div class="hub-node"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 5.3A17 17 0 0 0 15.8 4l-.5 1a15.7 15.7 0 0 0-4.6 0l-.5-1A17 17 0 0 0 4 5.3C1.4 9.2.7 13 1 16.8a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 10.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.2-3-11.5ZM8.7 14.5c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.6 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg><div><b>Discord</b><span>moderation · security · bots</span></div></div>
+        <div class="branches"><div class="br br-mod" data-skill-box="mod"><div class="node head"><code>MOD</code><div><h4>Moderation</h4><span>Keeping big servers healthy</span></div></div><ul class="leaves"><li><span>Large-scale moderation (90k)</span></li><li><span>Server administration</span></li><li><span>Staff leadership</span></li><li><span>Automod rule tuning</span></li><li><span>Case logs &amp; appeals</span></li></ul></div><div class="br br-sec" data-skill-box="sec"><div class="node head"><code>SEC</code><div><h4>Security</h4><span>Stopping raids before they land</span></div></div><ul class="leaves"><li><span>Anti-nuke &amp; raid defense</span></li><li><span>Permission architecture</span></li><li><span>Vault Account isolation</span></li><li><span>Raid &amp; spam simulation</span></li><li><span>Bot testing in sandboxes</span></li></ul></div><div class="br br-bots" data-skill-box="bots"><div class="node head"><code>BOT</code><div><h4>Bots I build</h4><span>Python, live in real servers</span></div></div><ul class="leaves"><li><span>Python</span></li><li><span>Discord bot development</span></li><li><span>Interactive button views</span></li><li><span>Leveling &amp; XP systems</span></li><li><span>Anti-spam &amp; AFK tracking</span></li></ul></div></div>
+        <div class="stack-node"><span>Security stack I run</span><i>Wick</i><i>Bravers</i><i>Security Bot</i><i>Krypton</i><i>Dyno</i><i>Carl-bot</i><i>Sapphire</i><i>JailBot</i></div>
+        <figcaption><b>My Discord skill map.</b> Three branches, one goal: big servers that stay safe and fun.</figcaption>
+      </figure>
+      <figure class="diagram htree reveal">
+        <div class="hub-node alt"><b>Beyond Discord</b><span>6 more areas</span></div>
+        <div class="hrows"><div class="hrow" data-skill-box="lead"><div class="node head small"><code>LDR</code><h4>Community leadership</h4></div><div class="chips"><span>Founding communities</span><span>Multi-brand network</span><span>Governance frameworks</span><span>Mergers &amp; treaties</span><span>Partnerships</span></div></div><div class="hrow" data-skill-box="ai"><div class="node head small"><code>AI</code><h4>AI product</h4></div><div class="chips"><span>Health AI product design</span><span>Wellness workflows</span><span>Clinical safety guardrails</span><span>AI-assisted prototyping</span></div></div><div class="hrow" data-skill-box="tools"><div class="node head small"><code>TLS</code><h4>AI builder tools</h4></div><div class="chips"><span>Bolt.new</span><span>Lovable</span><span>Replit Agent</span><span>Base44</span><span>Manus.space</span><span>Google AI Studio</span><span>Claude Pro</span></div></div><div class="hrow" data-skill-box="ops"><div class="node head small"><code>OPS</code><h4>Deploy &amp; monitor</h4></div><div class="chips"><span>Render deployments</span><span>UptimeRobot monitoring</span><span>Uptime &amp; latency alerts</span></div></div><div class="hrow" data-skill-box="art"><div class="node head small"><code>ART</code><h4>Creative</h4></div><div class="chips"><span>Football highlight editing</span><span>Beat-synced cutting</span><span>Velocity curves</span><span>Original soundtracks</span></div></div><div class="hrow" data-skill-box="game"><div class="node head small"><code>GMG</code><h4>Gaming</h4></div><div class="chips"><span>Minecraft SMP admin</span><span>Blox Fruits endgame</span><span>High-tier PvP &amp; Sea Events</span><span>Trading &amp; middleman</span></div></div></div>
+      </figure>
     </div>
   </section>
 
