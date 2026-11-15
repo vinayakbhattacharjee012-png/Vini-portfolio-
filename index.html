@@ -1512,6 +1512,21 @@
         <div class="flow-detail" aria-live="polite"></div>
         <div class="flow-ctrl"><button type="button" class="flow-play">Play the flow</button><span>or tap a step</span></div>
       </figure>
+      <figure class="diagram span reveal">
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 900 300" role="img" aria-label="Skill stack, bottom to top: Discord foundations, moderation and security, bots, testing, deployment and monitoring, then AI products on top.">
+            <rect class="node" x="60" y="232" width="780" height="46" rx="10" /><text class="t-title" x="450" y="260" text-anchor="middle">Discord foundations · servers, roles, permissions</text>
+            <rect class="node hot" x="60" y="186" width="780" height="40" rx="10" /><text class="t-title" x="450" y="211" text-anchor="middle">Moderation &amp; security · automod, anti-nuke, Vault Account</text>
+            <rect class="node cool" x="60" y="142" width="780" height="38" rx="10" /><text class="t-title" x="450" y="166" text-anchor="middle">Bots I build · Python, verification, leveling, anti-spam</text>
+            <rect class="node" x="60" y="100" width="780" height="36" rx="10" /><text class="t-title" x="450" y="123" text-anchor="middle">Testing · sandbox, attack simulation, pass / fail loop</text>
+            <rect class="node" x="60" y="60" width="780" height="34" rx="10" /><text class="t-title" x="450" y="82" text-anchor="middle">Deploy &amp; monitor · Render, UptimeRobot, live alerts</text>
+            <rect class="node hot" x="60" y="18" width="780" height="34" rx="10" /><text class="t-title" x="450" y="40" text-anchor="middle">AI products · Health AI design, web prototypes</text>
+            <path class="edge flow" d="M450,286 L450,262" marker-end="url(#arrST)" />
+            <defs><marker id="arrST" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker></defs>
+          </svg>
+        </div>
+        <figcaption><b>My skill stack.</b> Each layer rests on the one below it: AI products are only as safe as the testing and moderation under them.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -1675,6 +1690,25 @@
           <figcaption><b>How Nova 3.0 Ultimate handles a member.</b> Everyone passes the verification view first; after that the leveling, anti-spam and AFK modules run alongside each other.</figcaption>
         </figure>
       </div>
+      <figure class="diagram span reveal">
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 900 140" role="img" aria-label="Health AI product flow: idea, design, safety guardrails, prototype, test with real users, launch.">
+            <rect class="node" x="10" y="40" width="130" height="60" rx="10" /><text class="t-title" x="75" y="66" text-anchor="middle">Idea</text><text class="t-sub" x="75" y="84" text-anchor="middle">health problem</text>
+            <rect class="node" x="170" y="40" width="130" height="60" rx="10" /><text class="t-title" x="235" y="66" text-anchor="middle">Design</text><text class="t-sub" x="235" y="84" text-anchor="middle">wellness workflows</text>
+            <rect class="node hot" x="330" y="40" width="150" height="60" rx="10" /><text class="t-title" x="405" y="66" text-anchor="middle">Safety</text><text class="t-sub" x="405" y="84" text-anchor="middle">clinical guardrails</text>
+            <rect class="node" x="510" y="40" width="130" height="60" rx="10" /><text class="t-title" x="575" y="66" text-anchor="middle">Prototype</text><text class="t-sub" x="575" y="84" text-anchor="middle">AI-built, fast</text>
+            <rect class="node cool" x="670" y="40" width="110" height="60" rx="10" /><text class="t-title" x="725" y="66" text-anchor="middle">Test</text><text class="t-sub" x="725" y="84" text-anchor="middle">real users</text>
+            <rect class="node hot" x="810" y="40" width="80" height="60" rx="10" /><text class="t-title" x="850" y="66" text-anchor="middle">Launch</text>
+            <line class="edge flow" x1="140" y1="70" x2="166" y2="70" marker-end="url(#arrHA)" />
+            <line class="edge flow" x1="300" y1="70" x2="326" y2="70" marker-end="url(#arrHA)" />
+            <line class="edge flow teal" x1="480" y1="70" x2="506" y2="70" marker-end="url(#arrHA)" />
+            <line class="edge flow" x1="640" y1="70" x2="666" y2="70" marker-end="url(#arrHA)" />
+            <line class="edge flow teal" x1="780" y1="70" x2="806" y2="70" marker-end="url(#arrHA)" />
+            <defs><marker id="arrHA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker></defs>
+          </svg>
+        </div>
+        <figcaption><b>How a health AI product gets built.</b> Safety guardrails come before the prototype, not after, and every product is tested before launch.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -2485,7 +2519,7 @@
     var oEl = document.querySelector(".orbit"), hcEl = document.querySelector(".hero-copy"), sTick = false;
     function parallax() {
       var y = Math.min(scrollY, 900);
-      if (oEl) oEl.style.transform = "translateY(" + (y * .12) + "px) rotate(" + (y * .04) + "deg)";
+      if (oEl) oEl.style.transform = "translateY(" + (y * .12) + "px)";
       if (hcEl) hcEl.style.transform = "translateY(" + (y * -.06) + "px)";
       sTick = false;
     }
