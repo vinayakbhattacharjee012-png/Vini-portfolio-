@@ -146,7 +146,8 @@
   .menu-btn .x { display: none; }
   nav.open .menu-btn .bars { display: none; } nav.open .menu-btn .x { display: block; }
   .nav-right { display: flex; align-items: center; gap: 10px; }
-  @media (max-width: 1060px) {
+  .nav-links a { white-space: nowrap; }
+  @media (max-width: 1180px) {
     .menu-btn { display: grid; }
     .nav-links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0;
       padding: 8px max(16px, env(safe-area-inset-left, 0px)) 16px; background: var(--bg); border-bottom: 1px solid var(--line);
@@ -550,6 +551,37 @@
   .fact { padding: 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); min-width: 0; }
   .fact span { display: block; font: 500 0.7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--star); margin-bottom: 4px; }
   .fact b { font: 600 0.95rem/1.3 var(--font-display); }
+  .dbox { position: relative; padding: 24px; border-radius: 18px; background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--star) 45%, var(--line)); box-shadow: 0 0 0 4px var(--star-soft); margin-bottom: 16px; }
+  .dbox-top { display: grid; gap: 6px; margin-bottom: 18px; }
+  .dbox-top h3 { font-size: clamp(1.2rem, 2.4vw, 1.5rem); letter-spacing: -.02em; }
+  .dgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; position: relative; }
+  @media (max-width: 860px) { .dgrid { grid-template-columns: minmax(0, 1fr); } }
+  .dcol { padding: 16px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); min-width: 0; transition: border-color .2s, transform .2s; }
+  .dcol:hover { border-color: var(--star); transform: translateY(-2px); }
+  .dhead { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .dhead code { flex: none; font: 600 0.66rem var(--font-mono); padding: 6px 7px; border-radius: 8px; color: var(--star); background: var(--star-soft); }
+  .dcol:nth-child(2) .dhead code { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); }
+  .dcol:nth-child(3) .dhead code { color: var(--nebula); background: color-mix(in srgb, var(--nebula) 12%, transparent); }
+  .dhead h4 { margin: 0; font: 600 1rem var(--font-display); }
+  .dhead span { font-size: 0.78rem; color: var(--muted); }
+  .dcol ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  .dcol li { display: flex; gap: 8px; align-items: baseline; font-size: 0.9rem; }
+  .dcol li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--star); transform: translateY(-1px); }
+  .dcol:nth-child(2) li::before { background: var(--danger); } .dcol:nth-child(3) li::before { background: var(--nebula); }
+  .dbots { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+  .dbots span { font: 500 0.7rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 6px; }
+  .dbots i { font-style: normal; font: 600 0.8rem var(--font-display); padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+  .sgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .sgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .sgrid { grid-template-columns: minmax(0, 1fr); } }
+  .sbox { padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); min-width: 0; transition: border-color .2s, transform .2s; }
+  .sbox:hover { border-color: var(--nebula); transform: translateY(-2px); }
+  .sbox .dhead { margin-bottom: 10px; } .sbox .dhead h4 { flex: 1; }
+  .sbox .dhead b { font: 600 0.75rem var(--font-mono); color: var(--muted); }
+  .sbox:nth-child(even) .dhead code { color: var(--nebula); background: color-mix(in srgb, var(--nebula) 12%, transparent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { font-size: 0.8rem; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -615,7 +647,7 @@
   .search-btn:hover { color: var(--ink); border-color: var(--star); }
   .search-btn svg { width: 16px; height: 16px; flex: none; }
   .search-btn kbd { font: 500 0.7rem var(--font-mono); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; color: var(--star); }
-  @media (max-width: 1240px) { .search-btn .lbl, .search-btn kbd { display: none; } .search-btn { width: 38px; padding: 0; justify-content: center; } }
+  @media (max-width: 1440px) { .search-btn .lbl, .search-btn kbd { display: none; } .search-btn { width: 38px; padding: 0; justify-content: center; } }
   .search { position: fixed; inset: 0; z-index: 30; display: grid; justify-items: center; align-items: start;
     padding: calc(10vh + env(safe-area-inset-top, 0px)) 16px 16px; background: rgba(4, 6, 16, .55);
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
@@ -821,7 +853,7 @@
     html.loading body { overflow: auto; }
   }
 </style>
-<script>document.documentElement.classList.add("loading");</script>
+<script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
 </head>
 <body>
 <div class="loader" id="loader" role="status" aria-label="Loading Vini's portfolio"><div class="curtain top"></div><div class="curtain bot"></div><div class="loader-count" aria-hidden="true"><b id="loaderPct" style="--p:0%">0</b><i>%</i></div><div class="loader-sparks" aria-hidden="true"><i style="left:8%;--d:3.4s;--dl:0.2s;--dx:20px"></i><i style="left:17%;--d:2.8s;--dl:1.1s;--dx:-15px"></i><i style="left:26%;--d:3.8s;--dl:0.6s;--dx:30px"></i><i style="left:35%;--d:3.1s;--dl:1.6s;--dx:-25px"></i><i style="left:44%;--d:2.6s;--dl:0.3s;--dx:10px"></i><i style="left:53%;--d:3.5s;--dl:1.2s;--dx:-10px"></i><i style="left:62%;--d:2.9s;--dl:0.8s;--dx:25px"></i><i style="left:71%;--d:3.7s;--dl:0.1s;--dx:-30px"></i><i style="left:80%;--d:3.0s;--dl:1.4s;--dx:15px"></i><i style="left:89%;--d:3.3s;--dl:0.5s;--dx:-20px"></i><i style="left:48%;--d:2.7s;--dl:2.0s;--dx:0px"></i><i style="left:22%;--d:3.2s;--dl:2.2s;--dx:12px"></i></div><canvas id="meteors" aria-hidden="true"></canvas><div class="loader-bg" aria-hidden="true"><div class="sweep"></div><div class="rays"></div><div class="warp"></div></div><div class="loader-inner"><div class="logo-halo" aria-hidden="true"></div><div class="loader-glow" aria-hidden="true"><b></b><i></i><i></i><i></i></div><svg class="logo " viewBox="0 0 64 64" aria-hidden="true" focusable="false"><defs><linearGradient id="lgL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color: var(--star)"/><stop offset="1" style="stop-color: var(--nebula)"/></linearGradient></defs><path class="lg-ring" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="url(#lgL)" stroke-width="2.6" stroke-linecap="round"/><path class="lg-comet" d="M41.58,5.69 A28,28 0 1,0 53.45,14.0" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path class="lg-v" d="M19,21 L32,45 L45,21" fill="none" stroke="url(#lgL)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path class="lg-star" d="M48,2.5 Q48.9,8.1 54.5,9 Q48.9,9.9 48,15.5 Q47.1,9.9 41.5,9 Q47.1,8.1 48,2.5Z" style="fill: var(--star)"/><g class="lg-orbit"><circle cx="32" cy="4" r="2.2" style="fill: var(--nebula)"/></g></svg><div class="loader-greet" id="loaderGreet">Welcome to the <b>Galaxy</b></div><div class="loader-word" aria-hidden="true"><span>V</span><span>I</span><span>N</span><span>I</span></div><div class="loader-tag" aria-hidden="true">Builder · Founder · Creator</div><div class="loader-bar" aria-hidden="true"><i id="loaderBar"></i></div></div></div>
@@ -834,13 +866,13 @@
     <div class="nav-right">
     <div class="nav-links" id="navLinks">
       <a href="#about">About</a>
-      <a href="#ai">AI &amp; Software</a>
+      <a href="#skills">Skills</a>
       <a href="#community">Community</a>
       <a href="#security">Security</a>
+      <a href="#process">How I work</a>
+      <a href="#ai">AI &amp; Software</a>
       <a href="#creative">Creative</a>
       <a href="#gaming">Gaming</a>
-      <a href="#process">How I work</a>
-      <a href="#skills">Skills</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
     </div>
@@ -939,134 +971,20 @@
     </div>
   </section>
 
-  <!-- AI & SOFTWARE -->
-  <section id="ai">
+  <!-- SKILLS -->
+  <section id="skills">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">AI &amp; software development</span>
-        <h2>Products, bots and prototypes</h2>
-        <p>From a health AI app with safety guardrails to a Discord bot running in live communities.</p>
+        <span class="eyebrow">Skills</span>
+        <h2>What I'm good at</h2>
+        <p>Discord first: that's where most of my work lives. Everything else is grouped into small boxes below.</p>
       </div>
-      <div class="grid">
-        <article class="card reveal">
-          <span class="kicker">Product · in progress</span>
-          <h3>Polo, a health AI app</h3>
-          <p>Designing and building Polo, a health AI application focused on structured wellness workflows and clinical safety guardrails.</p>
-          <div class="pills"><span class="pill">Wellness workflows</span><span class="pill">Safety guardrails</span><span class="pill">Product design</span></div>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Python · live</span>
-          <h3>Nova 3.0 Ultimate</h3>
-          <p>A multi-purpose Python Discord bot running across live communities.</p>
-          <ul>
-            <li>Interactive verification views</li>
-            <li>Leveling progression</li>
-            <li>Anti-spam protection</li>
-            <li>AFK tracking</li>
-          </ul>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Web</span>
-          <h3>Full-stack AI prototyping</h3>
-          <p>Shipping rapid web prototypes and UI architectures, including <strong>Apex Sports Hub</strong>.</p>
-          <div class="pills">
-            <span class="pill">Bolt.new</span><span class="pill">Manus.space</span><span class="pill">Base44</span>
-            <span class="pill">Lovable</span><span class="pill">Replit Agent</span><span class="pill">Google AI Studio</span><span class="pill">Claude Pro</span>
-          </div>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Ops</span>
-          <h3>Deployment &amp; monitoring</h3>
-          <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
-          <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
-        </article>
-
-        <article class="card terminal reveal" style="grid-column: 1 / -1;">
-          <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
-          <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
-        </article>
-
-        <figure class="diagram span reveal">
-          <div class="diagram-scroll">
-            <svg viewBox="0 0 780 210" role="img" aria-label="Shipping loop: prototype with AI builders, deploy on Render, monitor with UptimeRobot, get alerts on downtime or latency, then fix and redeploy.">
-              <defs>
-                <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
-                <marker id="arrAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
-              </defs>
-              <rect class="node hot" x="10" y="40" width="160" height="66" rx="10" />
-              <text class="t-title" x="90" y="68" text-anchor="middle">Prototype</text>
-              <text class="t-sub" x="90" y="88" text-anchor="middle">Bolt · Lovable · Replit</text>
-
-              <rect class="node" x="210" y="40" width="160" height="66" rx="10" />
-              <text class="t-title" x="290" y="68" text-anchor="middle">Deploy</text>
-              <text class="t-sub" x="290" y="88" text-anchor="middle">Render</text>
-
-              <rect class="node cool" x="410" y="40" width="160" height="66" rx="10" />
-              <text class="t-title" x="490" y="68" text-anchor="middle">Monitor</text>
-              <text class="t-sub" x="490" y="88" text-anchor="middle">UptimeRobot checks</text>
-
-              <rect class="node" x="610" y="40" width="160" height="66" rx="10" />
-              <text class="t-title" x="690" y="68" text-anchor="middle">Alert</text>
-              <text class="t-sub" x="690" y="88" text-anchor="middle">downtime · latency</text>
-
-              <line class="edge flow" x1="170" y1="73" x2="206" y2="73" marker-end="url(#arrAh)" />
-              <text class="t-edge" x="190" y="30" text-anchor="middle">ship</text>
-              <line class="edge flow teal" x1="370" y1="73" x2="406" y2="73" marker-end="url(#arrA)" />
-              <text class="t-edge" x="390" y="30" text-anchor="middle">live</text>
-              <line class="edge flow" x1="570" y1="73" x2="606" y2="73" marker-end="url(#arrAh)" />
-              <text class="t-edge" x="590" y="30" text-anchor="middle">issue</text>
-
-              <path class="edge flow" d="M690,106 C690,190 90,190 90,110" marker-end="url(#arrAh)" />
-              <text class="t-edge" x="390" y="178" text-anchor="middle">fix &amp; redeploy</text>
-            </svg>
-          </div>
-          <figcaption><b>The shipping loop.</b> Prototypes go live on Render, UptimeRobot watches uptime and latency, and alerts feed straight back into the next fix.</figcaption>
-        </figure>
-
-        <figure class="diagram span reveal">
-          <div class="diagram-scroll">
-            <svg viewBox="0 0 780 250" role="img" aria-label="Nova 3.0 Ultimate flow: a new member joins, passes an interactive verification view, then the leveling, anti-spam and AFK modules run for verified members.">
-              <defs>
-                <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
-                <marker id="arrBh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
-              </defs>
-              <rect class="node" x="10" y="92" width="140" height="66" rx="10" />
-              <text class="t-title" x="80" y="120" text-anchor="middle">New member</text>
-              <text class="t-sub" x="80" y="140" text-anchor="middle">joins the server</text>
-
-              <rect class="node hot" x="210" y="92" width="170" height="66" rx="10" />
-              <text class="t-title" x="295" y="120" text-anchor="middle">Verification view</text>
-              <text class="t-sub" x="295" y="140" text-anchor="middle">interactive button</text>
-
-              <line class="edge flow" x1="150" y1="125" x2="206" y2="125" marker-end="url(#arrBh)" />
-              <text class="t-edge" x="178" y="114" text-anchor="middle">joins</text>
-
-              <rect class="node cool" x="460" y="12" width="160" height="58" rx="10" />
-              <text class="t-title" x="540" y="37" text-anchor="middle">Leveling</text>
-              <text class="t-sub" x="540" y="55" text-anchor="middle">progression for activity</text>
-
-              <rect class="node cool" x="460" y="96" width="160" height="58" rx="10" />
-              <text class="t-title" x="540" y="121" text-anchor="middle">Anti-spam</text>
-              <text class="t-sub" x="540" y="139" text-anchor="middle">stops message floods</text>
-
-              <rect class="node cool" x="460" y="180" width="160" height="58" rx="10" />
-              <text class="t-title" x="540" y="205" text-anchor="middle">AFK tracking</text>
-              <text class="t-sub" x="540" y="223" text-anchor="middle">away status for members</text>
-
-              <path class="edge flow teal" d="M380,125 C420,125 420,41 456,41" marker-end="url(#arrB)" />
-              <line class="edge flow teal" x1="380" y1="125" x2="456" y2="125" marker-end="url(#arrB)" />
-              <path class="edge flow teal" d="M380,125 C420,125 420,209 456,209" marker-end="url(#arrB)" />
-              <text class="t-edge" x="420" y="88" text-anchor="middle">verified</text>
-
-              <text class="t-edge" x="700" y="45" text-anchor="middle">Nova 3.0</text>
-              <text class="t-edge" x="700" y="129" text-anchor="middle">Ultimate</text>
-              <text class="t-edge" x="700" y="213" text-anchor="middle">modules</text>
-              <line class="edge dashed" x1="640" y1="20" x2="640" y2="230" />
-            </svg>
-          </div>
-          <figcaption><b>How Nova 3.0 Ultimate handles a member.</b> Everyone passes the verification view first; after that the leveling, anti-spam and AFK modules run alongside each other.</figcaption>
-        </figure>
-      </div>
+      <article class="dbox reveal" data-skill-box="discord">
+        <div class="dbox-top"><span class="kicker">Main skill set</span><h3>Discord: moderation, security &amp; bots</h3></div>
+        <div class="dgrid"><div class="dcol" data-skill-box="mod"><div class="dhead"><code>MOD</code><div><h4>Moderation</h4><span>Keeping big servers healthy</span></div></div><ul><li>Large-scale moderation (90k)</li><li>Server administration</li><li>Staff leadership</li><li>Automod rule tuning</li><li>Case logs &amp; appeals</li></ul></div><div class="dcol" data-skill-box="sec"><div class="dhead"><code>SEC</code><div><h4>Security</h4><span>Stopping raids before they land</span></div></div><ul><li>Anti-nuke &amp; raid defense</li><li>Permission architecture</li><li>Vault Account isolation</li><li>Raid &amp; spam simulation</li><li>Bot testing in sandboxes</li></ul></div><div class="dcol" data-skill-box="bots"><div class="dhead"><code>BOT</code><div><h4>Bots I build</h4><span>Python, live in real servers</span></div></div><ul><li>Python</li><li>Discord bot development</li><li>Interactive button views</li><li>Leveling &amp; XP systems</li><li>Anti-spam &amp; AFK tracking</li></ul></div></div>
+        <div class="dbots"><span>Security stack I run</span><i>Wick</i><i>Bravers</i><i>Security Bot</i><i>Krypton</i><i>Dyno</i><i>Carl-bot</i><i>Sapphire</i><i>JailBot</i></div>
+      </article>
+      <div class="sgrid"><article class="sbox reveal" data-skill-box="lead"><div class="dhead"><code>LDR</code><h4>Community leadership</h4><b>5</b></div><div class="chips"><span>Founding communities</span><span>Multi-brand network</span><span>Governance frameworks</span><span>Mergers &amp; treaties</span><span>Partnerships</span></div></article><article class="sbox reveal" data-skill-box="ai"><div class="dhead"><code>AI</code><h4>AI product</h4><b>4</b></div><div class="chips"><span>Health AI product design</span><span>Wellness workflows</span><span>Clinical safety guardrails</span><span>AI-assisted prototyping</span></div></article><article class="sbox reveal" data-skill-box="tools"><div class="dhead"><code>TLS</code><h4>AI builder tools</h4><b>7</b></div><div class="chips"><span>Bolt.new</span><span>Lovable</span><span>Replit Agent</span><span>Base44</span><span>Manus.space</span><span>Google AI Studio</span><span>Claude Pro</span></div></article><article class="sbox reveal" data-skill-box="ops"><div class="dhead"><code>OPS</code><h4>Deploy &amp; monitor</h4><b>3</b></div><div class="chips"><span>Render deployments</span><span>UptimeRobot monitoring</span><span>Uptime &amp; latency alerts</span></div></article><article class="sbox reveal" data-skill-box="art"><div class="dhead"><code>ART</code><h4>Creative</h4><b>4</b></div><div class="chips"><span>Football highlight editing</span><span>Beat-synced cutting</span><span>Velocity curves</span><span>Original soundtracks</span></div></article><article class="sbox reveal" data-skill-box="game"><div class="dhead"><code>GMG</code><h4>Gaming</h4><b>4</b></div><div class="chips"><span>Minecraft SMP admin</span><span>Blox Fruits endgame</span><span>High-tier PvP &amp; Sea Events</span><span>Trading &amp; middleman</span></div></article></div>
     </div>
   </section>
 
@@ -1217,105 +1135,6 @@
     </div>
   </section>
 
-  <!-- CREATIVE -->
-  <section id="creative">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Creative production</span>
-        <h2>Football edits with original sound</h2>
-        <p>European football and La Liga highlights, cut to the beat and scored with my own music.</p>
-      </div>
-      <div class="grid">
-        <article class="card reveal">
-          <span class="kicker">Video</span>
-          <h3>Football video editing</h3>
-          <p>European football and La Liga highlight edits. I source raw match footage and sync cuts to beat drops and velocity curves.</p>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Audio</span>
-          <h3>Original soundtracks</h3>
-          <p>Custom background scores and audio tracks for my edits, produced with Google Flow Music Premium.</p>
-          <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        </article>
-
-        <figure class="diagram span reveal" id="beat">
-          <div class="beat-head"><span class="kicker">Edit timeline · illustration</span><span class="beat-time mono" id="beatTime">00:00.0</span></div>
-          <div class="track" id="track"><div class="wave" id="wave"></div><div class="playhead" id="playhead"></div></div>
-          <div class="clips" id="clips"></div>
-          <figcaption><b>Cutting on the beat.</b> Each gold marker is a beat drop, and the clip changes the moment the playhead crosses it.</figcaption>
-        </figure>
-
-        <figure class="diagram span reveal">
-          <div class="diagram-scroll">
-            <svg viewBox="0 0 800 130" role="img" aria-label="Edit pipeline: raw match footage, cut on beat drops, velocity curves, original score from Google Flow Music, finished highlight edit.">
-              <defs>
-                <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
-              </defs>
-              <rect class="node" x="10" y="30" width="135" height="66" rx="10" />
-              <text class="t-title" x="77" y="58" text-anchor="middle">Raw footage</text>
-              <text class="t-sub" x="77" y="78" text-anchor="middle">match sources</text>
-
-              <rect class="node" x="173" y="30" width="135" height="66" rx="10" />
-              <text class="t-title" x="240" y="58" text-anchor="middle">Beat cuts</text>
-              <text class="t-sub" x="240" y="78" text-anchor="middle">synced to drops</text>
-
-              <rect class="node" x="336" y="30" width="135" height="66" rx="10" />
-              <text class="t-title" x="403" y="58" text-anchor="middle">Velocity</text>
-              <text class="t-sub" x="403" y="78" text-anchor="middle">speed curves</text>
-
-              <rect class="node cool" x="499" y="30" width="135" height="66" rx="10" />
-              <text class="t-title" x="566" y="58" text-anchor="middle">Original score</text>
-              <text class="t-sub" x="566" y="78" text-anchor="middle">Google Flow Music</text>
-
-              <rect class="node hot" x="662" y="30" width="128" height="66" rx="10" />
-              <text class="t-title" x="726" y="58" text-anchor="middle">Highlight</text>
-              <text class="t-sub" x="726" y="78" text-anchor="middle">La Liga · Europe</text>
-
-              <line class="edge flow" x1="145" y1="63" x2="169" y2="63" marker-end="url(#arrE)" />
-              <line class="edge flow" x1="308" y1="63" x2="332" y2="63" marker-end="url(#arrE)" />
-              <line class="edge flow" x1="471" y1="63" x2="495" y2="63" marker-end="url(#arrE)" />
-              <line class="edge flow" x1="634" y1="63" x2="658" y2="63" marker-end="url(#arrE)" />
-            </svg>
-          </div>
-          <figcaption><b>From raw footage to a finished edit.</b> Every cut lands on the music, and the music is written for the edit.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <!-- GAMING -->
-  <section id="gaming">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Gaming operations</span>
-        <h2>Servers and endgame play</h2>
-        <p>Running multiplayer servers and playing Blox Fruits at the highest level.</p>
-      </div>
-      <div class="grid">
-        <article class="card reveal">
-          <span class="kicker">Minecraft</span>
-          <h3>SMP server administration</h3>
-          <p>Set up and managed cross-platform (PC and mobile) Survival Multiplayer community servers.</p>
-          <div class="pills"><span class="pill">PC &amp; mobile players</span><span class="pill">Community SMP</span></div>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Roblox · Blox Fruits</span>
-          <h3>Endgame operations</h3>
-          <p>Max-level (2800) veteran running several endgame accounts. Active in high-tier PvP, Sea Events and structured item trading and middleman work.</p>
-          <div class="inventory">
-            <div class="slot" style="--i:0"><b>Human V4</b><span>maxed</span></div>
-            <div class="slot" style="--i:1"><b>Cursed Dual Katana</b><span>owned</span></div>
-            <div class="slot" style="--i:2"><b>Soul Guitar</b><span>owned</span></div>
-            <div class="slot" style="--i:3"><b>Shark Anchor</b><span>owned</span></div>
-            <div class="slot" style="--i:4"><b>Spiky Trident</b><span>owned</span></div>
-            <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
-            <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
-          </div>
-          <div class="pay"><span>Trades &amp; middleman deals in</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
-        </article>
-      </div>
-    </div>
-  </section>
   <!-- PROCESS -->
   <section id="process">
     <div class="wrap">
@@ -1470,28 +1289,236 @@
     </div>
   </section>
 
-  <!-- SKILLS -->
-  <section id="skills">
+  <!-- AI & SOFTWARE -->
+  <section id="ai">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="eyebrow">Skills</span>
-        <h2>My skills</h2>
-        <p>59 skills across 8 areas. Tap a star in the constellation or a filter to explore one area; bigger stars hold more skills.</p>
+        <span class="eyebrow">AI &amp; software development</span>
+        <h2>Products, bots and prototypes</h2>
+        <p>From a health AI app with safety guardrails to a Discord bot running in live communities.</p>
       </div>
-      <div class="skill-wrap">
-        <figure class="diagram constellation reveal" id="constellation">
-          <svg id="cSvg" viewBox="0 0 520 520" role="img" aria-label="Skill constellation: eight skill areas around Vini, sized by number of skills."><polygon points="260.0,80.0 380.2,129.8 430.0,250.0 380.2,370.2 260.0,420.0 139.8,370.2 90.0,250.0 139.8,129.8" class="edge dashed"></polygon><line x1="260" y1="250" x2="260.0" y2="80.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="129.8" class="edge flow"></line><line x1="260" y1="250" x2="430.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="260.0" y2="420.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="90.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="129.8" class="edge flow"></line><circle cx="260" cy="250" r="44" style="fill: var(--surface)"></circle><circle cx="260" cy="250" r="44" class="hub"></circle><text x="260" y="248" text-anchor="middle" class="t-title">Vini</text><text x="260" y="266" text-anchor="middle" class="t-sub">59 skills</text><g class="cnode" tabindex="0" role="button" aria-label="AI product, 5 skills"><circle cx="260.0" cy="80.0" r="30" class="halo"></circle><circle cx="260.0" cy="80.0" r="24" style="fill: var(--surface)"></circle><circle cx="260.0" cy="80.0" r="24" class="dot"></circle><text x="260.0" y="82.0" text-anchor="middle" class="num">5</text><text x="260.0" y="95.0" text-anchor="middle" class="code">AI</text><text x="260.0" y="47.0" text-anchor="middle" class="lbl">AI product</text></g><g class="cnode" tabindex="0" role="button" aria-label="Engineering, 7 skills"><circle cx="380.2" cy="129.8" r="32.8" class="halo"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" class="dot"></circle><text x="380.2" y="131.8" text-anchor="middle" class="num">7</text><text x="380.2" y="144.8" text-anchor="middle" class="code">DEV</text><text x="380.2" y="94.0" text-anchor="middle" class="lbl">Engineering</text></g><g class="cnode" tabindex="0" role="button" aria-label="AI builder tools, 7 skills"><circle cx="430.0" cy="250.0" r="32.8" class="halo"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" class="dot"></circle><text x="430.0" y="252.0" text-anchor="middle" class="num">7</text><text x="430.0" y="265.0" text-anchor="middle" class="code">TLS</text><text x="430.0" y="292.8" text-anchor="middle" class="lbl">AI builder tools</text></g><g class="cnode" tabindex="0" role="button" aria-label="Deploy &amp; monitor, 5 skills"><circle cx="380.2" cy="370.2" r="30" class="halo"></circle><circle cx="380.2" cy="370.2" r="24" style="fill: var(--surface)"></circle><circle cx="380.2" cy="370.2" r="24" class="dot"></circle><text x="380.2" y="372.2" text-anchor="middle" class="num">5</text><text x="380.2" y="385.2" text-anchor="middle" class="code">OPS</text><text x="380.2" y="410.2" text-anchor="middle" class="lbl">Deploy &amp; monitor</text></g><g class="cnode" tabindex="0" role="button" aria-label="Leadership, 6 skills"><circle cx="260.0" cy="420.0" r="31.4" class="halo"></circle><circle cx="260.0" cy="420.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="260.0" cy="420.0" r="25.4" class="dot"></circle><text x="260.0" y="422.0" text-anchor="middle" class="num">6</text><text x="260.0" y="435.0" text-anchor="middle" class="code">LDR</text><text x="260.0" y="461.4" text-anchor="middle" class="lbl">Leadership</text></g><g class="cnode" tabindex="0" role="button" aria-label="Moderation &amp; security, 17 skills"><circle cx="139.8" cy="370.2" r="46.8" class="halo"></circle><circle cx="139.8" cy="370.2" r="40.8" style="fill: var(--surface)"></circle><circle cx="139.8" cy="370.2" r="40.8" class="dot"></circle><text x="139.8" y="372.2" text-anchor="middle" class="num">17</text><text x="139.8" y="385.2" text-anchor="middle" class="code">SEC</text><text x="139.8" y="427.0" text-anchor="middle" class="lbl">Moderation &amp; security</text></g><g class="cnode" tabindex="0" role="button" aria-label="Creative, 6 skills"><circle cx="90.0" cy="250.0" r="31.4" class="halo"></circle><circle cx="90.0" cy="250.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="90.0" cy="250.0" r="25.4" class="dot"></circle><text x="90.0" y="252.0" text-anchor="middle" class="num">6</text><text x="90.0" y="265.0" text-anchor="middle" class="code">ART</text><text x="90.0" y="291.4" text-anchor="middle" class="lbl">Creative</text></g><g class="cnode" tabindex="0" role="button" aria-label="Gaming, 6 skills"><circle cx="139.8" cy="129.8" r="31.4" class="halo"></circle><circle cx="139.8" cy="129.8" r="25.4" style="fill: var(--surface)"></circle><circle cx="139.8" cy="129.8" r="25.4" class="dot"></circle><text x="139.8" y="131.8" text-anchor="middle" class="num">6</text><text x="139.8" y="144.8" text-anchor="middle" class="code">GMG</text><text x="139.8" y="95.4" text-anchor="middle" class="lbl">Gaming</text></g></svg>
-          <figcaption><b>Skill constellation.</b> Moderation &amp; security has the most skills, 17, from the layered bot setup and how I test it.</figcaption>
+      <div class="grid">
+        <article class="card reveal">
+          <span class="kicker">Product · in progress</span>
+          <h3>Polo, a health AI app</h3>
+          <p>Designing and building Polo, a health AI application focused on structured wellness workflows and clinical safety guardrails.</p>
+          <div class="pills"><span class="pill">Wellness workflows</span><span class="pill">Safety guardrails</span><span class="pill">Product design</span></div>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Python · live</span>
+          <h3>Nova 3.0 Ultimate</h3>
+          <p>A multi-purpose Python Discord bot running across live communities.</p>
+          <ul>
+            <li>Interactive verification views</li>
+            <li>Leveling progression</li>
+            <li>Anti-spam protection</li>
+            <li>AFK tracking</li>
+          </ul>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Web</span>
+          <h3>Full-stack AI prototyping</h3>
+          <p>Shipping rapid web prototypes and UI architectures, including <strong>Apex Sports Hub</strong>.</p>
+          <div class="pills">
+            <span class="pill">Bolt.new</span><span class="pill">Manus.space</span><span class="pill">Base44</span>
+            <span class="pill">Lovable</span><span class="pill">Replit Agent</span><span class="pill">Google AI Studio</span><span class="pill">Claude Pro</span>
+          </div>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Ops</span>
+          <h3>Deployment &amp; monitoring</h3>
+          <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
+          <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
+        </article>
+
+        <article class="card terminal reveal" style="grid-column: 1 / -1;">
+          <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
+          <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
+        </article>
+
+        <figure class="diagram span reveal">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 780 210" role="img" aria-label="Shipping loop: prototype with AI builders, deploy on Render, monitor with UptimeRobot, get alerts on downtime or latency, then fix and redeploy.">
+              <defs>
+                <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
+                <marker id="arrAh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
+              </defs>
+              <rect class="node hot" x="10" y="40" width="160" height="66" rx="10" />
+              <text class="t-title" x="90" y="68" text-anchor="middle">Prototype</text>
+              <text class="t-sub" x="90" y="88" text-anchor="middle">Bolt · Lovable · Replit</text>
+
+              <rect class="node" x="210" y="40" width="160" height="66" rx="10" />
+              <text class="t-title" x="290" y="68" text-anchor="middle">Deploy</text>
+              <text class="t-sub" x="290" y="88" text-anchor="middle">Render</text>
+
+              <rect class="node cool" x="410" y="40" width="160" height="66" rx="10" />
+              <text class="t-title" x="490" y="68" text-anchor="middle">Monitor</text>
+              <text class="t-sub" x="490" y="88" text-anchor="middle">UptimeRobot checks</text>
+
+              <rect class="node" x="610" y="40" width="160" height="66" rx="10" />
+              <text class="t-title" x="690" y="68" text-anchor="middle">Alert</text>
+              <text class="t-sub" x="690" y="88" text-anchor="middle">downtime · latency</text>
+
+              <line class="edge flow" x1="170" y1="73" x2="206" y2="73" marker-end="url(#arrAh)" />
+              <text class="t-edge" x="190" y="30" text-anchor="middle">ship</text>
+              <line class="edge flow teal" x1="370" y1="73" x2="406" y2="73" marker-end="url(#arrA)" />
+              <text class="t-edge" x="390" y="30" text-anchor="middle">live</text>
+              <line class="edge flow" x1="570" y1="73" x2="606" y2="73" marker-end="url(#arrAh)" />
+              <text class="t-edge" x="590" y="30" text-anchor="middle">issue</text>
+
+              <path class="edge flow" d="M690,106 C690,190 90,190 90,110" marker-end="url(#arrAh)" />
+              <text class="t-edge" x="390" y="178" text-anchor="middle">fix &amp; redeploy</text>
+            </svg>
+          </div>
+          <figcaption><b>The shipping loop.</b> Prototypes go live on Render, UptimeRobot watches uptime and latency, and alerts feed straight back into the next fix.</figcaption>
         </figure>
-        <div class="reveal" style="min-width: 0;">
-          <div class="filters" id="filters" role="group" aria-label="Filter skills by area"><button type="button" aria-pressed="true">All<b>59</b></button><button type="button" aria-pressed="false">AI product<b>5</b></button><button type="button" aria-pressed="false">Engineering<b>7</b></button><button type="button" aria-pressed="false">AI builder tools<b>7</b></button><button type="button" aria-pressed="false">Deploy &amp; monitor<b>5</b></button><button type="button" aria-pressed="false">Leadership<b>6</b></button><button type="button" aria-pressed="false">Moderation &amp; security<b>17</b></button><button type="button" aria-pressed="false">Creative<b>6</b></button><button type="button" aria-pressed="false">Gaming<b>6</b></button></div>
-          <div class="tiles" id="tiles"><div class="tile" data-cat="ai"><code>AI</code><span>Health AI product design</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Structured wellness workflows</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Clinical safety guardrails</span></div><div class="tile" data-cat="ai"><code>AI</code><span>AI-assisted prototyping</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Prompting with Claude Pro</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Python</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Discord bot development</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Interactive button views</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Leveling &amp; XP systems</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Anti-spam logic</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>AFK tracking</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>UI architecture</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Bolt.new</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Manus.space</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Base44</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Lovable</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Replit Agent</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Google AI Studio</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Claude Pro</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Render deployments</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>UptimeRobot monitoring</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Uptime &amp; latency alerts</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Live service upkeep</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Multi-device dev workflow</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Founding communities</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Multi-brand network management</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Governance frameworks</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Mergers &amp; treaty drafting</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Partnerships</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Staff leadership</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Large-scale moderation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Server administration</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Anti-nuke &amp; raid defense</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Permission architecture</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Vault Account isolation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Wick</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bravers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Security Bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Krypton</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Dyno</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Carl-bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Sapphire</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>JailBot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bot testing in sandbox servers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Raid &amp; spam simulation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Automod rule tuning</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Case logs &amp; appeals</span></div><div class="tile" data-cat="art"><code>ART</code><span>Football highlight editing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Match footage sourcing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Beat-synced cutting</span></div><div class="tile" data-cat="art"><code>ART</code><span>Velocity curves</span></div><div class="tile" data-cat="art"><code>ART</code><span>Soundtrack composition</span></div><div class="tile" data-cat="art"><code>ART</code><span>Google Flow Music</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Minecraft SMP admin</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Cross-platform servers</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Blox Fruits endgame</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>High-tier PvP</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Sea Events</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Trading &amp; middleman</span></div></div>
-          <p class="skill-count" id="skillCount" aria-live="polite">Showing all 59 skills</p>
-        </div>
+
+        <figure class="diagram span reveal">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 780 250" role="img" aria-label="Nova 3.0 Ultimate flow: a new member joins, passes an interactive verification view, then the leveling, anti-spam and AFK modules run for verified members.">
+              <defs>
+                <marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
+                <marker id="arrBh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
+              </defs>
+              <rect class="node" x="10" y="92" width="140" height="66" rx="10" />
+              <text class="t-title" x="80" y="120" text-anchor="middle">New member</text>
+              <text class="t-sub" x="80" y="140" text-anchor="middle">joins the server</text>
+
+              <rect class="node hot" x="210" y="92" width="170" height="66" rx="10" />
+              <text class="t-title" x="295" y="120" text-anchor="middle">Verification view</text>
+              <text class="t-sub" x="295" y="140" text-anchor="middle">interactive button</text>
+
+              <line class="edge flow" x1="150" y1="125" x2="206" y2="125" marker-end="url(#arrBh)" />
+              <text class="t-edge" x="178" y="114" text-anchor="middle">joins</text>
+
+              <rect class="node cool" x="460" y="12" width="160" height="58" rx="10" />
+              <text class="t-title" x="540" y="37" text-anchor="middle">Leveling</text>
+              <text class="t-sub" x="540" y="55" text-anchor="middle">progression for activity</text>
+
+              <rect class="node cool" x="460" y="96" width="160" height="58" rx="10" />
+              <text class="t-title" x="540" y="121" text-anchor="middle">Anti-spam</text>
+              <text class="t-sub" x="540" y="139" text-anchor="middle">stops message floods</text>
+
+              <rect class="node cool" x="460" y="180" width="160" height="58" rx="10" />
+              <text class="t-title" x="540" y="205" text-anchor="middle">AFK tracking</text>
+              <text class="t-sub" x="540" y="223" text-anchor="middle">away status for members</text>
+
+              <path class="edge flow teal" d="M380,125 C420,125 420,41 456,41" marker-end="url(#arrB)" />
+              <line class="edge flow teal" x1="380" y1="125" x2="456" y2="125" marker-end="url(#arrB)" />
+              <path class="edge flow teal" d="M380,125 C420,125 420,209 456,209" marker-end="url(#arrB)" />
+              <text class="t-edge" x="420" y="88" text-anchor="middle">verified</text>
+
+              <text class="t-edge" x="700" y="45" text-anchor="middle">Nova 3.0</text>
+              <text class="t-edge" x="700" y="129" text-anchor="middle">Ultimate</text>
+              <text class="t-edge" x="700" y="213" text-anchor="middle">modules</text>
+              <line class="edge dashed" x1="640" y1="20" x2="640" y2="230" />
+            </svg>
+          </div>
+          <figcaption><b>How Nova 3.0 Ultimate handles a member.</b> Everyone passes the verification view first; after that the leveling, anti-spam and AFK modules run alongside each other.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
 
+  <!-- CREATIVE -->
+  <section id="creative">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Creative production</span>
+        <h2>Football edits with original sound</h2>
+        <p>European football and La Liga highlights, cut to the beat and scored with my own music.</p>
+      </div>
+      <div class="grid">
+        <article class="card reveal">
+          <span class="kicker">Video</span>
+          <h3>Football video editing</h3>
+          <p>European football and La Liga highlight edits. I source raw match footage and sync cuts to beat drops and velocity curves.</p>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Audio</span>
+          <h3>Original soundtracks</h3>
+          <p>Custom background scores and audio tracks for my edits, produced with Google Flow Music Premium.</p>
+          <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </article>
+
+        <figure class="diagram span reveal" id="beat">
+          <div class="beat-head"><span class="kicker">Edit timeline · illustration</span><span class="beat-time mono" id="beatTime">00:00.0</span></div>
+          <div class="track" id="track"><div class="wave" id="wave"></div><div class="playhead" id="playhead"></div></div>
+          <div class="clips" id="clips"></div>
+          <figcaption><b>Cutting on the beat.</b> Each gold marker is a beat drop, and the clip changes the moment the playhead crosses it.</figcaption>
+        </figure>
+
+        <figure class="diagram span reveal">
+          <div class="diagram-scroll">
+            <svg viewBox="0 0 800 130" role="img" aria-label="Edit pipeline: raw match footage, cut on beat drops, velocity curves, original score from Google Flow Music, finished highlight edit.">
+              <defs>
+                <marker id="arrE" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
+              </defs>
+              <rect class="node" x="10" y="30" width="135" height="66" rx="10" />
+              <text class="t-title" x="77" y="58" text-anchor="middle">Raw footage</text>
+              <text class="t-sub" x="77" y="78" text-anchor="middle">match sources</text>
+
+              <rect class="node" x="173" y="30" width="135" height="66" rx="10" />
+              <text class="t-title" x="240" y="58" text-anchor="middle">Beat cuts</text>
+              <text class="t-sub" x="240" y="78" text-anchor="middle">synced to drops</text>
+
+              <rect class="node" x="336" y="30" width="135" height="66" rx="10" />
+              <text class="t-title" x="403" y="58" text-anchor="middle">Velocity</text>
+              <text class="t-sub" x="403" y="78" text-anchor="middle">speed curves</text>
+
+              <rect class="node cool" x="499" y="30" width="135" height="66" rx="10" />
+              <text class="t-title" x="566" y="58" text-anchor="middle">Original score</text>
+              <text class="t-sub" x="566" y="78" text-anchor="middle">Google Flow Music</text>
+
+              <rect class="node hot" x="662" y="30" width="128" height="66" rx="10" />
+              <text class="t-title" x="726" y="58" text-anchor="middle">Highlight</text>
+              <text class="t-sub" x="726" y="78" text-anchor="middle">La Liga · Europe</text>
+
+              <line class="edge flow" x1="145" y1="63" x2="169" y2="63" marker-end="url(#arrE)" />
+              <line class="edge flow" x1="308" y1="63" x2="332" y2="63" marker-end="url(#arrE)" />
+              <line class="edge flow" x1="471" y1="63" x2="495" y2="63" marker-end="url(#arrE)" />
+              <line class="edge flow" x1="634" y1="63" x2="658" y2="63" marker-end="url(#arrE)" />
+            </svg>
+          </div>
+          <figcaption><b>From raw footage to a finished edit.</b> Every cut lands on the music, and the music is written for the edit.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMING -->
+  <section id="gaming">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Gaming operations</span>
+        <h2>Servers and endgame play</h2>
+        <p>Running multiplayer servers and playing Blox Fruits at the highest level.</p>
+      </div>
+      <div class="grid">
+        <article class="card reveal">
+          <span class="kicker">Minecraft</span>
+          <h3>SMP server administration</h3>
+          <p>Set up and managed cross-platform (PC and mobile) Survival Multiplayer community servers.</p>
+          <div class="pills"><span class="pill">PC &amp; mobile players</span><span class="pill">Community SMP</span></div>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Roblox · Blox Fruits</span>
+          <h3>Endgame operations</h3>
+          <p>Max-level (2800) veteran running several endgame accounts. Active in high-tier PvP, Sea Events and structured item trading and middleman work.</p>
+          <div class="inventory">
+            <div class="slot" style="--i:0"><b>Human V4</b><span>maxed</span></div>
+            <div class="slot" style="--i:1"><b>Cursed Dual Katana</b><span>owned</span></div>
+            <div class="slot" style="--i:2"><b>Soul Guitar</b><span>owned</span></div>
+            <div class="slot" style="--i:3"><b>Shark Anchor</b><span>owned</span></div>
+            <div class="slot" style="--i:4"><b>Spiky Trident</b><span>owned</span></div>
+            <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
+            <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
+          </div>
+          <div class="pay"><span>Trades &amp; middleman deals in</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
   <!-- ADVERTISE -->
   <section id="advertise">
     <div class="wrap">
@@ -1969,9 +1996,7 @@
       (window.__skillCats || []).forEach(function (cat) {
         cat.skills.forEach(function (sk) {
           INDEX.push({ g: "Skills", ic: cat.code, t: sk, d: cat.name, k: "", go: function () {
-            window.__setSkillCat(cat.id);
-            var tile = Array.prototype.filter.call(document.querySelectorAll("#tiles .tile"), function (x) { return txt(x.querySelector("span")) === sk; })[0];
-            return tile || document.getElementById("skills"); } });
+            return window.__setSkillCat(cat.id) || document.getElementById("skills"); } });
         });
       });
       if (window.__flows) Object.keys(window.__flows.data).forEach(function (k) {
@@ -2083,153 +2108,10 @@
     }
   });
 
-  // Skills: constellation + filters + tiles
+  // Skills: grouped boxes (data for search)
   try {
-    var CATS = [
-      { id: "ai", code: "AI", name: "AI product", skills: ["Health AI product design", "Structured wellness workflows", "Clinical safety guardrails", "AI-assisted prototyping", "Prompting with Claude Pro"] },
-      { id: "dev", code: "DEV", name: "Engineering", skills: ["Python", "Discord bot development", "Interactive button views", "Leveling & XP systems", "Anti-spam logic", "AFK tracking", "UI architecture"] },
-      { id: "tools", code: "TLS", name: "AI builder tools", skills: ["Bolt.new", "Manus.space", "Base44", "Lovable", "Replit Agent", "Google AI Studio", "Claude Pro"] },
-      { id: "ops", code: "OPS", name: "Deploy & monitor", skills: ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts", "Live service upkeep", "Multi-device dev workflow"] },
-      { id: "lead", code: "LDR", name: "Leadership", skills: ["Founding communities", "Multi-brand network management", "Governance frameworks", "Mergers & treaty drafting", "Partnerships", "Staff leadership"] },
-      { id: "sec", code: "SEC", name: "Moderation & security", skills: ["Large-scale moderation", "Server administration", "Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot", "Bot testing in sandbox servers", "Raid & spam simulation", "Automod rule tuning", "Case logs & appeals"] },
-      { id: "art", code: "ART", name: "Creative", skills: ["Football highlight editing", "Match footage sourcing", "Beat-synced cutting", "Velocity curves", "Soundtrack composition", "Google Flow Music"] },
-      { id: "game", code: "GMG", name: "Gaming", skills: ["Minecraft SMP admin", "Cross-platform servers", "Blox Fruits endgame", "High-tier PvP", "Sea Events", "Trading & middleman"] }
-    ];
-    var TOTAL = CATS.reduce(function (n, c) { return n + c.skills.length; }, 0);
-    var svgNS = "http://www.w3.org/2000/svg", cSvg = document.getElementById("cSvg");
-    var filtersEl = document.getElementById("filters"), tilesEl = document.getElementById("tiles"), countEl = document.getElementById("skillCount");
-    var CX = 260, CY = 250, RAD = 170, nodes = {}, fbtns = {}, tiles = [];
-    cSvg.innerHTML = ""; filtersEl.innerHTML = ""; tilesEl.innerHTML = "";
-    function el(tag, attrs, parent) { var e = document.createElementNS(svgNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
-
-    var pts = CATS.map(function (c, i) { var a = -Math.PI / 2 + i * Math.PI * 2 / CATS.length; return { x: CX + Math.cos(a) * RAD, y: CY + Math.sin(a) * RAD }; });
-    el("polygon", { points: pts.map(function (p) { return p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" "), class: "edge dashed" }, cSvg);
-    pts.forEach(function (p) { el("line", { x1: CX, y1: CY, x2: p.x.toFixed(1), y2: p.y.toFixed(1), class: "edge flow" }, cSvg); });
-    el("circle", { cx: CX, cy: CY, r: 44, style: "fill: var(--surface)" }, cSvg);
-    el("circle", { cx: CX, cy: CY, r: 44, class: "hub" }, cSvg);
-    var t1 = el("text", { x: CX, y: CY - 2, "text-anchor": "middle", class: "t-title" }, cSvg); t1.textContent = "Vini";
-    var t2 = el("text", { x: CX, y: CY + 16, "text-anchor": "middle", class: "t-sub" }, cSvg); t2.textContent = TOTAL + " skills";
-
-    CATS.forEach(function (c, i) {
-      var p = pts[i], r = 17 + c.skills.length * 1.4;
-      var g = el("g", { class: "cnode", tabindex: "0", role: "button", "aria-label": c.name + ", " + c.skills.length + " skills" }, cSvg);
-      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r + 6, class: "halo" }, g);
-      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, style: "fill: var(--surface)" }, g);
-      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, class: "dot" }, g);
-      var n = el("text", { x: p.x.toFixed(1), y: (p.y + 2).toFixed(1), "text-anchor": "middle", class: "num" }, g); n.textContent = c.skills.length;
-      var cd = el("text", { x: p.x.toFixed(1), y: (p.y + 15).toFixed(1), "text-anchor": "middle", class: "code" }, g); cd.textContent = c.code;
-      var below = p.y >= CY - 1;
-      var lb = el("text", { x: p.x.toFixed(1), y: (below ? p.y + r + 16 : p.y - r - 9).toFixed(1), "text-anchor": "middle", class: "lbl" }, g); lb.textContent = c.name;
-      g.addEventListener("click", function () { setCat(current === c.id ? "all" : c.id); });
-      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setCat(current === c.id ? "all" : c.id); } });
-      nodes[c.id] = g;
-    });
-
-    function addFilter(id, label, count) {
-      var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "false");
-      b.innerHTML = label + "<b>" + count + "</b>";
-      b.addEventListener("click", function () { setCat(id); });
-      filtersEl.appendChild(b); fbtns[id] = b;
-    }
-    addFilter("all", "All", TOTAL);
-    CATS.forEach(function (c) { addFilter(c.id, c.name, c.skills.length); });
-
-    CATS.forEach(function (c, ci) {
-      c.skills.forEach(function (sk) {
-        var d = document.createElement("div"); d.className = "tile" + (ci % 2 ? " alt" : ""); d.setAttribute("data-cat", c.id);
-        var code = document.createElement("code"); code.textContent = c.code;
-        var sp = document.createElement("span"); sp.textContent = sk;
-        d.appendChild(code); d.appendChild(sp); tilesEl.appendChild(d); tiles.push(d);
-      });
-    });
-
-    var current = "all";
-    function setCat(id) {
-      current = id;
-      Object.keys(fbtns).forEach(function (k) { fbtns[k].setAttribute("aria-pressed", k === id ? "true" : "false"); });
-      Object.keys(nodes).forEach(function (k) { nodes[k].classList.toggle("on", k === id); });
-      var shown = 0;
-      tiles.forEach(function (t) {
-        var show = id === "all" || t.getAttribute("data-cat") === id;
-        t.hidden = !show;
-        t.classList.remove("pop");
-        if (show) {
-          if (!reduce) { void t.offsetWidth; t.style.animationDelay = Math.min(shown, 20) * 0.025 + "s"; t.classList.add("pop"); }
-          shown++;
-        }
-      });
-      var cat = CATS.filter(function (c) { return c.id === id; })[0];
-      countEl.textContent = cat ? "Showing " + shown + " of " + TOTAL + " skills · " + cat.name : "Showing all " + TOTAL + " skills";
-    }
-    setCat("all");
-    window.__skillCats = CATS; window.__setSkillCat = setCat;
-    tiles.forEach(function (t) { t.classList.remove("pop"); });
-  } catch (e) {}
-
-  // Process flowcharts
-  try {
-    var FLOWS = {
-      mod: [
-        ["Detect", "Problems surface three ways: automod rules in Dyno, Carl-bot and Sapphire, member reports, and staff watching busy channels.", ["Dyno", "Carl-bot", "Sapphire", "Reports"]],
-        ["Triage", "First question: is this an attack on the server, or one person breaking the rules? The answer decides which path it takes.", ["Severity", "Context", "History"]],
-        ["Lockdown", "Raids and nukes go straight to the anti-nuke layer. Wick, Bravers, Security Bot and Krypton strip permissions, kick raiders and stop mass deletes before staff even react.", ["Wick", "Bravers", "Security Bot", "Krypton"]],
-        ["Restore & audit", "Once it's contained, deleted channels and roles are restored and the audit log is checked to find how the attacker got in. Ownership stays safe in the Vault Account the whole time.", ["Audit log", "Backups", "Vault Account"]],
-        ["Action ladder", "For rule breaks I use the lowest action that fixes it: warn, then mute, then JailBot isolation, then kick, and ban only for serious or repeated cases.", ["Warn", "Timeout", "JailBot", "Kick", "Ban"]],
-        ["Log & evidence", "Every action is logged with screenshots and a reason, so any staff member can see the full history of a case.", ["Mod logs", "Evidence", "Case notes"]],
-        ["Review, appeals & tune", "Appeals get a second look from another staff member. Anything automod missed, or flagged by mistake, becomes a rule change, so the next problem is caught earlier.", ["Appeals", "Staff review", "Rule tuning"]]
-      ],
-      test: [
-        ["Sandbox", "Every bot is added to a private test server first, never straight into a live community.", ["Test server", "Alt accounts"]],
-        ["Permissions", "Bots get only the permissions they need, and their role sits at the right place in the hierarchy so they can act on raiders but not on staff.", ["Least privilege", "Role hierarchy"]],
-        ["Simulate", "I throw real attacks at it: message floods, mass joins from alt accounts, mass channel and role deletes, and bad links.", ["Spam floods", "Mass joins", "Nuke tests", "Bad links"]],
-        ["Check", "Did it react fast enough? Did it log everything? Did it punish anyone innocent? False positives matter as much as missed attacks.", ["Response time", "Logs", "False positives"]],
-        ["Pass?", "A bot only passes if it stops every simulated attack without hitting normal members.", ["Pass / fail"]],
-        ["Tune & re-test", "On a fail I adjust thresholds, whitelists and permissions, then run the same attacks again until it passes.", ["Thresholds", "Whitelists", "Re-test"]],
-        ["Go live", "Then it's rolled out to the live server, staff are briefed on what it does, and my own bots like Nova are watched by UptimeRobot.", ["Rollout", "Staff briefing", "UptimeRobot"]]
-      ]
-    };
-    var LABELS = { mod: ["01", "02", "03a", "04a", "03b", "05", "06"], test: ["01", "02", "03", "04", "05", "06", "07"] };
-    var flowTabs = document.querySelectorAll(".flow-tabs button");
-    function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
-    document.querySelectorAll("[data-flow-panel]").forEach(function (fig) {
-      var key = fig.getAttribute("data-flow-panel"), steps = FLOWS[key];
-      var nodes = fig.querySelectorAll(".fnode"), detail = fig.querySelector(".flow-detail"), playBtn = fig.querySelector(".flow-play");
-      var timer = null, cur = -1;
-      function show(i) {
-        cur = i;
-        nodes.forEach(function (n) { n.classList.toggle("on", +n.getAttribute("data-i") === i); });
-        var st = steps[i];
-        detail.innerHTML = '<span class="big">' + LABELS[key][i] + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p><div class="pills">' +
-          st[2].map(function (x) { return '<span class="pill">' + esc(x) + '</span>'; }).join("") + "</div>";
-        if (!reduce) { detail.classList.remove("swap"); void detail.offsetWidth; detail.classList.add("swap"); }
-      }
-      function stop() { clearInterval(timer); timer = null; playBtn.textContent = "Play the flow"; }
-      function play() {
-        if (timer) { stop(); return; }
-        playBtn.textContent = "Pause";
-        show(cur + 1 >= steps.length ? 0 : cur + 1);
-        timer = setInterval(function () { if (cur + 1 >= steps.length) { stop(); return; } show(cur + 1); }, 2600);
-      }
-      nodes.forEach(function (n) {
-        function pick() { stop(); show(+n.getAttribute("data-i")); }
-        n.addEventListener("click", pick);
-        n.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
-      });
-      playBtn.addEventListener("click", play);
-      fig.__stop = stop; fig.__show = function (i) { stop(); show(i); };
-      show(0);
-    });
-    window.__flows = { data: FLOWS, open: function (k, i) { var b = document.querySelector('.flow-tabs button[data-flow="' + k + '"]'); if (b) b.click(); var f = document.getElementById("flow-" + k); if (f && f.__show) f.__show(i); return f; } };
-    flowTabs.forEach(function (b) {
-      b.addEventListener("click", function () {
-        var k = b.getAttribute("data-flow");
-        flowTabs.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-        document.querySelectorAll("[data-flow-panel]").forEach(function (f) {
-          var on = f.getAttribute("data-flow-panel") === k; f.hidden = !on; if (!on && f.__stop) f.__stop();
-          if (on) { f.classList.add("in", "live"); }
-        });
-      });
-    });
+    window.__skillCats = [{"id": "mod", "code": "MOD", "name": "Discord \u00b7 Moderation", "skills": ["Large-scale moderation (90k)", "Server administration", "Staff leadership", "Automod rule tuning", "Case logs & appeals"]}, {"id": "sec", "code": "SEC", "name": "Discord \u00b7 Security", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Raid & spam simulation", "Bot testing in sandboxes"]}, {"id": "bots", "code": "BOT", "name": "Discord \u00b7 Bots I build", "skills": ["Python", "Discord bot development", "Interactive button views", "Leveling & XP systems", "Anti-spam & AFK tracking"]}, {"id": "sec", "code": "SEC", "name": "Security stack", "skills": ["Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot"]}, {"id": "lead", "code": "LDR", "name": "Community leadership", "skills": ["Founding communities", "Multi-brand network", "Governance frameworks", "Mergers & treaties", "Partnerships"]}, {"id": "ai", "code": "AI", "name": "AI product", "skills": ["Health AI product design", "Wellness workflows", "Clinical safety guardrails", "AI-assisted prototyping"]}, {"id": "tools", "code": "TLS", "name": "AI builder tools", "skills": ["Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space", "Google AI Studio", "Claude Pro"]}, {"id": "ops", "code": "OPS", "name": "Deploy & monitor", "skills": ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts"]}, {"id": "art", "code": "ART", "name": "Creative", "skills": ["Football highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}, {"id": "game", "code": "GMG", "name": "Gaming", "skills": ["Minecraft SMP admin", "Blox Fruits endgame", "High-tier PvP & Sea Events", "Trading & middleman"]}];
+    window.__setSkillCat = function (id) { return document.querySelector('[data-skill-box="' + id + '"]'); };
   } catch (e) {}
 
   // Copy email
