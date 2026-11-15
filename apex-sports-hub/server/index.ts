@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { leagueById, type Envelope, type Sport } from '../src/lib/types.ts';
 import { espnScoreboard, espnStandings } from './espn.ts';
 import { tsdbStandings, tsdbTeam } from './thesportsdb.ts';
-import { geminiEnabled, geminiNews, geminiScoreboard, geminiStandings } from './gemini.ts';
+import { geminiAnswer, geminiEnabled, geminiNews, geminiScoreboard, geminiStandings } from './gemini.ts';
+import { espnMatchCentre } from './match.ts';
 import { sampleNews, sampleScoreboard, sampleStandings } from './sample.ts';
 
 try {
@@ -95,6 +96,13 @@ async function api(url: URL): Promise<unknown> {
       ]);
     }
 
+    case '/api/match': {
+      const league = leagueById(q('league'));
+      const id = q('id');
+      if (!league || !/^\d+$/.test(id)) throw new HttpError(400, 'Need a league and a live match id');
+      return cached(`mc:${league.id}:${id}`, 45_000, [{ name: 'ESPN', run: () => espnMatchCentre(league, id) }]);
+    }
+
     case '/api/team': {
       const name = q('name').trim();
       if (!name) throw new HttpError(400, 'Missing team name');
@@ -142,11 +150,41 @@ async function serveStatic(req: IncomingMessage, res: ServerResponse, pathname: 
   }
 }
 
+const askCache = new Map<string, { at: number; value: unknown }>();
+const lastAsk = new Map<string, number>();
+
+async function readBody(req: IncomingMessage): Promise<string> {
+  let raw = '';
+  for await (const chunk of req) {
+    raw += chunk;
+    if (raw.length > 4000) throw new HttpError(413, 'Question too long');
+  }
+  return raw;
+}
+
+async function ask(req: IncomingMessage): Promise<unknown> {
+  if (!geminiEnabled()) throw new HttpError(503, 'AI assistant is off: set GEMINI_API_KEY on the server.');
+  const ip = req.socket.remoteAddress ?? 'anon';
+  if (Date.now() - (lastAsk.get(ip) ?? 0) < 3000) throw new HttpError(429, 'Slow down a little: one question every few seconds.');
+  lastAsk.set(ip, Date.now());
+  const { question, league, matchId, context } = JSON.parse(await readBody(req)) as Record<string, string>;
+  const q = String(question ?? '').trim().slice(0, 300);
+  if (!q) throw new HttpError(400, 'Empty question');
+  const key = `${league}|${matchId}|${q.toLowerCase()}`;
+  const hit = askCache.get(key);
+  if (hit && Date.now() - hit.at < 60_000) return hit.value;
+  const value = await geminiAnswer(q, String(context ?? '').slice(0, 3000)).catch((e: Error) => {
+    throw new HttpError(502, `Assistant unavailable: ${e.message}`);
+  });
+  askCache.set(key, { at: Date.now(), value });
+  return value;
+}
+
 createServer(async (req, res) => {
   const url = new URL(req.url ?? '/', 'http://localhost');
   if (!url.pathname.startsWith('/api/')) return serveStatic(req, res, url.pathname);
   try {
-    const body = await api(url);
+    const body = url.pathname === '/api/ask' && req.method === 'POST' ? await ask(req) : await api(url);
     res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
     res.end(JSON.stringify(body));
   } catch (e) {

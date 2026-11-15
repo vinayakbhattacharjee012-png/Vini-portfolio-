@@ -233,7 +233,7 @@ export default function App() {
         {team ? (
           <TeamDetail key={team} name={team} now={now} onClose={closeAll} onBack={openMatch ? () => setTeam(null) : undefined} />
         ) : openMatch ? (
-          <MatchDetail m={openMatch} leagueName={lg.name} onClose={closeAll} onTeam={setTeam} />
+          <MatchDetail m={openMatch} leagueId={lg.id} leagueName={lg.name} onClose={closeAll} onTeam={setTeam} />
         ) : null}
       </Drawer>
 

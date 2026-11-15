@@ -12,7 +12,7 @@ const ESPN_PATH: Record<string, string> = {
   ipl: 'cricket/8048',
 };
 
-function pathFor(league: League) {
+export function pathFor(league: League) {
   const p = ESPN_PATH[league.id];
   if (!p) throw new Error('no ESPN feed');
   return p;

@@ -125,3 +125,29 @@ Return a JSON array: {"headline": string (max 90 chars), "summary": one sentence
     citations,
   );
 }
+
+/** Free-form grounded answer for the match assistant. */
+export async function geminiAnswer(question: string, context: string): Promise<{ answer: string; citations: Citation[] }> {
+  const res = await ai().models.generateContent({
+    model: model(),
+    contents: `You are Apex AI, the match assistant on a live sports website. Current date/time: ${new Date().toUTCString()}.
+Live data the site already has (may be partial):
+${context || '(no match selected)'}
+
+User question: ${question}
+
+Answer in under 150 words. Use Google Search for live or recent facts (scores, tactics, injuries, referees, venues) and say when something is unavailable. Never invent player statistics, heat maps, interception counts or tracking data; if asked for those, say the free feeds don't include them.`,
+    config: { tools: [{ googleSearch: {} }], temperature: 0.3 },
+  });
+  const chunks = res.candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+  const citations: Citation[] = [];
+  const seen = new Set<string>();
+  for (const c of chunks) {
+    const uri = c.web?.uri;
+    if (uri && !seen.has(uri)) {
+      seen.add(uri);
+      citations.push({ uri, title: c.web?.title ?? new URL(uri).hostname });
+    }
+  }
+  return { answer: res.text?.trim() || 'No answer returned.', citations: citations.slice(0, 6) };
+}

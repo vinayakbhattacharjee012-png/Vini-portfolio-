@@ -4,6 +4,7 @@ import type { Match, TeamProfile } from '../lib/types.ts';
 import { useApi } from '../lib/api.ts';
 import { cx, kickoff } from '../lib/format.ts';
 import { Crest, Empty, LiveBadge, Score, Skeleton, SourceBadge } from './ui.tsx';
+import { MatchCentre } from './MatchCentre.tsx';
 
 export function Drawer({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: ReactNode; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -57,7 +58,7 @@ function CloseBar({ onClose, onBack, title }: { onClose: () => void; onBack?: ()
   );
 }
 
-export function MatchDetail({ m, leagueName, onClose, onTeam }: { m: Match; leagueName: string; onClose: () => void; onTeam: (n: string) => void }) {
+export function MatchDetail({ m, leagueId, leagueName, onClose, onTeam }: { m: Match; leagueId: string; leagueName: string; onClose: () => void; onTeam: (n: string) => void }) {
   const k = kickoff(m.start);
   return (
     <>
@@ -106,7 +107,7 @@ export function MatchDetail({ m, leagueName, onClose, onTeam }: { m: Match; leag
           </div>
         )}
       </dl>
-      <div className="grid grid-cols-2 gap-2 px-5 pb-8">
+      <div className="grid grid-cols-2 gap-2 px-5 pb-6">
         {(['home', 'away'] as const).map((s) => (
           <button key={s} onClick={() => onTeam(m[s].name)} className="flex items-center justify-center gap-2 rounded-xl bg-white/5 px-3 py-2.5 text-xs font-medium text-slate-300 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white">
             <Shield className="size-3.5" />
@@ -114,6 +115,7 @@ export function MatchDetail({ m, leagueName, onClose, onTeam }: { m: Match; leag
           </button>
         ))}
       </div>
+      <MatchCentre leagueId={leagueId} matchId={m.id} live={m.status === 'live'} />
     </>
   );
 }
