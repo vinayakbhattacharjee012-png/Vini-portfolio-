@@ -754,6 +754,12 @@
   @media (max-width: 560px) { .need { grid-template-columns: minmax(0, 1fr); } }
   .stats.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   @media (max-width: 520px) { .stats.three { grid-template-columns: minmax(0, 1fr); } }
+  .scroll-cue { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 36px; text-decoration: none; color: var(--muted); font: 500 .72rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
+  .scroll-cue i { width: 22px; height: 22px; border-right: 2px solid var(--star); border-bottom: 2px solid var(--star); transform: rotate(45deg); animation: cueBob 1.6s ease-in-out infinite; }
+  @keyframes cueBob { 0%, 100% { transform: rotate(45deg) translate(-3px, -3px); } 50% { transform: rotate(45deg) translate(3px, 3px); } }
+  .handle { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; position: relative; z-index: 1; }
+  .handle span { font: 500 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .handle b { font: 600 1.05rem var(--font-mono); color: var(--star); user-select: all; }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1090,6 +1096,7 @@
       <a class="cta primary" href="#contact">Work with me</a>
       <a class="cta" href="#ai">See my work</a>
     </div>
+    <a class="scroll-cue" href="#about" aria-label="Scroll down to About me"><span>Scroll</span><i></i></a>
     </div>
     <div class="orbit" aria-label="My five areas of work, orbiting">
       <div class="orb o3">
@@ -1848,6 +1855,10 @@
           <a class="cta" href="https://discord.gg/JJkyD2Rhc" target="_blank" rel="noopener">Join Galaxy Empire</a>
           <a class="cta" href="https://discord.gg/vtacNP4kG" target="_blank" rel="noopener">Roblox community server</a>
         </div>
+        <div class="handle">
+          <span>Discord</span><b id="handle">daring_lynx_05522</b>
+          <button class="cta" type="button" id="copyHandle">Copy handle</button>
+        </div>
       </div>
     </div>
   </section>
@@ -2441,6 +2452,16 @@
   try {
     window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}];
     window.__setSkillCat = function (id) { return document.querySelector('.skillrow[data-skill-box="' + id + '"]'); };
+  } catch (e) {}
+
+  // Copy Discord handle
+  try {
+    var hb = document.getElementById("copyHandle");
+    hb.addEventListener("click", function () {
+      var t = document.getElementById("handle").textContent;
+      function ok() { hb.textContent = "Copied ✓"; setTimeout(function () { hb.textContent = "Copy handle"; }, 2000); }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, ok); else ok();
+    });
   } catch (e) {}
 
   // Copy email
