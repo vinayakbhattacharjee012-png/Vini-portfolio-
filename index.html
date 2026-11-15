@@ -146,7 +146,7 @@
   .menu-btn .x { display: none; }
   nav.open .menu-btn .bars { display: none; } nav.open .menu-btn .x { display: block; }
   .nav-right { display: flex; align-items: center; gap: 10px; }
-  @media (max-width: 820px) {
+  @media (max-width: 1060px) {
     .menu-btn { display: grid; }
     .nav-links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0;
       padding: 8px max(16px, env(safe-area-inset-left, 0px)) 16px; background: var(--bg); border-bottom: 1px solid var(--line);
@@ -515,6 +515,59 @@
   footer { padding-block: 36px 52px; color: var(--muted); font-size: 0.9rem; }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
 
+  /* ---- Design polish ---- */
+  nav { -webkit-backdrop-filter: saturate(160%) blur(12px); backdrop-filter: saturate(160%) blur(12px); }
+  main { counter-reset: sec; }
+  main > section .sec-head > .eyebrow::before { counter-increment: sec; content: "0" counter(sec) " / "; color: var(--muted); }
+  .card { position: relative; }
+  .card::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(135deg, var(--star), transparent 40%, transparent 60%, var(--nebula));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity .25s ease; }
+  .card:hover::before { opacity: 1; }
+  section:nth-of-type(even) { background: linear-gradient(180deg, transparent, var(--star-soft) 220%); }
+
+  /* ---- Process flowcharts ---- */
+  .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
+  .flow-tabs button:hover { color: var(--ink); border-color: var(--star); }
+  .flow-tabs button[aria-pressed="true"] { background: var(--star); border-color: var(--star); color: var(--bg); }
+  .flowchart .diagram-scroll svg { min-width: 760px; }
+  .swipe { display: none; font: 500 0.74rem var(--font-mono); color: var(--muted); margin: 0 0 8px; }
+  @media (max-width: 820px) { .swipe { display: block; } }
+  svg .fnode { cursor: pointer; }
+  svg .fnode:focus { outline: none; }
+  svg .fnode .box { fill: var(--surface-2); stroke: var(--line); stroke-width: 1.3; transition: fill .2s ease, stroke .2s ease; }
+  svg .fnode.warn .box { stroke: var(--danger); }
+  svg .fnode:hover .box, svg .fnode:focus-visible .box { stroke: var(--star); }
+  svg .fnode.on .box { fill: var(--star-soft); stroke: var(--star); stroke-width: 2.2; }
+  svg .fnode .n { font: 600 10px var(--font-mono); fill: var(--star); }
+  svg .chip { stroke: var(--danger); stroke-width: 1.2; }
+  svg .chip-t { font: 600 11px var(--font-mono); fill: var(--ink); }
+  svg .t-yes { font: 600 10.5px var(--font-mono); fill: var(--nebula); }
+  svg .t-no { font: 600 10.5px var(--font-mono); fill: var(--danger); }
+  .flow-detail { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: start; margin-top: 16px;
+    padding: 16px 18px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+  .flow-detail .big { grid-row: span 3; font: 700 2.2rem/1 var(--font-display); color: var(--star); font-variant-numeric: tabular-nums; }
+  .flow-detail h3 { font-size: 1.05rem; }
+  .flow-detail p { margin: 0; color: var(--muted); }
+  @media (max-width: 560px) { .flow-detail { grid-template-columns: minmax(0, 1fr); } .flow-detail .big { grid-row: auto; font-size: 1.6rem; } }
+  .flow-detail.swap { animation: rise .35s ease both; }
+  .flow-ctrl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+  .flow-ctrl button { font: 600 0.82rem var(--font-display); padding: 7px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  .flow-ctrl button:hover { border-color: var(--star); }
+  .flow-ctrl span { font: 500 0.78rem var(--font-mono); color: var(--muted); }
+
+  /* ---- Payments ---- */
+  .pay { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .pay > span:first-child { font: 500 0.72rem/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+  .coin { display: inline-flex; align-items: center; gap: 6px; font: 600 0.82rem var(--font-display); padding: 5px 12px 5px 6px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); }
+  .coin i { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font: 700 0.72rem var(--font-body); font-style: normal; color: var(--bg); }
+  .coin.inr i { background: var(--star); } .coin.crypto i { background: var(--nebula); }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
@@ -534,6 +587,7 @@
       <a href="#security">Security</a>
       <a href="#creative">Creative</a>
       <a href="#gaming">Gaming</a>
+      <a href="#process">How I work</a>
       <a href="#skills">Skills</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
@@ -971,27 +1025,182 @@
             <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
             <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
           </div>
+          <div class="pay"><span>Trades &amp; middleman deals in</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
         </article>
       </div>
     </div>
   </section>
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">How I work</span>
+        <h2>Moderation and bot testing, step by step</h2>
+        <p>The process behind the numbers: how a problem moves through my servers, and how a bot gets tested before it goes anywhere near a live community. Tap any step.</p>
+      </div>
+      <div class="flow-tabs" role="group" aria-label="Choose a flowchart">
+        <button type="button" data-flow="mod" aria-pressed="true">Discord moderation</button>
+        <button type="button" data-flow="test" aria-pressed="false">Bot testing</button>
+      </div>
+
+      <figure class="diagram flowchart reveal" id="flow-mod" data-flow-panel="mod">
+        <p class="swipe">Swipe sideways to see the whole flow →</p>
+        <div class="diagram-scroll">
+          <svg viewBox="0 0 900 370" role="img" aria-label="Moderation flowchart: detect, triage, then either an anti-nuke lockdown for raids or the action ladder of warn, mute, jail, kick and ban for rule breaks; both are logged, then reviewed and appeals handled, which feeds back into detection.">
+            <defs>
+              <marker id="arrM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
+              <marker id="arrMh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
+            </defs>
+            <line class="edge flow" x1="150" y1="165" x2="186" y2="165" marker-end="url(#arrMh)" />
+            <path class="edge flow" d="M250,120 C250,63 300,63 346,63" marker-end="url(#arrMh)" />
+            <text class="t-no" x="262" y="84">raid / nuke</text>
+            <path class="edge flow teal" d="M250,210 C250,248 300,248 346,248" marker-end="url(#arrM)" />
+            <text class="t-yes" x="262" y="240">rule break</text>
+            <line class="edge flow" x1="520" y1="63" x2="566" y2="63" marker-end="url(#arrMh)" />
+            <path class="edge flow" d="M720,63 C740,63 740,145 746,145" marker-end="url(#arrMh)" />
+            <path class="edge flow teal" d="M690,248 C730,248 730,185 746,185" marker-end="url(#arrM)" />
+            <path class="edge dashed" d="M820,200 L820,339 L580,339" marker-end="url(#arrM)" />
+            <path class="edge dashed" d="M380,339 L80,339 L80,204" marker-end="url(#arrM)" />
+
+            <g class="fnode" data-i="0" tabindex="0" role="button" aria-label="Step 1, Detect">
+              <rect class="box" x="10" y="130" width="140" height="70" rx="10" />
+              <text class="n" x="22" y="148">01</text>
+              <text class="t-title" x="80" y="168" text-anchor="middle">Detect</text>
+              <text class="t-sub" x="80" y="186" text-anchor="middle">automod · reports</text>
+            </g>
+            <g class="fnode" data-i="1" tabindex="0" role="button" aria-label="Step 2, Triage">
+              <polygon class="box" points="250,120 310,165 250,210 190,165" />
+              <text class="n" x="250" y="146" text-anchor="middle">02</text>
+              <text class="t-title" x="250" y="170" text-anchor="middle">Triage</text>
+              <text class="t-sub" x="250" y="186" text-anchor="middle">what is it?</text>
+            </g>
+            <g class="fnode warn" data-i="2" tabindex="0" role="button" aria-label="Step 3a, Lockdown">
+              <rect class="box" x="350" y="30" width="170" height="66" rx="10" />
+              <text class="n" x="362" y="47">03a</text>
+              <text class="t-title" x="435" y="62" text-anchor="middle">Lockdown</text>
+              <text class="t-sub" x="435" y="80" text-anchor="middle">anti-nuke bots react</text>
+            </g>
+            <g class="fnode" data-i="3" tabindex="0" role="button" aria-label="Step 4a, Restore and audit">
+              <rect class="box" x="570" y="30" width="150" height="66" rx="10" />
+              <text class="n" x="582" y="47">04a</text>
+              <text class="t-title" x="645" y="62" text-anchor="middle">Restore &amp; audit</text>
+              <text class="t-sub" x="645" y="80" text-anchor="middle">roles · channels · perms</text>
+            </g>
+            <g class="fnode" data-i="4" tabindex="0" role="button" aria-label="Step 3b, Action ladder">
+              <rect class="box" x="350" y="200" width="340" height="100" rx="10" />
+              <text class="n" x="362" y="218">03b</text>
+              <text class="t-title" x="520" y="222" text-anchor="middle">Action ladder</text>
+              <text class="t-sub" x="520" y="238" text-anchor="middle">lowest action that fixes it</text>
+              <rect class="chip" x="362" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .08" />
+              <text class="chip-t" x="391" y="271" text-anchor="middle">Warn</text>
+              <rect class="chip" x="428" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .18" />
+              <text class="chip-t" x="457" y="271" text-anchor="middle">Mute</text>
+              <rect class="chip" x="494" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .3" />
+              <text class="chip-t" x="523" y="271" text-anchor="middle">Jail</text>
+              <rect class="chip" x="560" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .45" />
+              <text class="chip-t" x="589" y="271" text-anchor="middle">Kick</text>
+              <rect class="chip" x="626" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .65" />
+              <text class="chip-t" x="655" y="271" text-anchor="middle">Ban</text>
+            </g>
+            <g class="fnode" data-i="5" tabindex="0" role="button" aria-label="Step 5, Log and evidence">
+              <rect class="box" x="750" y="130" width="140" height="70" rx="10" />
+              <text class="n" x="762" y="148">05</text>
+              <text class="t-title" x="820" y="168" text-anchor="middle">Log &amp; evidence</text>
+              <text class="t-sub" x="820" y="186" text-anchor="middle">mod-log channel</text>
+            </g>
+            <g class="fnode" data-i="6" tabindex="0" role="button" aria-label="Step 6, Review and tune">
+              <rect class="box" x="380" y="322" width="200" height="34" rx="17" />
+              <text class="t-title" x="480" y="344" text-anchor="middle">06 · Review, appeals &amp; tune</text>
+            </g>
+          </svg>
+        </div>
+        <div class="flow-detail" aria-live="polite"></div>
+        <div class="flow-ctrl"><button type="button" class="flow-play">Play the flow</button><span>or tap a step</span></div>
+      </figure>
+
+      <figure class="diagram flowchart reveal" id="flow-test" data-flow-panel="test" hidden>
+        <p class="swipe">Swipe sideways to see the whole flow →</p>
+        <div class="diagram-scroll">
+          <svg viewBox="0 50 960 220" role="img" aria-label="Bot testing flowchart: sandbox server, set permissions, simulate attacks, check results, then a pass or fail decision. Failures go to tuning and back to simulation; passes go live and are monitored.">
+            <defs>
+              <marker id="arrT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
+              <marker id="arrTh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
+              <marker id="arrTr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill: var(--danger)" /></marker>
+            </defs>
+            <line class="edge flow" x1="140" y1="113" x2="170" y2="113" marker-end="url(#arrTh)" />
+            <line class="edge flow" x1="304" y1="113" x2="334" y2="113" marker-end="url(#arrTh)" />
+            <line class="edge flow" x1="468" y1="113" x2="498" y2="113" marker-end="url(#arrTh)" />
+            <line class="edge flow" x1="632" y1="113" x2="652" y2="113" marker-end="url(#arrTh)" />
+            <line class="edge flow teal" x1="776" y1="113" x2="806" y2="113" marker-end="url(#arrT)" />
+            <text class="t-yes" x="791" y="102" text-anchor="middle">pass</text>
+            <path class="attack" d="M716,158 L716,236 L594,236" marker-end="url(#arrTr)" />
+            <text class="t-no" x="724" y="200">fail</text>
+            <path class="attack" d="M424,236 L403,236 L403,150" marker-end="url(#arrTr)" />
+
+            <g class="fnode" data-i="0" tabindex="0" role="button" aria-label="Step 1, Sandbox server">
+              <rect class="box" x="10" y="80" width="130" height="66" rx="10" />
+              <text class="n" x="22" y="97">01</text>
+              <text class="t-title" x="75" y="112" text-anchor="middle">Sandbox</text>
+              <text class="t-sub" x="75" y="130" text-anchor="middle">private test server</text>
+            </g>
+            <g class="fnode" data-i="1" tabindex="0" role="button" aria-label="Step 2, Permissions">
+              <rect class="box" x="174" y="80" width="130" height="66" rx="10" />
+              <text class="n" x="186" y="97">02</text>
+              <text class="t-title" x="239" y="112" text-anchor="middle">Permissions</text>
+              <text class="t-sub" x="239" y="130" text-anchor="middle">least privilege</text>
+            </g>
+            <g class="fnode warn" data-i="2" tabindex="0" role="button" aria-label="Step 3, Simulate">
+              <rect class="box" x="338" y="80" width="130" height="66" rx="10" />
+              <text class="n" x="350" y="97">03</text>
+              <text class="t-title" x="403" y="112" text-anchor="middle">Simulate</text>
+              <text class="t-sub" x="403" y="130" text-anchor="middle">spam · raids · nukes</text>
+            </g>
+            <g class="fnode" data-i="3" tabindex="0" role="button" aria-label="Step 4, Check results">
+              <rect class="box" x="502" y="80" width="130" height="66" rx="10" />
+              <text class="n" x="514" y="97">04</text>
+              <text class="t-title" x="567" y="112" text-anchor="middle">Check</text>
+              <text class="t-sub" x="567" y="130" text-anchor="middle">logs · false positives</text>
+            </g>
+            <g class="fnode" data-i="4" tabindex="0" role="button" aria-label="Step 5, Pass or fail">
+              <polygon class="box" points="716,68 776,113 716,158 656,113" />
+              <text class="n" x="716" y="96" text-anchor="middle">05</text>
+              <text class="t-title" x="716" y="118" text-anchor="middle">Pass?</text>
+            </g>
+            <g class="fnode" data-i="5" tabindex="0" role="button" aria-label="Step 6, Tune config">
+              <rect class="box" x="428" y="219" width="166" height="34" rx="17" />
+              <text class="t-title" x="511" y="241" text-anchor="middle">06 · Tune &amp; re-test</text>
+            </g>
+            <g class="fnode" data-i="6" tabindex="0" role="button" aria-label="Step 7, Go live">
+              <rect class="box" x="810" y="80" width="140" height="66" rx="10" />
+              <text class="n" x="822" y="97">07</text>
+              <text class="t-title" x="880" y="112" text-anchor="middle">Go live</text>
+              <text class="t-sub" x="880" y="130" text-anchor="middle">brief staff · monitor</text>
+            </g>
+          </svg>
+        </div>
+        <div class="flow-detail" aria-live="polite"></div>
+        <div class="flow-ctrl"><button type="button" class="flow-play">Play the flow</button><span>or tap a step</span></div>
+      </figure>
+    </div>
+  </section>
+
   <!-- SKILLS -->
   <section id="skills">
     <div class="wrap">
       <div class="sec-head reveal">
         <span class="eyebrow">Skills</span>
         <h2>My skills</h2>
-        <p>55 skills across 8 areas. Tap a star in the constellation or a filter to explore one area; bigger stars hold more skills.</p>
+        <p>59 skills across 8 areas. Tap a star in the constellation or a filter to explore one area; bigger stars hold more skills.</p>
       </div>
       <div class="skill-wrap">
         <figure class="diagram constellation reveal" id="constellation">
-          <svg id="cSvg" viewBox="0 0 520 520" role="img" aria-label="Skill constellation: eight skill areas around Vini, sized by number of skills."><polygon points="260.0,80.0 380.2,129.8 430.0,250.0 380.2,370.2 260.0,420.0 139.8,370.2 90.0,250.0 139.8,129.8" class="edge dashed"></polygon><line x1="260" y1="250" x2="260.0" y2="80.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="129.8" class="edge flow"></line><line x1="260" y1="250" x2="430.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="260.0" y2="420.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="90.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="129.8" class="edge flow"></line><circle cx="260" cy="250" r="44" style="fill: var(--surface)"></circle><circle cx="260" cy="250" r="44" class="hub"></circle><text x="260" y="248" text-anchor="middle" class="t-title">Vini</text><text x="260" y="266" text-anchor="middle" class="t-sub">55 skills</text><g class="cnode" tabindex="0" role="button" aria-label="AI product, 5 skills"><circle cx="260.0" cy="80.0" r="30" class="halo"></circle><circle cx="260.0" cy="80.0" r="24" style="fill: var(--surface)"></circle><circle cx="260.0" cy="80.0" r="24" class="dot"></circle><text x="260.0" y="82.0" text-anchor="middle" class="num">5</text><text x="260.0" y="95.0" text-anchor="middle" class="code">AI</text><text x="260.0" y="47.0" text-anchor="middle" class="lbl">AI product</text></g><g class="cnode" tabindex="0" role="button" aria-label="Engineering, 7 skills"><circle cx="380.2" cy="129.8" r="32.8" class="halo"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" class="dot"></circle><text x="380.2" y="131.8" text-anchor="middle" class="num">7</text><text x="380.2" y="144.8" text-anchor="middle" class="code">DEV</text><text x="380.2" y="94.0" text-anchor="middle" class="lbl">Engineering</text></g><g class="cnode" tabindex="0" role="button" aria-label="AI builder tools, 7 skills"><circle cx="430.0" cy="250.0" r="32.8" class="halo"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" class="dot"></circle><text x="430.0" y="252.0" text-anchor="middle" class="num">7</text><text x="430.0" y="265.0" text-anchor="middle" class="code">TLS</text><text x="430.0" y="292.8" text-anchor="middle" class="lbl">AI builder tools</text></g><g class="cnode" tabindex="0" role="button" aria-label="Deploy &amp; monitor, 5 skills"><circle cx="380.2" cy="370.2" r="30" class="halo"></circle><circle cx="380.2" cy="370.2" r="24" style="fill: var(--surface)"></circle><circle cx="380.2" cy="370.2" r="24" class="dot"></circle><text x="380.2" y="372.2" text-anchor="middle" class="num">5</text><text x="380.2" y="385.2" text-anchor="middle" class="code">OPS</text><text x="380.2" y="410.2" text-anchor="middle" class="lbl">Deploy &amp; monitor</text></g><g class="cnode" tabindex="0" role="button" aria-label="Leadership, 6 skills"><circle cx="260.0" cy="420.0" r="31.4" class="halo"></circle><circle cx="260.0" cy="420.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="260.0" cy="420.0" r="25.4" class="dot"></circle><text x="260.0" y="422.0" text-anchor="middle" class="num">6</text><text x="260.0" y="435.0" text-anchor="middle" class="code">LDR</text><text x="260.0" y="461.4" text-anchor="middle" class="lbl">Leadership</text></g><g class="cnode" tabindex="0" role="button" aria-label="Moderation &amp; security, 13 skills"><circle cx="139.8" cy="370.2" r="41.2" class="halo"></circle><circle cx="139.8" cy="370.2" r="35.2" style="fill: var(--surface)"></circle><circle cx="139.8" cy="370.2" r="35.2" class="dot"></circle><text x="139.8" y="372.2" text-anchor="middle" class="num">13</text><text x="139.8" y="385.2" text-anchor="middle" class="code">SEC</text><text x="139.8" y="421.4" text-anchor="middle" class="lbl">Moderation &amp; security</text></g><g class="cnode" tabindex="0" role="button" aria-label="Creative, 6 skills"><circle cx="90.0" cy="250.0" r="31.4" class="halo"></circle><circle cx="90.0" cy="250.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="90.0" cy="250.0" r="25.4" class="dot"></circle><text x="90.0" y="252.0" text-anchor="middle" class="num">6</text><text x="90.0" y="265.0" text-anchor="middle" class="code">ART</text><text x="90.0" y="291.4" text-anchor="middle" class="lbl">Creative</text></g><g class="cnode" tabindex="0" role="button" aria-label="Gaming, 6 skills"><circle cx="139.8" cy="129.8" r="31.4" class="halo"></circle><circle cx="139.8" cy="129.8" r="25.4" style="fill: var(--surface)"></circle><circle cx="139.8" cy="129.8" r="25.4" class="dot"></circle><text x="139.8" y="131.8" text-anchor="middle" class="num">6</text><text x="139.8" y="144.8" text-anchor="middle" class="code">GMG</text><text x="139.8" y="95.4" text-anchor="middle" class="lbl">Gaming</text></g></svg>
-          <figcaption><b>Skill constellation.</b> Security has the most skills, 13, because of the layered bot setup.</figcaption>
+          <svg id="cSvg" viewBox="0 0 520 520" role="img" aria-label="Skill constellation: eight skill areas around Vini, sized by number of skills."><polygon points="260.0,80.0 380.2,129.8 430.0,250.0 380.2,370.2 260.0,420.0 139.8,370.2 90.0,250.0 139.8,129.8" class="edge dashed"></polygon><line x1="260" y1="250" x2="260.0" y2="80.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="129.8" class="edge flow"></line><line x1="260" y1="250" x2="430.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="260.0" y2="420.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="90.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="129.8" class="edge flow"></line><circle cx="260" cy="250" r="44" style="fill: var(--surface)"></circle><circle cx="260" cy="250" r="44" class="hub"></circle><text x="260" y="248" text-anchor="middle" class="t-title">Vini</text><text x="260" y="266" text-anchor="middle" class="t-sub">59 skills</text><g class="cnode" tabindex="0" role="button" aria-label="AI product, 5 skills"><circle cx="260.0" cy="80.0" r="30" class="halo"></circle><circle cx="260.0" cy="80.0" r="24" style="fill: var(--surface)"></circle><circle cx="260.0" cy="80.0" r="24" class="dot"></circle><text x="260.0" y="82.0" text-anchor="middle" class="num">5</text><text x="260.0" y="95.0" text-anchor="middle" class="code">AI</text><text x="260.0" y="47.0" text-anchor="middle" class="lbl">AI product</text></g><g class="cnode" tabindex="0" role="button" aria-label="Engineering, 7 skills"><circle cx="380.2" cy="129.8" r="32.8" class="halo"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" class="dot"></circle><text x="380.2" y="131.8" text-anchor="middle" class="num">7</text><text x="380.2" y="144.8" text-anchor="middle" class="code">DEV</text><text x="380.2" y="94.0" text-anchor="middle" class="lbl">Engineering</text></g><g class="cnode" tabindex="0" role="button" aria-label="AI builder tools, 7 skills"><circle cx="430.0" cy="250.0" r="32.8" class="halo"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" class="dot"></circle><text x="430.0" y="252.0" text-anchor="middle" class="num">7</text><text x="430.0" y="265.0" text-anchor="middle" class="code">TLS</text><text x="430.0" y="292.8" text-anchor="middle" class="lbl">AI builder tools</text></g><g class="cnode" tabindex="0" role="button" aria-label="Deploy &amp; monitor, 5 skills"><circle cx="380.2" cy="370.2" r="30" class="halo"></circle><circle cx="380.2" cy="370.2" r="24" style="fill: var(--surface)"></circle><circle cx="380.2" cy="370.2" r="24" class="dot"></circle><text x="380.2" y="372.2" text-anchor="middle" class="num">5</text><text x="380.2" y="385.2" text-anchor="middle" class="code">OPS</text><text x="380.2" y="410.2" text-anchor="middle" class="lbl">Deploy &amp; monitor</text></g><g class="cnode" tabindex="0" role="button" aria-label="Leadership, 6 skills"><circle cx="260.0" cy="420.0" r="31.4" class="halo"></circle><circle cx="260.0" cy="420.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="260.0" cy="420.0" r="25.4" class="dot"></circle><text x="260.0" y="422.0" text-anchor="middle" class="num">6</text><text x="260.0" y="435.0" text-anchor="middle" class="code">LDR</text><text x="260.0" y="461.4" text-anchor="middle" class="lbl">Leadership</text></g><g class="cnode" tabindex="0" role="button" aria-label="Moderation &amp; security, 17 skills"><circle cx="139.8" cy="370.2" r="46.8" class="halo"></circle><circle cx="139.8" cy="370.2" r="40.8" style="fill: var(--surface)"></circle><circle cx="139.8" cy="370.2" r="40.8" class="dot"></circle><text x="139.8" y="372.2" text-anchor="middle" class="num">17</text><text x="139.8" y="385.2" text-anchor="middle" class="code">SEC</text><text x="139.8" y="427.0" text-anchor="middle" class="lbl">Moderation &amp; security</text></g><g class="cnode" tabindex="0" role="button" aria-label="Creative, 6 skills"><circle cx="90.0" cy="250.0" r="31.4" class="halo"></circle><circle cx="90.0" cy="250.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="90.0" cy="250.0" r="25.4" class="dot"></circle><text x="90.0" y="252.0" text-anchor="middle" class="num">6</text><text x="90.0" y="265.0" text-anchor="middle" class="code">ART</text><text x="90.0" y="291.4" text-anchor="middle" class="lbl">Creative</text></g><g class="cnode" tabindex="0" role="button" aria-label="Gaming, 6 skills"><circle cx="139.8" cy="129.8" r="31.4" class="halo"></circle><circle cx="139.8" cy="129.8" r="25.4" style="fill: var(--surface)"></circle><circle cx="139.8" cy="129.8" r="25.4" class="dot"></circle><text x="139.8" y="131.8" text-anchor="middle" class="num">6</text><text x="139.8" y="144.8" text-anchor="middle" class="code">GMG</text><text x="139.8" y="95.4" text-anchor="middle" class="lbl">Gaming</text></g></svg>
+          <figcaption><b>Skill constellation.</b> Moderation &amp; security has the most skills, 17, from the layered bot setup and how I test it.</figcaption>
         </figure>
         <div class="reveal" style="min-width: 0;">
-          <div class="filters" id="filters" role="group" aria-label="Filter skills by area"><button type="button" aria-pressed="true">All<b>55</b></button><button type="button" aria-pressed="false">AI product<b>5</b></button><button type="button" aria-pressed="false">Engineering<b>7</b></button><button type="button" aria-pressed="false">AI builder tools<b>7</b></button><button type="button" aria-pressed="false">Deploy &amp; monitor<b>5</b></button><button type="button" aria-pressed="false">Leadership<b>6</b></button><button type="button" aria-pressed="false">Moderation &amp; security<b>13</b></button><button type="button" aria-pressed="false">Creative<b>6</b></button><button type="button" aria-pressed="false">Gaming<b>6</b></button></div>
-          <div class="tiles" id="tiles"><div class="tile" data-cat="ai"><code>AI</code><span>Health AI product design</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Structured wellness workflows</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Clinical safety guardrails</span></div><div class="tile" data-cat="ai"><code>AI</code><span>AI-assisted prototyping</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Prompting with Claude Pro</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Python</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Discord bot development</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Interactive button views</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Leveling &amp; XP systems</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Anti-spam logic</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>AFK tracking</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>UI architecture</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Bolt.new</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Manus.space</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Base44</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Lovable</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Replit Agent</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Google AI Studio</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Claude Pro</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Render deployments</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>UptimeRobot monitoring</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Uptime &amp; latency alerts</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Live service upkeep</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Multi-device dev workflow</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Founding communities</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Multi-brand network management</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Governance frameworks</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Mergers &amp; treaty drafting</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Partnerships</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Staff leadership</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Large-scale moderation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Server administration</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Anti-nuke &amp; raid defense</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Permission architecture</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Vault Account isolation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Wick</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bravers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Security Bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Krypton</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Dyno</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Carl-bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Sapphire</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>JailBot</span></div><div class="tile" data-cat="art"><code>ART</code><span>Football highlight editing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Match footage sourcing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Beat-synced cutting</span></div><div class="tile" data-cat="art"><code>ART</code><span>Velocity curves</span></div><div class="tile" data-cat="art"><code>ART</code><span>Soundtrack composition</span></div><div class="tile" data-cat="art"><code>ART</code><span>Google Flow Music</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Minecraft SMP admin</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Cross-platform servers</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Blox Fruits endgame</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>High-tier PvP</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Sea Events</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Trading &amp; middleman</span></div></div>
-          <p class="skill-count" id="skillCount" aria-live="polite">Showing all 55 skills</p>
+          <div class="filters" id="filters" role="group" aria-label="Filter skills by area"><button type="button" aria-pressed="true">All<b>59</b></button><button type="button" aria-pressed="false">AI product<b>5</b></button><button type="button" aria-pressed="false">Engineering<b>7</b></button><button type="button" aria-pressed="false">AI builder tools<b>7</b></button><button type="button" aria-pressed="false">Deploy &amp; monitor<b>5</b></button><button type="button" aria-pressed="false">Leadership<b>6</b></button><button type="button" aria-pressed="false">Moderation &amp; security<b>17</b></button><button type="button" aria-pressed="false">Creative<b>6</b></button><button type="button" aria-pressed="false">Gaming<b>6</b></button></div>
+          <div class="tiles" id="tiles"><div class="tile" data-cat="ai"><code>AI</code><span>Health AI product design</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Structured wellness workflows</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Clinical safety guardrails</span></div><div class="tile" data-cat="ai"><code>AI</code><span>AI-assisted prototyping</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Prompting with Claude Pro</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Python</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Discord bot development</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Interactive button views</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Leveling &amp; XP systems</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Anti-spam logic</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>AFK tracking</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>UI architecture</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Bolt.new</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Manus.space</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Base44</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Lovable</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Replit Agent</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Google AI Studio</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Claude Pro</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Render deployments</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>UptimeRobot monitoring</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Uptime &amp; latency alerts</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Live service upkeep</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Multi-device dev workflow</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Founding communities</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Multi-brand network management</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Governance frameworks</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Mergers &amp; treaty drafting</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Partnerships</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Staff leadership</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Large-scale moderation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Server administration</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Anti-nuke &amp; raid defense</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Permission architecture</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Vault Account isolation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Wick</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bravers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Security Bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Krypton</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Dyno</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Carl-bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Sapphire</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>JailBot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bot testing in sandbox servers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Raid &amp; spam simulation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Automod rule tuning</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Case logs &amp; appeals</span></div><div class="tile" data-cat="art"><code>ART</code><span>Football highlight editing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Match footage sourcing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Beat-synced cutting</span></div><div class="tile" data-cat="art"><code>ART</code><span>Velocity curves</span></div><div class="tile" data-cat="art"><code>ART</code><span>Soundtrack composition</span></div><div class="tile" data-cat="art"><code>ART</code><span>Google Flow Music</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Minecraft SMP admin</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Cross-platform servers</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Blox Fruits endgame</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>High-tier PvP</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Sea Events</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Trading &amp; middleman</span></div></div>
+          <p class="skill-count" id="skillCount" aria-live="polite">Showing all 59 skills</p>
         </div>
       </div>
     </div>
@@ -1009,7 +1218,7 @@
       <div class="ad-stats reveal">
         <div><b>1.5k–2k</b><span>members reached</span></div>
         <div><b>5</b><span>community brands</span></div>
-        <div><b>Roblox</b><span>&amp; gaming audience</span></div>
+        <div><b>₹ / Crypto</b><span>payment accepted</span></div>
       </div>
 
       <div class="grid ad-grid">
@@ -1035,9 +1244,10 @@
           <span class="kicker">How it works</span>
           <ol>
             <li><b>Send an enquiry</b> with the form below or by email.</li>
-            <li><b>Agree the details</b>: placement, timing and rate.</li>
+            <li><b>Agree the details</b>: placement, timing and rate. I accept <b>INR</b> and <b>crypto</b>.</li>
             <li><b>Your ad goes live</b> across the network.</li>
           </ol>
+          <div class="pay"><span>Payment</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
         </article>
       </div>
 
@@ -1066,7 +1276,14 @@
               <option>Not sure yet</option>
             </select>
           </label>
-          <label for="adBudget">Budget (optional)<input id="adBudget" name="budget" placeholder="e.g. Robux, USD or INR amount" /></label>
+          <label for="adPay">Pay with
+            <select id="adPay" name="payment">
+              <option>INR (₹)</option>
+              <option>Crypto</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+          <label for="adBudget">Budget (optional)<input id="adBudget" name="budget" placeholder="e.g. ₹2,000 or crypto amount" /></label>
           <label class="full" for="adMsg">Details<textarea id="adMsg" name="message" rows="4" placeholder="What you want to advertise and when"></textarea></label>
         </div>
         <div class="form-foot">
@@ -1366,7 +1583,7 @@
       { id: "tools", code: "TLS", name: "AI builder tools", skills: ["Bolt.new", "Manus.space", "Base44", "Lovable", "Replit Agent", "Google AI Studio", "Claude Pro"] },
       { id: "ops", code: "OPS", name: "Deploy & monitor", skills: ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts", "Live service upkeep", "Multi-device dev workflow"] },
       { id: "lead", code: "LDR", name: "Leadership", skills: ["Founding communities", "Multi-brand network management", "Governance frameworks", "Mergers & treaty drafting", "Partnerships", "Staff leadership"] },
-      { id: "sec", code: "SEC", name: "Moderation & security", skills: ["Large-scale moderation", "Server administration", "Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot"] },
+      { id: "sec", code: "SEC", name: "Moderation & security", skills: ["Large-scale moderation", "Server administration", "Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot", "Bot testing in sandbox servers", "Raid & spam simulation", "Automod rule tuning", "Case logs & appeals"] },
       { id: "art", code: "ART", name: "Creative", skills: ["Football highlight editing", "Match footage sourcing", "Beat-synced cutting", "Velocity curves", "Soundtrack composition", "Google Flow Music"] },
       { id: "game", code: "GMG", name: "Gaming", skills: ["Minecraft SMP admin", "Cross-platform servers", "Blox Fruits endgame", "High-tier PvP", "Sea Events", "Trading & middleman"] }
     ];
@@ -1440,6 +1657,71 @@
     tiles.forEach(function (t) { t.classList.remove("pop"); });
   } catch (e) {}
 
+  // Process flowcharts
+  try {
+    var FLOWS = {
+      mod: [
+        ["Detect", "Problems surface three ways: automod rules in Dyno, Carl-bot and Sapphire, member reports, and staff watching busy channels.", ["Dyno", "Carl-bot", "Sapphire", "Reports"]],
+        ["Triage", "First question: is this an attack on the server, or one person breaking the rules? The answer decides which path it takes.", ["Severity", "Context", "History"]],
+        ["Lockdown", "Raids and nukes go straight to the anti-nuke layer. Wick, Bravers, Security Bot and Krypton strip permissions, kick raiders and stop mass deletes before staff even react.", ["Wick", "Bravers", "Security Bot", "Krypton"]],
+        ["Restore & audit", "Once it's contained, deleted channels and roles are restored and the audit log is checked to find how the attacker got in. Ownership stays safe in the Vault Account the whole time.", ["Audit log", "Backups", "Vault Account"]],
+        ["Action ladder", "For rule breaks I use the lowest action that fixes it: warn, then mute, then JailBot isolation, then kick, and ban only for serious or repeated cases.", ["Warn", "Timeout", "JailBot", "Kick", "Ban"]],
+        ["Log & evidence", "Every action is logged with screenshots and a reason, so any staff member can see the full history of a case.", ["Mod logs", "Evidence", "Case notes"]],
+        ["Review, appeals & tune", "Appeals get a second look from another staff member. Anything automod missed, or flagged by mistake, becomes a rule change, so the next problem is caught earlier.", ["Appeals", "Staff review", "Rule tuning"]]
+      ],
+      test: [
+        ["Sandbox", "Every bot is added to a private test server first, never straight into a live community.", ["Test server", "Alt accounts"]],
+        ["Permissions", "Bots get only the permissions they need, and their role sits at the right place in the hierarchy so they can act on raiders but not on staff.", ["Least privilege", "Role hierarchy"]],
+        ["Simulate", "I throw real attacks at it: message floods, mass joins from alt accounts, mass channel and role deletes, and bad links.", ["Spam floods", "Mass joins", "Nuke tests", "Bad links"]],
+        ["Check", "Did it react fast enough? Did it log everything? Did it punish anyone innocent? False positives matter as much as missed attacks.", ["Response time", "Logs", "False positives"]],
+        ["Pass?", "A bot only passes if it stops every simulated attack without hitting normal members.", ["Pass / fail"]],
+        ["Tune & re-test", "On a fail I adjust thresholds, whitelists and permissions, then run the same attacks again until it passes.", ["Thresholds", "Whitelists", "Re-test"]],
+        ["Go live", "Then it's rolled out to the live server, staff are briefed on what it does, and my own bots like Nova are watched by UptimeRobot.", ["Rollout", "Staff briefing", "UptimeRobot"]]
+      ]
+    };
+    var LABELS = { mod: ["01", "02", "03a", "04a", "03b", "05", "06"], test: ["01", "02", "03", "04", "05", "06", "07"] };
+    var flowTabs = document.querySelectorAll(".flow-tabs button");
+    function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+    document.querySelectorAll("[data-flow-panel]").forEach(function (fig) {
+      var key = fig.getAttribute("data-flow-panel"), steps = FLOWS[key];
+      var nodes = fig.querySelectorAll(".fnode"), detail = fig.querySelector(".flow-detail"), playBtn = fig.querySelector(".flow-play");
+      var timer = null, cur = -1;
+      function show(i) {
+        cur = i;
+        nodes.forEach(function (n) { n.classList.toggle("on", +n.getAttribute("data-i") === i); });
+        var st = steps[i];
+        detail.innerHTML = '<span class="big">' + LABELS[key][i] + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p><div class="pills">' +
+          st[2].map(function (x) { return '<span class="pill">' + esc(x) + '</span>'; }).join("") + "</div>";
+        if (!reduce) { detail.classList.remove("swap"); void detail.offsetWidth; detail.classList.add("swap"); }
+      }
+      function stop() { clearInterval(timer); timer = null; playBtn.textContent = "Play the flow"; }
+      function play() {
+        if (timer) { stop(); return; }
+        playBtn.textContent = "Pause";
+        show(cur + 1 >= steps.length ? 0 : cur + 1);
+        timer = setInterval(function () { if (cur + 1 >= steps.length) { stop(); return; } show(cur + 1); }, 2600);
+      }
+      nodes.forEach(function (n) {
+        function pick() { stop(); show(+n.getAttribute("data-i")); }
+        n.addEventListener("click", pick);
+        n.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+      });
+      playBtn.addEventListener("click", play);
+      fig.__stop = stop;
+      show(0);
+    });
+    flowTabs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-flow");
+        flowTabs.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        document.querySelectorAll("[data-flow-panel]").forEach(function (f) {
+          var on = f.getAttribute("data-flow-panel") === k; f.hidden = !on; if (!on && f.__stop) f.__stop();
+          if (on) { f.classList.add("in", "live"); }
+        });
+      });
+    });
+  } catch (e) {}
+
   // Copy email
   try {
     var copyBtn = document.getElementById("copyMail"), mailText = document.getElementById("mailText");
@@ -1463,7 +1745,7 @@
       submitBtn.disabled = true; status.className = "form-status"; status.textContent = "Sending…";
       function fallback() {
         var body = ["Name: " + data.get("name"), "Email: " + data.get("email"), "Brand: " + data.get("brand"), "Promoting: " + data.get("type"),
-          "Option: " + data.get("option"), "Budget: " + data.get("budget"), "", data.get("message")].join("\n");
+          "Option: " + data.get("option"), "Pay with: " + data.get("payment"), "Budget: " + data.get("budget"), "", data.get("message")].join("\n");
         status.textContent = "The form couldn't send from here. Email vini.official.netops@gmail.com instead; a new email with your details should open.";
         location.href = "mailto:vini.official.netops@gmail.com?subject=" + encodeURIComponent("Ad enquiry from " + data.get("name")) + "&body=" + encodeURIComponent(body);
         submitBtn.disabled = false;
