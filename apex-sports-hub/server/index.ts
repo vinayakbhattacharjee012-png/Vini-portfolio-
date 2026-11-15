@@ -7,7 +7,7 @@ import { espnScoreboard, espnStandings } from './espn.ts';
 import { tsdbStandings, tsdbTeam } from './thesportsdb.ts';
 import { geminiAnswer, geminiEnabled, geminiNews, geminiScoreboard, geminiStandings } from './gemini.ts';
 import { espnMatchCentre } from './match.ts';
-import { matchCount, recordFor, resultsFor, syncStatus, teamNames } from './db.ts';
+import { clubTable, matchCount, recordFor, resultsFor, syncStatus, teamNames } from './db.ts';
 import { startIngest } from './ingest.ts';
 import { espnNews } from './news.ts';
 import { sampleNews, sampleScoreboard, sampleStandings } from './sample.ts';
@@ -113,6 +113,12 @@ async function api(url: URL): Promise<unknown> {
       const since = new Date(Date.now() - days * 86_400_000).toISOString();
       const rows = resultsFor({ league, limit: Number(q('limit') || 200), finishedOnly: q('finished') !== '0' }).filter((r) => r.start >= since);
       return { data: rows, source: 'db', fetchedAt: new Date().toISOString(), total: matchCount() };
+    }
+
+    case '/api/clubs': {
+      const league = leagueById(q('league'));
+      if (!league) throw new HttpError(400, 'Unknown league');
+      return { data: clubTable(league.id), source: 'db', fetchedAt: new Date().toISOString() };
     }
 
     case '/api/teams/search': {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Activity, LayoutGrid, ListOrdered, Newspaper, Radio, RefreshCw, Search, Trophy, Zap } from 'lucide-react';
+import { Activity, LayoutGrid, ListOrdered, Newspaper, Radio, RefreshCw, Search, Shield, Trophy, Zap } from 'lucide-react';
 import { LEAGUES, leagueById, type Envelope, type Match, type NewsItem, type Sport, type StandingRow } from './lib/types.ts';
 import { useApi, useNow } from './lib/api.ts';
 import { cx } from './lib/format.ts';
@@ -8,8 +8,9 @@ import { Standings } from './components/Standings.tsx';
 import { News } from './components/News.tsx';
 import { Drawer, MatchDetail, TeamDetail } from './components/Drawer.tsx';
 import { LiveBadge, Panel, SourceBadge } from './components/ui.tsx';
+import { Clubs } from './components/Clubs.tsx';
 
-type View = 'matches' | 'table' | 'news';
+type View = 'matches' | 'table' | 'clubs' | 'news';
 
 const readHash = () => {
   const [sport, league] = location.hash.slice(1).split('/');
@@ -53,6 +54,19 @@ export default function App() {
   // keep an open match drawer in sync with polled scores
   const openMatch = match ? (scores.data?.data.find((m) => m.id === match.id) ?? match) : null;
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) return setSuggestions([]);
+    const t = setTimeout(() => {
+      fetch(`/api/teams/search?q=${encodeURIComponent(q)}`)
+        .then((r) => r.json())
+        .then((b) => setSuggestions(b.data ?? []))
+        .catch(() => setSuggestions([]));
+    }, 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
   const pickSport = (s: Sport) => setSel({ sport: s, league: LEAGUES.find((l) => l.sport === s)!.id });
   const closeAll = useCallback(() => {
     setMatch(null);
@@ -91,6 +105,12 @@ export default function App() {
   const tablePanel = (
     <Panel title={cricket ? 'Points table' : 'Standings'} icon={<Trophy className="size-4 text-amber-300" />} right={<SourceBadge source={table.data?.source} at={table.data?.fetchedAt} now={now} note={table.data?.note} />}>
       <Standings rows={lg.hasTable ? table.data?.data : []} loading={lg.hasTable && table.loading} cricket={cricket} onTeam={setTeam} compact={view !== 'table'} />
+    </Panel>
+  );
+
+  const clubsPanel = (
+    <Panel title="Clubs" icon={<Shield className="size-4 text-sky-300" />} right={<span className="text-[10px] text-slate-500">Tap a club for its profile</span>}>
+      <Clubs league={league} onClub={setTeam} />
     </Panel>
   );
 
@@ -151,10 +171,16 @@ export default function App() {
               ref={searchRef}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search teams"
-              aria-label="Search teams"
+              list="club-suggest"
+              placeholder="Search clubs"
+              aria-label="Search clubs"
               className="w-full rounded-xl bg-white/5 py-2 pr-8 pl-8 text-xs text-slate-100 ring-1 ring-white/10 placeholder:text-slate-500 focus:ring-live/50 focus:outline-none"
             />
+            <datalist id="club-suggest">
+              {suggestions.map((n) => (
+                <option key={n} value={n} />
+              ))}
+            </datalist>
             <kbd className="absolute top-1/2 right-2.5 hidden -translate-y-1/2 rounded border border-white/10 px-1 text-[10px] text-slate-500 sm:block">/</kbd>
           </form>
         </div>
@@ -215,19 +241,21 @@ export default function App() {
           <div className="lg:col-span-7">{matchesPanel}</div>
           <div className="space-y-5 lg:col-span-5">
             {tablePanel}
+            {clubsPanel}
             {newsPanel}
           </div>
         </div>
-        <div className="lg:hidden">{view === 'matches' ? matchesPanel : view === 'table' ? tablePanel : newsPanel}</div>
+        <div className="lg:hidden">{view === 'matches' ? matchesPanel : view === 'table' ? tablePanel : view === 'clubs' ? clubsPanel : newsPanel}</div>
       </main>
 
       {/* mobile tab bar */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-obsidian/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden" aria-label="Sections">
-        <div className="mx-auto grid max-w-md grid-cols-3">
+        <div className="mx-auto grid max-w-md grid-cols-4">
           {(
             [
               ['matches', 'Matches', LayoutGrid],
               ['table', 'Table', ListOrdered],
+              ['clubs', 'Clubs', Shield],
               ['news', 'News', Newspaper],
             ] as const
           ).map(([id, label, Icon]) => (

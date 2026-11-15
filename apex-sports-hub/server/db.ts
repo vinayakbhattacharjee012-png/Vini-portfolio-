@@ -134,3 +134,27 @@ export function logSync(league: string, job: string, ok: boolean, detail: string
 export function matchCount() {
   return (db.prepare('SELECT COUNT(*) AS n FROM matches').get() as { n: number }).n;
 }
+
+export interface ClubRow { name: string; played: number; won: number; drawn: number; lost: number; gf: number; ga: number; points: number }
+
+/** Every club with a stored finished match in a league, with its record (3 pts a win, 1 a draw). */
+export function clubTable(league: string): ClubRow[] {
+  const rows = db.prepare(`SELECT home, away, home_score, away_score FROM matches WHERE league = ? AND status = 'finished'`).all(league) as any[];
+  const map = new Map<string, ClubRow>();
+  const row = (name: string) => {
+    if (!map.has(name)) map.set(name, { name, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, points: 0 });
+    return map.get(name)!;
+  };
+  for (const r of rows) {
+    const hs = Number(r.home_score), as = Number(r.away_score);
+    if (Number.isNaN(hs) || Number.isNaN(as)) continue;
+    for (const [name, us, them] of [[r.home, hs, as], [r.away, as, hs]] as const) {
+      const c = row(name);
+      c.played++; c.gf += us; c.ga += them;
+      if (us > them) { c.won++; c.points += 3; }
+      else if (us === them) { c.drawn++; c.points += 1; }
+      else c.lost++;
+    }
+  }
+  return [...map.values()].sort((a, b) => b.points - a.points || b.gf - b.ga - (a.gf - a.ga) || a.name.localeCompare(b.name));
+}
