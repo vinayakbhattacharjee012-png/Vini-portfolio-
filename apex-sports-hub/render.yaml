@@ -1,0 +1,17 @@
+# Render Blueprint: one-click deploy of Apex Sports Hub (API + built frontend in one Node service).
+services:
+  - type: web
+    name: apex-sports-hub
+    runtime: node
+    rootDir: apex-sports-hub
+    plan: starter
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: GEMINI_API_KEY
+        sync: false   # set in the Render dashboard; never committed
