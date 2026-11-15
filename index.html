@@ -786,6 +786,16 @@
   .spec dt { font: 500 .72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
   .spec dd { margin: 0; font-size: .92rem; color: var(--ink); }
   @media (max-width: 420px) { .spec dl { grid-template-columns: minmax(0, 1fr); gap: 2px; } .spec dt { margin-top: 8px; } }
+  /* ---- Rolling bot-name line ---- */
+  .botroll { position: relative; overflow: hidden; margin: 0 -16px 36px; padding: 14px 0; border-block: 1px solid var(--line);
+    background: linear-gradient(90deg, var(--bg), transparent 12%, transparent 88%, var(--bg)); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .botroll-track { display: flex; width: max-content; gap: 12px; animation: botRoll 34s linear infinite; }
+  .botroll:hover .botroll-track { animation-play-state: paused; }
+  .botroll-track span { font: 600 .9rem var(--font-display); padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--line); display: inline-flex; align-items: center; gap: 12px; }
+  .botroll-track span::after { content: "✦"; color: var(--star); font-size: .7rem; }
+  @keyframes botRoll { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .botroll-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .botroll-track span:nth-child(n+10) { display: none; } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1301,6 +1311,7 @@
         <h2>A layered defense grid</h2>
         <p>Raids and permission escalations have to get through several bot layers, and server ownership itself sits in a separate Vault Account that never takes part in day-to-day moderation.</p>
       </div>
+      <div class="botroll" aria-label="Security bots in use" role="img"><div class="botroll-track"><span>Wick</span><span>Bravers</span><span>Security Bot</span><span>Krypton</span><span>Dyno</span><span>Carl-bot</span><span>Sapphire</span><span>JailBot</span><span>Nova 3.0</span><span>Wick</span><span>Bravers</span><span>Security Bot</span><span>Krypton</span><span>Dyno</span><span>Carl-bot</span><span>Sapphire</span><span>JailBot</span><span>Nova 3.0</span></div></div>
       <div class="skillrow reveal" data-skill-box="security" aria-label="Security skills"><div class="skb"><code>SEC</code><b>Anti-nuke &amp; raid defense</b><span>8-bot layered stack</span></div><div class="skb"><code>PRM</code><b>Permission architecture</b><span>Least-privilege roles</span></div><div class="skb"><code>VLT</code><b>Vault Account</b><span>Ownership kept safe</span></div><div class="skb"><code>SIM</code><b>Raid simulation</b><span>Attack tests in sandbox</span></div></div>
 
       <div class="grid">
@@ -1338,6 +1349,7 @@
         <h2>Moderation and bot testing, step by step</h2>
         <p>The process behind the numbers: how a problem moves through my servers, and how a bot gets tested before it goes anywhere near a live community. Tap any step.</p>
       </div>
+      <div class="botroll" aria-label="Bots used in the moderation flow" role="img"><div class="botroll-track"><span>Wick</span><span>Bravers</span><span>Security Bot</span><span>Krypton</span><span>Dyno</span><span>Carl-bot</span><span>Sapphire</span><span>JailBot</span><span>Nova 3.0</span><span>Wick</span><span>Bravers</span><span>Security Bot</span><span>Krypton</span><span>Dyno</span><span>Carl-bot</span><span>Sapphire</span><span>JailBot</span><span>Nova 3.0</span></div></div>
       <div class="skillrow reveal" data-skill-box="process" aria-label="Process skills"><div class="skb"><code>AUT</code><b>Automod tuning</b><span>Fewer false positives</span></div><div class="skb"><code>LOG</code><b>Case logs &amp; appeals</b><span>Every action recorded</span></div><div class="skb"><code>QA</code><b>Bot testing</b><span>Sandbox before live</span></div></div>
 
       <div class="flow-tabs" role="group" aria-label="Choose a flowchart">
