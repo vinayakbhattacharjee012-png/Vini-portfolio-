@@ -291,17 +291,13 @@
   .night { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
     background: linear-gradient(180deg, #050816 0%, #0b1330 55%, #0d1a2e 100%); }
   .night canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .night .clouds { position: absolute; left: -10%; right: -10%; top: 0; height: 55%; opacity: .55;
-    background: radial-gradient(ellipse 45% 22% at 25% 30%, rgba(60,90,150,.35), transparent 70%),
-                radial-gradient(ellipse 40% 18% at 70% 20%, rgba(40,70,130,.35), transparent 70%),
-                radial-gradient(ellipse 60% 25% at 50% 45%, rgba(20,35,70,.6), transparent 75%); }
+  .night .clouds { position: absolute; left: -30%; right: -30%; top: 0; height: 60%; will-change: transform; opacity: .6; }
+  .night .c1 { background: radial-gradient(ellipse 30% 16% at 30% 26%, rgba(70,105,170,.4), transparent 70%), radial-gradient(ellipse 26% 14% at 62% 40%, rgba(40,65,120,.45), transparent 70%); animation: drift 70s linear infinite alternate; }
+  .night .c2 { top: 12%; opacity: .4; background: radial-gradient(ellipse 34% 14% at 70% 20%, rgba(90,125,190,.35), transparent 70%), radial-gradient(ellipse 22% 10% at 20% 48%, rgba(30,50,100,.5), transparent 70%); animation: drift 110s linear infinite alternate-reverse; }
+  @keyframes drift { from { transform: translateX(-6%); } to { transform: translateX(8%); } }
   .night .flash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at var(--fx, 50%) 30%, rgba(170,200,255,.55), rgba(70,110,200,.15) 45%, transparent 70%); }
   .night .flash.on { animation: flashPulse .5s ease-out forwards; }
   @keyframes flashPulse { 0% { opacity: 0; } 10% { opacity: 1; } 22% { opacity: .2; } 34% { opacity: .9; } 100% { opacity: 0; } }
-  .night .bolt { position: absolute; top: 0; height: 62%; width: 14%; left: var(--bx, 50%); opacity: 0; fill: none; stroke: #cfe2ff; stroke-width: 2.4;
-    filter: drop-shadow(0 0 6px #7fb0ff) drop-shadow(0 0 16px #3d6fd6); transform: translateX(-50%); }
-  .night .bolt.on { animation: boltFlash .45s steps(1) forwards; }
-  @keyframes boltFlash { 0% { opacity: 0; } 8% { opacity: 1; } 16% { opacity: .15; } 26% { opacity: 1; } 60% { opacity: 0; } 100% { opacity: 0; } }
   .hero .wrap { z-index: 1; }
   .hero #sky { z-index: 0; opacity: .5; }
   .reveal.in { animation: riseIn .8s cubic-bezier(.2,.7,.2,1) both; }
@@ -1030,7 +1026,7 @@
 
 <header class="hero" id="top">
   <canvas id="sky" aria-hidden="true"></canvas>
-  <div class="night" aria-hidden="true"><canvas id="meteorSky"></canvas><div class="clouds"></div><div class="flash" id="flash"></div><svg class="bolt" id="bolt" viewBox="0 0 120 400" preserveAspectRatio="none"><path d="M60,0 L48,80 L70,95 L40,190 L66,205 L30,320 L58,330 L44,400" /></svg></div>
+  <div class="night" aria-hidden="true"><canvas id="meteorSky"></canvas><div class="clouds c1"></div><div class="clouds c2"></div><div class="flash" id="flash"></div></div>
   <div class="wrap">
    <div class="hero-grid">
     <div class="hero-copy">
@@ -2218,46 +2214,80 @@
   } catch (e) {}
 
 
-  // Night sky: meteor shower + lightning (hero only; paused off-screen; skipped for reduced motion)
+  // Night sky: twinkling stars, meteors + fireballs, drifting clouds, forked lightning (hero only)
   try {
-    var nc = document.getElementById("meteorSky"), nx = nc.getContext("2d"), NW = 0, NH = 0, mets = [], nlast = 0, nalive = false, nnext = 0;
-    var MAXM = innerWidth < 820 ? 5 : 9;
-    function nsize() { NW = nc.offsetWidth; NH = nc.offsetHeight; nc.width = NW; nc.height = NH; }
-    function nadd(init) {
-      var sp = 7 + Math.random() * 7, ang = Math.PI * (0.56 + Math.random() * 0.1);
-      mets.push({ x: Math.random() * NW * 1.2 - NW * .1, y: init ? Math.random() * NH * .6 - NH * .2 : -30, vx: -Math.cos(ang) * sp, vy: Math.sin(ang) * sp, len: 90 + Math.random() * 140, w: 1 + Math.random() * 1.8, c: Math.random() < .7 ? "#ffd29a" : "#ffffff" });
+    var nc = document.getElementById("meteorSky"), nx = nc.getContext("2d"), NW = 0, NH = 0, mets = [], stars = [], bolts = [];
+    var nlast = 0, nalive = false, nnext = 0, nextFire = 0, dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    var small = innerWidth < 820;
+    function nsize() {
+      NW = nc.offsetWidth; NH = nc.offsetHeight; nc.width = NW * dpr; nc.height = NH * dpr; nx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      stars = []; var n = small ? 50 : 110;
+      for (var i = 0; i < n; i++) stars.push({ x: Math.random() * NW, y: Math.random() * NH * .75, r: .4 + Math.random() * 1.2, p: Math.random() * 6.28, s: .6 + Math.random() * 2.2 });
+    }
+    function nadd(init, fire) {
+      var sp = fire ? 4 + Math.random() * 2 : 7 + Math.random() * 8, ang = Math.PI * (0.55 + Math.random() * 0.1);
+      mets.push({ x: Math.random() * NW * 1.2 - NW * .1, y: init ? Math.random() * NH * .5 - NH * .15 : -30, vx: -Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+        len: fire ? 220 + Math.random() * 120 : 80 + Math.random() * 140, w: fire ? 2.6 : 1 + Math.random() * 1.6, fire: fire, c: Math.random() < .7 ? "#ffd29a" : "#ffffff" });
+    }
+    function forkBolt(x0) {
+      var pts = [[x0, 0]], x = x0, y = 0, H = NH * .62;
+      while (y < H) { y += 14 + Math.random() * 18; x += (Math.random() - .5) * 34; pts.push([x, y]); }
+      var segs = [];
+      for (var i = 1; i < pts.length; i++) {
+        segs.push([pts[i - 1], pts[i]]);
+        if (Math.random() < .22 && i < pts.length - 2) { // branch
+          var bx = pts[i][0], by = pts[i][1], L = 3 + Math.floor(Math.random() * 3), dx = bx;
+          for (var k = 0; k < L; k++) { var nx2 = dx + (Math.random() - .3) * 30, ny = by + 16 + Math.random() * 18; segs.push([[dx, by], [nx2, ny]]); dx = nx2; by = ny; }
+        }
+      }
+      bolts.push({ segs: segs, life: 0 });
     }
     function nframe(t) {
       if (!nalive) return;
       if (t - nlast < 33) { requestAnimationFrame(nframe); return; } nlast = t;
       nx.clearRect(0, 0, NW, NH);
-      if (mets.length < MAXM && t > nnext) { nadd(false); nnext = t + 450 + Math.random() * 900; }
+      for (var i = 0; i < stars.length; i++) {
+        var st = stars[i], a = .25 + .6 * (.5 + .5 * Math.sin(t / 1000 * st.s + st.p));
+        nx.globalAlpha = a; nx.fillStyle = "#e8ebf7"; nx.beginPath(); nx.arc(st.x, st.y, st.r, 0, 6.283); nx.fill();
+      }
+      nx.globalAlpha = 1;
+      if (mets.length < (small ? 5 : 9) && t > nnext) { nadd(false, false); nnext = t + 500 + Math.random() * 1000; }
+      if (t > nextFire) { nadd(false, true); nextFire = t + 14000 + Math.random() * 12000; }
       nx.lineCap = "round";
-      for (var i = mets.length - 1; i >= 0; i--) {
-        var m = mets[i]; m.x += m.vx; m.y += m.vy;
+      for (var j = mets.length - 1; j >= 0; j--) {
+        var m = mets[j]; m.x += m.vx; m.y += m.vy;
         var n = Math.hypot(m.vx, m.vy), tx = m.x - m.vx / n * m.len, ty = m.y - m.vy / n * m.len;
-        var g = nx.createLinearGradient(m.x, m.y, tx, ty); g.addColorStop(0, m.c); g.addColorStop(1, "rgba(255,200,130,0)");
+        var g = nx.createLinearGradient(m.x, m.y, tx, ty); g.addColorStop(0, m.c); g.addColorStop(1, "rgba(255,190,120,0)");
         nx.strokeStyle = g; nx.lineWidth = m.w; nx.beginPath(); nx.moveTo(m.x, m.y); nx.lineTo(tx, ty); nx.stroke();
-        nx.globalAlpha = .45; nx.fillStyle = "#ffb86b"; nx.beginPath(); nx.arc(m.x, m.y, m.w * 2.6, 0, 6.283); nx.fill(); nx.globalAlpha = 1;
-        nx.fillStyle = "#fff"; nx.beginPath(); nx.arc(m.x, m.y, m.w * .9, 0, 6.283); nx.fill();
-        if (m.y > NH + 40 || m.x < -200) mets.splice(i, 1);
+        var hr = m.fire ? 9 : m.w * 2.6;
+        nx.globalAlpha = m.fire ? .35 : .45; nx.fillStyle = "#ffb86b"; nx.beginPath(); nx.arc(m.x, m.y, hr, 0, 6.283); nx.fill();
+        nx.globalAlpha = 1; nx.fillStyle = "#fff"; nx.beginPath(); nx.arc(m.x, m.y, m.w * .9, 0, 6.283); nx.fill();
+        if (m.y > NH + 40 || m.x < -260) mets.splice(j, 1);
+      }
+      for (var b = bolts.length - 1; b >= 0; b--) {
+        var bt = bolts[b]; bt.life += 33; var f = bt.life < 90 ? 1 : bt.life < 170 ? .25 : bt.life < 260 ? .9 : 0;
+        if (f === 0) { bolts.splice(b, 1); continue; }
+        nx.globalAlpha = f; nx.strokeStyle = "#dbe9ff"; nx.lineWidth = 2.2; nx.shadowColor = "#6aa2ff"; nx.shadowBlur = 16;
+        nx.beginPath(); for (var q = 0; q < bt.segs.length; q++) { nx.moveTo(bt.segs[q][0][0], bt.segs[q][0][1]); nx.lineTo(bt.segs[q][1][0], bt.segs[q][1][1]); } nx.stroke();
+        nx.shadowBlur = 0; nx.globalAlpha = 1;
       }
       requestAnimationFrame(nframe);
     }
-    var flashEl = document.getElementById("flash"), boltEl = document.getElementById("bolt");
+    var flashEl = document.getElementById("flash");
     function storm() {
       var fx = 15 + Math.random() * 70;
       flashEl.style.setProperty("--fx", fx + "%"); flashEl.classList.remove("on"); void flashEl.offsetWidth; flashEl.classList.add("on");
-      boltEl.style.setProperty("--bx", fx + "%"); boltEl.classList.remove("on"); void boltEl.offsetWidth; boltEl.classList.add("on");
+      forkBolt(NW * fx / 100);
       setTimeout(storm, 6000 + Math.random() * 7000);
     }
     var hero = document.querySelector(".hero");
     if (!reduce) {
-      nsize(); for (var q = 0; q < 4; q++) nadd(true);
+      nsize(); for (var q2 = 0; q2 < 3; q2++) nadd(true, false);
+      nextFire = performance.now() + 9000;
       if ("IntersectionObserver" in window) new IntersectionObserver(function (en) { if (en[0].isIntersecting && !nalive) { nalive = true; requestAnimationFrame(nframe); } else if (!en[0].isIntersecting) nalive = false; }).observe(hero);
       else { nalive = true; requestAnimationFrame(nframe); }
       setTimeout(storm, 2500);
-      window.addEventListener("resize", nsize);
+      var nrt; window.addEventListener("resize", function () { clearTimeout(nrt); nrt = setTimeout(nsize, 150); });
     }
   } catch (e) {}
 
