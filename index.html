@@ -1137,10 +1137,6 @@
   </div>
 </header>
 
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track" id="ticker"></div>
-</div>
-
 <main id="main">
   <!-- ABOUT -->
   <section id="about">
@@ -1161,12 +1157,6 @@
           <p>I build things with AI and code, and I run the communities they're built for.</p>
           <p>Right now I'm designing <strong>Polo</strong>, a health AI app with clinical safety guardrails, and writing Python Discord bots like <strong>Nova 3.0 Ultimate</strong>. I founded the <strong>Galaxy network</strong>, five community brands with 1.5k–2k members, and I've moderated servers as big as <strong>90,000 members</strong>, so security and good moderation are close to my heart.</p>
           <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself.</p>
-          <div class="facts">
-            <div class="fact"><span>I build</span><b>Health AI &amp; Discord bots</b></div>
-            <div class="fact"><span>I run</span><b>The Galaxy network</b></div>
-            <div class="fact"><span>I protect</span><b>Servers up to 90k members</b></div>
-            <div class="fact"><span>I create</span><b>Football edits &amp; music</b></div>
-          </div>
         </div>
       </div>
     </div>
@@ -1327,35 +1317,6 @@
             <text class="t-danger" x="14" y="408">raid / nuke</text>
             <g id="raidLayer"></g>
           </svg>
-          <div class="raid-bar">
-            <button class="btn" id="raidBtn" type="button">Simulate a raid</button>
-            <span class="raid-log" id="raidLog" aria-live="polite">12 attackers are waiting.</span>
-          </div>
-          <figcaption><b>Four rings of defense.</b> Attacks are stopped at the outer anti-nuke layer, misbehaving users are handled by automod and JailBot, and ownership stays out of reach in the Vault Account.</figcaption>
-        </figure>
-        <div style="display:grid; gap:16px; align-content:start; min-width:0;">
-          <article class="card reveal">
-            <span class="kicker">Layer 1</span>
-            <h3>Anti-nuke &amp; raid defense</h3>
-            <p>Wick, Bravers, Security Bot and Krypton watch for mass bans, channel deletions and raid waves.</p>
-          </article>
-          <article class="card reveal">
-            <span class="kicker">Layer 2</span>
-            <h3>Moderation &amp; automod</h3>
-            <p>Dyno, Carl-bot and Sapphire handle automod rules, logging and everyday moderation.</p>
-          </article>
-          <article class="card reveal">
-            <span class="kicker">Layer 3</span>
-            <h3>Containment</h3>
-            <p>JailBot isolates problem accounts so they can be reviewed without touching the rest of the server.</p>
-          </article>
-          <article class="card reveal">
-            <span class="kicker">Core</span>
-            <h3>Vault Account</h3>
-            <p>Technical server ownership lives in a dedicated account, so a compromised staff account can’t take over the server.</p>
-          </article>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1604,11 +1565,6 @@
           <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
         </article>
 
-        <article class="card terminal reveal" style="grid-column: 1 / -1;">
-          <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
-          <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
-        </article>
-
         <figure class="diagram span reveal">
           <div class="diagram-scroll">
             <svg viewBox="0 0 780 210" role="img" aria-label="Shipping loop: prototype with AI builders, deploy on Render, monitor with UptimeRobot, get alerts on downtime or latency, then fix and redeploy.">
@@ -1732,15 +1688,7 @@
           <span class="kicker">Audio</span>
           <h3>Original soundtracks</h3>
           <p>Custom background scores and audio tracks for my edits, produced with Google Flow Music Premium.</p>
-          <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </article>
-
-        <figure class="diagram span reveal" id="beat">
-          <div class="beat-head"><span class="kicker">Edit timeline · illustration</span><span class="beat-time mono" id="beatTime">00:00.0</span></div>
-          <div class="track" id="track"><div class="wave" id="wave"></div><div class="playhead" id="playhead"></div></div>
-          <div class="clips" id="clips"></div>
-          <figcaption><b>Cutting on the beat.</b> Each gold marker is a beat drop, and the clip changes the moment the playhead crosses it.</figcaption>
-        </figure>
 
         <figure class="diagram span reveal">
           <div class="diagram-scroll">
@@ -2044,13 +1992,6 @@
     document.addEventListener("click", function (e) { if (navEl.classList.contains("open") && !navEl.contains(e.target)) setMenu(false); });
   } catch (e) {}
 
-  // Ticker
-  var skills = ["Health AI", "Python", "Discord bots", "Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space",
-    "Google AI Studio", "Claude Pro", "Render", "UptimeRobot", "Anti-nuke", "Wick", "Dyno", "Carl-bot", "Governance",
-    "Moderation", "Video editing", "Beat sync", "Google Flow Music", "Discord security", "Galaxy network"];
-  var track = document.getElementById("ticker");
-  var html = skills.map(function (s) { return "<span>" + s + "</span>"; }).join("");
-  track.innerHTML = html + html;
 
   // Rotating word
   var words = ["health AI", "Discord bots", "web prototypes", "defense grids", "highlight edits", "game servers"];
