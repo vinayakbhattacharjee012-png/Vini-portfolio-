@@ -654,6 +654,18 @@
     .hrows { margin-left: 22px; padding-left: 20px; } .hrows::before { top: -14px; }
     .hrow::before { left: -20px; width: 20px; top: 22px; }
   }
+  .skillrow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: -6px 0 26px; }
+  .skillrow:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 760px) { .skillrow, .skillrow:has(> :nth-child(3):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } }
+  .skb { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; align-items: center; min-width: 0;
+    padding: 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; transition: transform .15s, border-color .15s; }
+  .skb::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--star), var(--nebula)); }
+  .skb:hover { transform: translateY(-2px); border-color: var(--star); }
+  .skb code { grid-row: span 2; font: 600 0.62rem var(--font-mono); padding: 7px 6px; border-radius: 8px; min-width: 34px; text-align: center; color: var(--star); background: var(--star-soft); }
+  .skb:nth-child(even) code { color: var(--nebula); background: color-mix(in srgb, var(--nebula) 12%, transparent); }
+  .skb b { font: 600 0.88rem/1.25 var(--font-display); }
+  .skb span { font-size: 0.74rem; color: var(--muted); line-height: 1.3; }
+  @media (max-width: 420px) { .skb { grid-template-columns: minmax(0, 1fr); padding: 10px; } .skb code { grid-row: auto; justify-self: start; } .skb b { font-size: .82rem; } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -938,7 +950,6 @@
     <div class="nav-right">
     <div class="nav-links" id="navLinks">
       <a href="#about">About</a>
-      <a href="#skills">Skills</a>
       <a href="#community">Community</a>
       <a href="#security">Security</a>
       <a href="#process">How I work</a>
@@ -1043,27 +1054,6 @@
     </div>
   </section>
 
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Skills</span>
-        <h2>What I'm good at</h2>
-        <p>Discord first: that's where most of my work lives. The second map shows everything else.</p>
-      </div>
-      <figure class="diagram tree reveal" data-skill-box="discord">
-        <div class="hub-node"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 5.3A17 17 0 0 0 15.8 4l-.5 1a15.7 15.7 0 0 0-4.6 0l-.5-1A17 17 0 0 0 4 5.3C1.4 9.2.7 13 1 16.8a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 10.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.2-3-11.5ZM8.7 14.5c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.6 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg><div><b>Discord</b><span>moderation · security · bots</span></div></div>
-        <div class="branches"><div class="br br-mod" data-skill-box="mod"><div class="node head"><code>MOD</code><div><h4>Moderation</h4><span>Keeping big servers healthy</span></div></div><ul class="leaves"><li><span>Large-scale moderation (90k)</span></li><li><span>Server administration</span></li><li><span>Staff leadership</span></li><li><span>Automod rule tuning</span></li><li><span>Case logs &amp; appeals</span></li></ul></div><div class="br br-sec" data-skill-box="sec"><div class="node head"><code>SEC</code><div><h4>Security</h4><span>Stopping raids before they land</span></div></div><ul class="leaves"><li><span>Anti-nuke &amp; raid defense</span></li><li><span>Permission architecture</span></li><li><span>Vault Account isolation</span></li><li><span>Raid &amp; spam simulation</span></li><li><span>Bot testing in sandboxes</span></li></ul></div><div class="br br-bots" data-skill-box="bots"><div class="node head"><code>BOT</code><div><h4>Bots I build</h4><span>Python, live in real servers</span></div></div><ul class="leaves"><li><span>Python</span></li><li><span>Discord bot development</span></li><li><span>Interactive button views</span></li><li><span>Leveling &amp; XP systems</span></li><li><span>Anti-spam &amp; AFK tracking</span></li></ul></div></div>
-        <div class="stack-node"><span>Security stack I run</span><i>Wick</i><i>Bravers</i><i>Security Bot</i><i>Krypton</i><i>Dyno</i><i>Carl-bot</i><i>Sapphire</i><i>JailBot</i></div>
-        <figcaption><b>My Discord skill map.</b> Three branches, one goal: big servers that stay safe and fun.</figcaption>
-      </figure>
-      <figure class="diagram htree reveal">
-        <div class="hub-node alt"><b>Beyond Discord</b><span>6 more areas</span></div>
-        <div class="hrows"><div class="hrow" data-skill-box="lead"><div class="node head small"><code>LDR</code><h4>Community leadership</h4></div><div class="chips"><span>Founding communities</span><span>Multi-brand network</span><span>Governance frameworks</span><span>Mergers &amp; treaties</span><span>Partnerships</span></div></div><div class="hrow" data-skill-box="ai"><div class="node head small"><code>AI</code><h4>AI product</h4></div><div class="chips"><span>Health AI product design</span><span>Wellness workflows</span><span>Clinical safety guardrails</span><span>AI-assisted prototyping</span></div></div><div class="hrow" data-skill-box="tools"><div class="node head small"><code>TLS</code><h4>AI builder tools</h4></div><div class="chips"><span>Bolt.new</span><span>Lovable</span><span>Replit Agent</span><span>Base44</span><span>Manus.space</span><span>Google AI Studio</span><span>Claude Pro</span></div></div><div class="hrow" data-skill-box="ops"><div class="node head small"><code>OPS</code><h4>Deploy &amp; monitor</h4></div><div class="chips"><span>Render deployments</span><span>UptimeRobot monitoring</span><span>Uptime &amp; latency alerts</span></div></div><div class="hrow" data-skill-box="art"><div class="node head small"><code>ART</code><h4>Creative</h4></div><div class="chips"><span>Football highlight editing</span><span>Beat-synced cutting</span><span>Velocity curves</span><span>Original soundtracks</span></div></div><div class="hrow" data-skill-box="game"><div class="node head small"><code>GMG</code><h4>Gaming</h4></div><div class="chips"><span>Minecraft SMP admin</span><span>Blox Fruits endgame</span><span>High-tier PvP &amp; Sea Events</span><span>Trading &amp; middleman</span></div></div></div>
-      </figure>
-    </div>
-  </section>
-
   <!-- COMMUNITY -->
   <section id="community">
     <div class="wrap">
@@ -1072,6 +1062,8 @@
         <h2>Founder, director and moderator</h2>
         <p>I run my own multi-brand network and moderate some of the largest Roblox communities on Discord.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="community" aria-label="Community skills"><div class="skb"><code>MOD</code><b>Large-scale moderation</b><span>Servers up to 90k</span></div><div class="skb"><code>LDR</code><b>Staff leadership</b><span>Mod teams &amp; roles</span></div><div class="skb"><code>GOV</code><b>Governance &amp; treaties</b><span>Charters, mergers</span></div><div class="skb"><code>NET</code><b>Multi-brand network</b><span>5 Galaxy brands</span></div></div>
+
       <div class="grid">
         <article class="card reveal">
           <span class="kicker">Founder &amp; director</span>
@@ -1155,6 +1147,8 @@
         <h2>A layered defense grid</h2>
         <p>Raids and permission escalations have to get through several bot layers, and server ownership itself sits in a separate Vault Account that never takes part in day-to-day moderation.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="security" aria-label="Security skills"><div class="skb"><code>SEC</code><b>Anti-nuke &amp; raid defense</b><span>8-bot layered stack</span></div><div class="skb"><code>PRM</code><b>Permission architecture</b><span>Least-privilege roles</span></div><div class="skb"><code>VLT</code><b>Vault Account</b><span>Ownership kept safe</span></div><div class="skb"><code>SIM</code><b>Raid simulation</b><span>Attack tests in sandbox</span></div></div>
+
       <div class="grid">
         <figure class="diagram round reveal">
           <svg viewBox="0 0 460 440" role="img" aria-label="Defense grid: an outer anti-nuke layer, a moderation and automod layer, a containment layer and the Vault Account holding server ownership at the core. A raid attempt is stopped at the outer layer.">
@@ -1219,6 +1213,8 @@
         <h2>Moderation and bot testing, step by step</h2>
         <p>The process behind the numbers: how a problem moves through my servers, and how a bot gets tested before it goes anywhere near a live community. Tap any step.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="process" aria-label="Process skills"><div class="skb"><code>AUT</code><b>Automod tuning</b><span>Fewer false positives</span></div><div class="skb"><code>LOG</code><b>Case logs &amp; appeals</b><span>Every action recorded</span></div><div class="skb"><code>QA</code><b>Bot testing</b><span>Sandbox before live</span></div></div>
+
       <div class="flow-tabs" role="group" aria-label="Choose a flowchart">
         <button type="button" data-flow="mod" aria-pressed="true">Discord moderation</button>
         <button type="button" data-flow="test" aria-pressed="false">Bot testing</button>
@@ -1373,6 +1369,8 @@
         <h2>Products, bots and prototypes</h2>
         <p>From a health AI app with safety guardrails to a Discord bot running in live communities.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="ai" aria-label="Bot &amp; AI skills"><div class="skb"><code>PY</code><b>Python Discord bots</b><span>Nova 3.0 Ultimate</span></div><div class="skb"><code>UI</code><b>Button views &amp; leveling</b><span>Verification, XP</span></div><div class="skb"><code>AI</code><b>Health AI design</b><span>Safety guardrails</span></div><div class="skb"><code>TLS</code><b>AI prototyping</b><span>Bolt · Lovable · Replit</span></div></div>
+
       <div class="grid">
         <article class="card reveal">
           <span class="kicker">Product · in progress</span>
@@ -1504,6 +1502,8 @@
         <h2>Football edits with original sound</h2>
         <p>European football and La Liga highlights, cut to the beat and scored with my own music.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="creative" aria-label="Creative skills"><div class="skb"><code>CUT</code><b>Highlight editing</b><span>European football</span></div><div class="skb"><code>BPM</code><b>Beat-synced cutting</b><span>Cuts on the drop</span></div><div class="skb"><code>VEL</code><b>Velocity curves</b><span>Speed ramps</span></div><div class="skb"><code>MUS</code><b>Original soundtracks</b><span>Google Flow Music</span></div></div>
+
       <div class="grid">
         <article class="card reveal">
           <span class="kicker">Video</span>
@@ -1570,6 +1570,8 @@
         <h2>Servers and endgame play</h2>
         <p>Running multiplayer servers and playing Blox Fruits at the highest level.</p>
       </div>
+      <div class="skillrow reveal" data-skill-box="gaming" aria-label="Gaming skills"><div class="skb"><code>MC</code><b>Minecraft SMP admin</b><span>PC &amp; mobile servers</span></div><div class="skb"><code>BF</code><b>Blox Fruits endgame</b><span>Max level 2,800</span></div><div class="skb"><code>PVP</code><b>PvP &amp; Sea Events</b><span>High-tier play</span></div><div class="skb"><code>TRD</code><b>Trading &amp; middleman</b><span>INR &amp; crypto deals</span></div></div>
+
       <div class="grid">
         <article class="card reveal">
           <span class="kicker">Minecraft</span>
@@ -2186,8 +2188,8 @@
 
   // Skills: grouped boxes (data for search)
   try {
-    window.__skillCats = [{"id": "mod", "code": "MOD", "name": "Discord \u00b7 Moderation", "skills": ["Large-scale moderation (90k)", "Server administration", "Staff leadership", "Automod rule tuning", "Case logs & appeals"]}, {"id": "sec", "code": "SEC", "name": "Discord \u00b7 Security", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Raid & spam simulation", "Bot testing in sandboxes"]}, {"id": "bots", "code": "BOT", "name": "Discord \u00b7 Bots I build", "skills": ["Python", "Discord bot development", "Interactive button views", "Leveling & XP systems", "Anti-spam & AFK tracking"]}, {"id": "sec", "code": "SEC", "name": "Security stack", "skills": ["Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot"]}, {"id": "lead", "code": "LDR", "name": "Community leadership", "skills": ["Founding communities", "Multi-brand network", "Governance frameworks", "Mergers & treaties", "Partnerships"]}, {"id": "ai", "code": "AI", "name": "AI product", "skills": ["Health AI product design", "Wellness workflows", "Clinical safety guardrails", "AI-assisted prototyping"]}, {"id": "tools", "code": "TLS", "name": "AI builder tools", "skills": ["Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space", "Google AI Studio", "Claude Pro"]}, {"id": "ops", "code": "OPS", "name": "Deploy & monitor", "skills": ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts"]}, {"id": "art", "code": "ART", "name": "Creative", "skills": ["Football highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}, {"id": "game", "code": "GMG", "name": "Gaming", "skills": ["Minecraft SMP admin", "Blox Fruits endgame", "High-tier PvP & Sea Events", "Trading & middleman"]}];
-    window.__setSkillCat = function (id) { return document.querySelector('[data-skill-box="' + id + '"]'); };
+    window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}, {"id": "gaming", "code": "MC", "name": "Gaming skills", "skills": ["Minecraft SMP admin", "Blox Fruits endgame", "PvP & Sea Events", "Trading & middleman"]}];
+    window.__setSkillCat = function (id) { return document.querySelector('.skillrow[data-skill-box="' + id + '"]'); };
   } catch (e) {}
 
   // Copy email
