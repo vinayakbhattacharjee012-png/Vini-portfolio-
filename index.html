@@ -1063,6 +1063,20 @@
     .loader { display: none !important; }
     html.loading body { overflow: auto; }
   }
+
+  /* ---- Formal mode: calmer, professional motion ---- */
+  .bg-fx, #sky, .night, .orbit-fx, #meteors, .logo-halo, .loader-glow, .loader-sparks, .loader-bg { display: none !important; }
+  .scroll-cue i { animation: none !important; }
+  .hero { background: var(--bg); }
+  .orbit, .hero-copy { transform: none !important; }
+  .diagram svg .node, .diagram svg .edge.flow, .diagram svg .flow { animation: none !important; }
+  .diagram svg .edge.flow { stroke-dasharray: none; }
+  .orb, .planet > a { animation: none !important; }
+  .rotator { animation: none !important; background: none; -webkit-text-fill-color: currentColor; color: var(--star); }
+  .card:hover, .tcard:hover, .skb:hover, .dcol:hover { transform: none; }
+  .brand:hover .logo .lg-ring { animation: none; }
+  .loader { background: var(--bg); }
+  .curtain { background: var(--bg); }
 </style>
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
 </head>
