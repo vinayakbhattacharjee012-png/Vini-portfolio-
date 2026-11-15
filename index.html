@@ -747,6 +747,13 @@
   .diagram svg .node:nth-of-type(3n) { animation-delay: -4.6s; }
   @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
   .diagram svg .edge.flow { stroke-dasharray: 6 7; }
+  .need { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; position: relative; z-index: 1; }
+  .need li { font-size: .92rem; color: var(--muted); padding-left: 16px; position: relative; }
+  .need li::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--star); }
+  .need b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+  @media (max-width: 560px) { .need { grid-template-columns: minmax(0, 1fr); } }
+  .stats.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 520px) { .stats.three { grid-template-columns: minmax(0, 1fr); } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1077,12 +1084,11 @@
       servers with <strong>90,000 members</strong> and run the <strong>Galaxy network</strong>.
     </p>
     <ul class="hero-tags" aria-label="What I do">
-      <li>Health AI</li><li>Discord bots</li><li>Server security</li><li>Community leadership</li><li>Football edits</li>
+      <li>Health AI</li><li>Discord bots</li><li>Server security</li>
     </ul>
     <div class="ctas">
-      <a class="cta primary" href="#advertise">Advertise with me</a>
+      <a class="cta primary" href="#contact">Work with me</a>
       <a class="cta" href="#ai">See my work</a>
-      <a class="cta" href="#contact">Contact</a>
     </div>
     </div>
     <div class="orbit" aria-label="My five areas of work, orbiting">
@@ -1100,13 +1106,10 @@
       <div class="core" aria-hidden="true"><img class="core-img" src="logo-vini.png" alt="" width="256" height="256" decoding="async" /></div>
     </div>
    </div>
-    <div class="stats">
+    <div class="stats three">
       <div class="stat"><b data-count="90000">90,000</b><span>largest community moderated</span></div>
-      <div class="stat"><b data-count="1">1</b><span>live Discord bot (Nova 3.0)</span></div>
-      <div class="stat"><b>1.5k–2k</b><span>members in my network</span></div>
       <div class="stat"><b data-count="5">5</b><span>community brands founded</span></div>
       <div class="stat"><b data-count="8">8</b><span>security bots layered</span></div>
-      <div class="stat"><b data-count="2">2</b><span>health &amp; web prototypes</span></div>
     </div>
   </div>
 </header>
@@ -1830,6 +1833,12 @@
         <span class="eyebrow">Contact</span>
         <h2>Let's work together</h2>
         <p>For projects, collaborations, moderation roles or ads, email me directly.</p>
+        <ul class="need" aria-label="What to include in your message">
+          <li><b>Bots</b> a Discord bot or verification flow</li>
+          <li><b>Moderation</b> help with a server or raid defence</li>
+          <li><b>Edits</b> football highlights or soundtracks</li>
+          <li><b>Ads</b> placement, timing and budget in INR or crypto</li>
+        </ul>
         <div class="mail-row">
           <span class="mail" id="mailText">vini.official.netops@gmail.com</span>
           <button class="cta" type="button" id="copyMail">Copy email</button>
