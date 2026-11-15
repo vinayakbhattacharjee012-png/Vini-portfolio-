@@ -672,6 +672,25 @@
   .skb b { font: 600 0.88rem/1.25 var(--font-display); }
   .skb span { font-size: 0.74rem; color: var(--muted); line-height: 1.3; }
   @media (max-width: 420px) { .skb { grid-template-columns: minmax(0, 1fr); padding: 10px; } .skb code { grid-row: auto; justify-self: start; } .skb b { font-size: .82rem; } }
+  .test-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 36px; }
+  @media (max-width: 860px) { .test-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .test-grid { grid-template-columns: minmax(0, 1fr); } }
+  .tcard { display: grid; gap: 4px; padding: 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); min-width: 0; transition: transform .2s, border-color .2s; }
+  .tcard:hover { transform: translateY(-3px); border-color: var(--nebula); }
+  .tcard code { justify-self: start; font: 600 0.66rem var(--font-mono); padding: 4px 7px; border-radius: 6px; color: var(--nebula); background: color-mix(in srgb, var(--nebula) 12%, transparent); }
+  .tcard b { font: 600 1rem var(--font-display); margin-top: 6px; }
+  .tcard span { font-size: 0.86rem; color: var(--muted); }
+  .xp-wrap { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  @media (max-width: 760px) { .xp-wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; } }
+  .xp-head h3 { font-size: 1.4rem; margin-top: 8px; }
+  .xp { list-style: none; margin: 0; padding: 0 0 0 22px; position: relative; display: grid; gap: 18px; }
+  .xp::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--star), var(--nebula)); }
+  .xp li { position: relative; display: grid; gap: 2px; }
+  .xp li > div { display: grid; gap: 2px; min-width: 0; }
+  .xp li::before { content: ""; position: absolute; left: -22px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--star); box-shadow: 0 0 10px var(--star-soft); }
+  .xp time { font: 500 0.72rem var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--star); }
+  .xp b { font: 600 1rem var(--font-display); }
+  .xp span { font-size: 0.9rem; color: var(--muted); }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -959,9 +978,9 @@
       <a href="#community">Community</a>
       <a href="#security">Security</a>
       <a href="#process">How I work</a>
+      <a href="#testing">Testing</a>
       <a href="#ai">AI &amp; Software</a>
       <a href="#creative">Creative</a>
-      <a href="#gaming">Gaming</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
     </div>
@@ -1005,7 +1024,7 @@
     <div class="orbit" aria-label="My five areas of work, orbiting">
       <div class="orb o3">
         <span class="planet"><a href="#creative" style="--c: var(--nebula)">Creative</a></span>
-        <span class="planet bottom"><a href="#gaming">Gaming</a></span>
+        <span class="planet bottom"></span>
       </div>
       <div class="orb o2">
         <span class="planet"><a href="#community">Community</a></span>
@@ -1019,11 +1038,11 @@
    </div>
     <div class="stats">
       <div class="stat"><b data-count="90000">90,000</b><span>largest community moderated</span></div>
-      <div class="stat"><b data-count="40000">40,000</b><span>Fruity Blox members</span></div>
+      <div class="stat"><b data-count="1">1</b><span>live Discord bot (Nova 3.0)</span></div>
       <div class="stat"><b>1.5k–2k</b><span>members in my network</span></div>
       <div class="stat"><b data-count="5">5</b><span>community brands founded</span></div>
       <div class="stat"><b data-count="8">8</b><span>security bots layered</span></div>
-      <div class="stat"><b data-count="2800">2,800</b><span>max level, Blox Fruits</span></div>
+      <div class="stat"><b data-count="2">2</b><span>health &amp; web prototypes</span></div>
     </div>
   </div>
 </header>
@@ -1051,7 +1070,7 @@
         <div class="about-text reveal">
           <p>I build things with AI and code, and I run the communities they're built for.</p>
           <p>Right now I'm designing <strong>Polo</strong>, a health AI app with clinical safety guardrails, and writing Python Discord bots like <strong>Nova 3.0 Ultimate</strong>. I founded the <strong>Galaxy network</strong>, five community brands with 1.5k–2k members, and I've moderated servers as big as <strong>90,000 members</strong>, so security and good moderation are close to my heart.</p>
-          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself, and play Blox Fruits at max level.</p>
+          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself,.</p>
           <div class="facts">
             <div class="fact"><span>I build</span><b>Health AI &amp; Discord bots</b></div>
             <div class="fact"><span>I run</span><b>The Galaxy network</b></div>
@@ -1139,7 +1158,6 @@
           <span class="kicker">Moderation &amp; administration</span>
           <h3>Large-scale moderation</h3>
           <div class="roles">
-            <div class="role"><b>Senior Moderator</b><span>Fruity Blox · Blox Fruits community · 40,000 members</span></div>
             <div class="role"><b>Junior Moderator</b><span>Roblox community server · 90,000 members</span></div>
             <div class="role"><b>Head Administrator</b><span>Owned Galaxy network hubs</span></div>
           </div>
@@ -1370,6 +1388,34 @@
     </div>
   </section>
 
+  <!-- TESTING -->
+  <section id="testing">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Testing &amp; experience</span>
+        <h2>How I test, and where I've worked</h2>
+        <p>Every bot runs through the same attacks in a private sandbox before it touches a live community.</p>
+      </div>
+      <div class="test-grid">
+        <div class="tcard reveal"><code>SPAM</code><b>Message floods</b><span>Can it stop a flood without slowing normal chat?</span></div>
+        <div class="tcard reveal"><code>JOIN</code><b>Mass joins</b><span>Alt accounts join at once. Does it react fast enough?</span></div>
+        <div class="tcard reveal"><code>NUKE</code><b>Channel &amp; role deletes</b><span>Does the anti-nuke layer stop it and log who did it?</span></div>
+        <div class="tcard reveal"><code>LINK</code><b>Bad links</b><span>Scam and invite links are caught and removed.</span></div>
+        <div class="tcard reveal"><code>PERM</code><b>Permission checks</b><span>The bot can act on raiders but not on staff.</span></div>
+        <div class="tcard reveal"><code>FP</code><b>False positives</b><span>Innocent members must never be punished by mistake.</span></div>
+      </div>
+      <div class="xp-wrap">
+        <div class="xp-head reveal"><span class="kicker">Experience</span><h3>Where I've worked</h3></div>
+        <ol class="xp">
+          <li class="reveal"><time>Now</time><div><b>Founder &amp; director, Galaxy network</b><span>Five community brands, 1.5k–2k members. Governance, mergers and treaties.</span></div></li>
+          <li class="reveal"><time>Moderation</time><div><b>Junior moderator, Roblox community server</b><span>Moderating a server of 90,000 members.</span></div></li>
+          <li class="reveal"><time>Security</time><div><b>Server security architect</b><span>Built a layered defence: anti-nuke, automod and containment, with ownership kept in a separate Vault Account.</span></div></li>
+          <li class="reveal"><time>Bots</time><div><b>Bot developer, Nova 3.0 Ultimate</b><span>Verification views, leveling, anti-spam and AFK tracking, live in communities.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- AI & SOFTWARE -->
   <section id="ai">
     <div class="wrap">
@@ -1571,41 +1617,6 @@
     </div>
   </section>
 
-  <!-- GAMING -->
-  <section id="gaming">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Gaming operations</span>
-        <h2>Servers and endgame play</h2>
-        <p>Running multiplayer servers and playing Blox Fruits at the highest level.</p>
-      </div>
-      <div class="skillrow reveal" data-skill-box="gaming" aria-label="Gaming skills"><div class="skb"><code>MC</code><b>Minecraft SMP admin</b><span>PC &amp; mobile servers</span></div><div class="skb"><code>BF</code><b>Blox Fruits endgame</b><span>Max level 2,800</span></div><div class="skb"><code>PVP</code><b>PvP &amp; Sea Events</b><span>High-tier play</span></div><div class="skb"><code>TRD</code><b>Trading &amp; middleman</b><span>INR &amp; crypto deals</span></div></div>
-
-      <div class="grid">
-        <article class="card reveal">
-          <span class="kicker">Minecraft</span>
-          <h3>SMP server administration</h3>
-          <p>Set up and managed cross-platform (PC and mobile) Survival Multiplayer community servers.</p>
-          <div class="pills"><span class="pill">PC &amp; mobile players</span><span class="pill">Community SMP</span></div>
-        </article>
-        <article class="card reveal">
-          <span class="kicker">Roblox · Blox Fruits</span>
-          <h3>Endgame operations</h3>
-          <p>Max-level (2800) veteran running several endgame accounts. Active in high-tier PvP, Sea Events and structured item trading and middleman work.</p>
-          <div class="inventory">
-            <div class="slot" style="--i:0"><b>Human V4</b><span>maxed</span></div>
-            <div class="slot" style="--i:1"><b>Cursed Dual Katana</b><span>owned</span></div>
-            <div class="slot" style="--i:2"><b>Soul Guitar</b><span>owned</span></div>
-            <div class="slot" style="--i:3"><b>Shark Anchor</b><span>owned</span></div>
-            <div class="slot" style="--i:4"><b>Spiky Trident</b><span>owned</span></div>
-            <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
-            <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
-          </div>
-          <div class="pay"><span>Trades &amp; middleman deals in</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
-        </article>
-      </div>
-    </div>
-  </section>
   <!-- ADVERTISE -->
   <section id="advertise">
     <div class="wrap">
@@ -1844,7 +1855,7 @@
   // Ticker
   var skills = ["Health AI", "Python", "Discord bots", "Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space",
     "Google AI Studio", "Claude Pro", "Render", "UptimeRobot", "Anti-nuke", "Wick", "Dyno", "Carl-bot", "Governance",
-    "Moderation", "Video editing", "Beat sync", "Google Flow Music", "Minecraft SMP", "Blox Fruits PvP", "Middleman trading"];
+    "Moderation", "Video editing", "Beat sync", "Google Flow Music", "Discord security", "Galaxy network"];
   var track = document.getElementById("ticker");
   var html = skills.map(function (s) { return "<span>" + s + "</span>"; }).join("");
   track.innerHTML = html + html;
@@ -2197,7 +2208,7 @@
 
   // Skills: grouped boxes (data for search)
   try {
-    window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}, {"id": "gaming", "code": "MC", "name": "Gaming skills", "skills": ["Minecraft SMP admin", "Blox Fruits endgame", "PvP & Sea Events", "Trading & middleman"]}];
+    window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}];
     window.__setSkillCat = function (id) { return document.querySelector('.skillrow[data-skill-box="' + id + '"]'); };
   } catch (e) {}
 
