@@ -618,6 +618,27 @@
     .branches::after { display: none; }
     .br::before { top: 24px; left: -21px; width: 21px; height: 2px; margin: 0; }
   }
+  /* compact skill boxes */
+  .leaves { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 10px 0 0 12px; border-left: 2px solid color-mix(in srgb, var(--c) 45%, transparent); margin-left: 18px; }
+  .leaves::before, .leaves li::before, .leaves li::after { display: none; }
+  .leaves li { padding: 0; }
+  .leaves li span, .hrow .chips span { display: flex; align-items: center; justify-content: center; text-align: center; min-height: 40px;
+    padding: 6px 8px; border-radius: 9px; font-size: 0.76rem; line-height: 1.25; background: var(--surface);
+    border: 1px solid var(--line); border-top: 2px solid var(--c); transition: transform .15s, border-color .15s; overflow-wrap: anywhere; }
+  .leaves li:hover span, .hrow .chips span:hover { transform: translateY(-2px); border-color: var(--c); }
+  .hrow .chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(118px, 100%), 1fr)); gap: 6px; }
+  @media (max-width: 560px) {
+    .tree, .htree { padding: 16px 12px; }
+    .branches { padding-left: 12px; } .branches::before { left: 12px; } .br::before { left: -11px; width: 11px; }
+    .node { padding: 9px 10px; gap: 8px; } .node .head span, .br .node span { display: none; }
+    .node code { padding: 4px 5px; font-size: .6rem; }
+    .leaves { margin-left: 10px; padding-left: 8px; gap: 5px; }
+    .leaves li span, .hrow .chips span { font-size: 0.72rem; min-height: 36px; padding: 5px 6px; overflow-wrap: normal; word-break: normal; hyphens: manual; }
+    .hrow .chips { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+    .hrows { margin-left: 12px; padding-left: 12px; } .hrow::before { left: -12px; width: 12px; }
+    .htree .hub-node.alt::after { left: 12px; }
+    .hub-node { padding: 10px 12px; } .hub-node b { font-size: 1.05rem; }
+  }
   .htree { margin-top: 16px; padding: 24px 22px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 34px; align-items: center; }
   .hrows { position: relative; display: grid; gap: 10px; padding-left: 26px; }
   .hrows::before { content: ""; position: absolute; left: 0; top: 24px; bottom: 24px; width: 2px; background: var(--nebula); opacity: .5; }
