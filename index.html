@@ -4,24 +4,24 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Vini · Builder, Community Founder, Creator</title>
-<link rel="canonical" href="https://vini-portfolio-galaxy.netlify.app/" />
+<link rel="canonical" href="https://vini-portfolio.onrender.com/" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb547'/%3E%3Cstop offset='1' stop-color='%233dd6c6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23080b1a'/%3E%3Cpath d='M41.58,5.69 A28,28 0 1,0 53.45,14.0' fill='none' stroke='url%28%23g%29' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M19,21 L32,45 L45,21' fill='none' stroke='url%28%23g%29' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M48,2.5 Q48.9,8.1 54.5,9 Q48.9,9.9 48,15.5 Q47.1,9.9 41.5,9 Q47.1,8.1 48,2.5Z' fill='%23ffb547'/%3E%3C/svg%3E" />
 <meta name="theme-color" content="#080b1a" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#f4f5fa" media="(prefers-color-scheme: light)" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Vini" />
-<meta property="og:url" content="https://vini-portfolio-galaxy.netlify.app/" />
+<meta property="og:url" content="https://vini-portfolio.onrender.com/" />
 <meta property="og:title" content="Vini · I build health AI and run communities at scale" />
 <meta property="og:description" content="AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran." />
-<meta property="og:image" content="https://vini-portfolio-galaxy.netlify.app/og.png" />
+<meta property="og:image" content="https://vini-portfolio.onrender.com/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Vini: builder, community founder and creator" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Vini · I build health AI and run communities at scale" />
 <meta name="twitter:description" content="AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran." />
-<meta name="twitter:image" content="https://vini-portfolio-galaxy.netlify.app/og.png" />
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vini","url":"https://vini-portfolio-galaxy.netlify.app/","email":"mailto:vini.official.netops@gmail.com","jobTitle":"AI & software builder, community founder","description":"AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran."}</script>
+<meta name="twitter:image" content="https://vini-portfolio.onrender.com/og.png" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Vini","url":"https://vini-portfolio.onrender.com/","email":"mailto:vini.official.netops@gmail.com","jobTitle":"AI & software builder, community founder","description":"AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran."}</script>
 <meta name="claude:viewport-fit-sides" content="cover" />
 <meta name="description" content="Vini: AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -2129,6 +2129,13 @@
         status.textContent = "The form couldn't send from here. Email vini.official.netops@gmail.com instead; a new email with your details should open.";
         location.href = "mailto:vini.official.netops@gmail.com?subject=" + encodeURIComponent("Ad enquiry from " + data.get("name")) + "&body=" + encodeURIComponent(body);
         submitBtn.disabled = false;
+      }
+      if (!/netlify\.app$/.test(location.hostname)) {
+        var body2 = ["Name: " + data.get("name"), "Email: " + data.get("email"), "Brand: " + data.get("brand"), "Promoting: " + data.get("type"),
+          "Option: " + data.get("option"), "Pay with: " + data.get("payment"), "Budget: " + data.get("budget"), "", data.get("message")].join("\n");
+        status.className = "form-status ok"; status.textContent = "Opening your email app with the details filled in. Just press send ✓";
+        location.href = "mailto:vini.official.netops@gmail.com?subject=" + encodeURIComponent("Ad enquiry from " + data.get("name")) + "&body=" + encodeURIComponent(body2);
+        submitBtn.disabled = false; return;
       }
       fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(data).toString() })
         .then(function (r) {
