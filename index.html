@@ -761,6 +761,21 @@
   .handle { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 16px; position: relative; z-index: 1; }
   .handle span { font: 500 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
   .handle b { font: 600 1.05rem var(--font-mono); color: var(--star); user-select: all; }
+  /* ---- Scroll-driven animation ---- */
+  @supports (animation-timeline: view()) {
+    .card, .tcard, .skb, .dcol, .fact, .stat, .role, .xp li, .fact, .need li {
+      animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 2% cover 32%;
+    }
+    .reveal.in.card, .reveal.in.tcard, .reveal.in.xp li, .reveal.in.skb { animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 2% cover 32%; }
+    .sec-head { animation: headSlide linear both; animation-timeline: view(); animation-range: entry 0% cover 28%; }
+    .diagram { animation: diagFade linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+    .skillrow, .test-grid, .xp-wrap { animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
+  }
+  @keyframes scrollRise { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes headSlide { from { opacity: 0; transform: translateX(-36px); } to { opacity: 1; transform: none; } }
+  @keyframes diagFade { from { opacity: .2; transform: scale(.96); } to { opacity: 1; transform: none; } }
+  .hero-copy, .orbit { will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { @supports (animation-timeline: view()) { .card, .tcard, .skb, .sec-head, .diagram { animation: none !important; } } }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1145,7 +1160,7 @@
         <div class="about-text reveal">
           <p>I build things with AI and code, and I run the communities they're built for.</p>
           <p>Right now I'm designing <strong>Polo</strong>, a health AI app with clinical safety guardrails, and writing Python Discord bots like <strong>Nova 3.0 Ultimate</strong>. I founded the <strong>Galaxy network</strong>, five community brands with 1.5k–2k members, and I've moderated servers as big as <strong>90,000 members</strong>, so security and good moderation are close to my heart.</p>
-          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself,.</p>
+          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself.</p>
           <div class="facts">
             <div class="fact"><span>I build</span><b>Health AI &amp; Discord bots</b></div>
             <div class="fact"><span>I run</span><b>The Galaxy network</b></div>
@@ -2463,6 +2478,18 @@
       function ok() { hb.textContent = "Copied ✓"; setTimeout(function () { hb.textContent = "Copy handle"; }, 2000); }
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, ok); else ok();
     });
+  } catch (e) {}
+
+  // Scroll parallax for the hero (everywhere): orbit turns and drifts as you scroll away
+  try {
+    var oEl = document.querySelector(".orbit"), hcEl = document.querySelector(".hero-copy"), sTick = false;
+    function parallax() {
+      var y = Math.min(scrollY, 900);
+      if (oEl) oEl.style.transform = "translateY(" + (y * .12) + "px) rotate(" + (y * .04) + "deg)";
+      if (hcEl) hcEl.style.transform = "translateY(" + (y * -.06) + "px)";
+      sTick = false;
+    }
+    if (!reduce) window.addEventListener("scroll", function () { if (!sTick) { sTick = true; requestAnimationFrame(parallax); } }, { passive: true });
   } catch (e) {}
 
   // Copy email
