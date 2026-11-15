@@ -1545,8 +1545,8 @@
         <div class="tcard reveal"><code>LINK</code><b>Bad links</b><span>Scam and invite links are caught and removed.</span></div>
         <div class="tcard reveal"><code>PERM</code><b>Permission checks</b><span>The bot can act on raiders but not on staff.</span></div>
         <div class="tcard reveal"><code>FP</code><b>False positives</b><span>Innocent members must never be punished by mistake.</span></div>
-        <div class="tcard reveal flow-test"><code>MOD FLOW</code><b>Moderation flow test</b><span>A test case runs through every step: detect, triage, action ladder, log, then appeal and tune.</span></div>
-        <div class="tcard reveal flow-test"><code>BOT FLOW</code><b>Bot flow test</b><span>Sandbox, permissions, simulate, check. A fail goes back to tune and re-test, and only a pass goes live.</span></div>
+        <div class="tcard reveal flow-test" data-flow="mod"><code>MOD FLOW</code><b>Moderation flow test</b><span>A test case runs through every step: detect, triage, action ladder, log, then appeal and tune.</span></div>
+        <div class="tcard reveal flow-test" data-flow="test"><code>BOT FLOW</code><b>Bot flow test</b><span>Sandbox, permissions, simulate, check. A fail goes back to tune and re-test, and only a pass goes live.</span></div>
       </div>
       <div class="xp-wrap">
         <div class="xp-head reveal"><span class="kicker">Experience</span><h3>Where I've worked</h3></div>
@@ -2524,6 +2524,88 @@
       sTick = false;
     }
     if (!reduce) window.addEventListener("scroll", function () { if (!sTick) { sTick = true; requestAnimationFrame(parallax); } }, { passive: true });
+  } catch (e) {}
+
+  // Process flowcharts
+  try {
+    var FLOWS = {
+      mod: [
+        ["Detect", "Problems surface three ways: automod rules in Dyno, Carl-bot and Sapphire, member reports, and staff watching busy channels.", ["Dyno", "Carl-bot", "Sapphire", "Reports"]],
+        ["Triage", "First question: is this an attack on the server, or one person breaking the rules? The answer decides which path it takes.", ["Severity", "Context", "History"]],
+        ["Lockdown", "Raids and nukes go straight to the anti-nuke layer. Wick, Bravers, Security Bot and Krypton strip permissions, kick raiders and stop mass deletes before staff even react.", ["Wick", "Bravers", "Security Bot", "Krypton"]],
+        ["Restore & audit", "Once it's contained, deleted channels and roles are restored and the audit log is checked to find how the attacker got in. Ownership stays safe in the Vault Account the whole time.", ["Audit log", "Backups", "Vault Account"]],
+        ["Action ladder", "For rule breaks I use the lowest action that fixes it: warn, then mute, then JailBot isolation, then kick, and ban only for serious or repeated cases.", ["Warn", "Timeout", "JailBot", "Kick", "Ban"]],
+        ["Log & evidence", "Every action is logged with screenshots and a reason, so any staff member can see the full history of a case.", ["Mod logs", "Evidence", "Case notes"]],
+        ["Review, appeals & tune", "Appeals get a second look from another staff member. Anything automod missed, or flagged by mistake, becomes a rule change, so the next problem is caught earlier.", ["Appeals", "Staff review", "Rule tuning"]]
+      ],
+      test: [
+        ["Sandbox", "Every bot is added to a private test server first, never straight into a live community.", ["Test server", "Alt accounts"]],
+        ["Permissions", "Bots get only the permissions they need, and their role sits at the right place in the hierarchy so they can act on raiders but not on staff.", ["Least privilege", "Role hierarchy"]],
+        ["Simulate", "I throw real attacks at it: message floods, mass joins from alt accounts, mass channel and role deletes, and bad links.", ["Spam floods", "Mass joins", "Nuke tests", "Bad links"]],
+        ["Check", "Did it react fast enough? Did it log everything? Did it punish anyone innocent? False positives matter as much as missed attacks.", ["Response time", "Logs", "False positives"]],
+        ["Pass?", "A bot only passes if it stops every simulated attack without hitting normal members.", ["Pass / fail"]],
+        ["Tune & re-test", "On a fail I adjust thresholds, whitelists and permissions, then run the same attacks again until it passes.", ["Thresholds", "Whitelists", "Re-test"]],
+        ["Go live", "Then it's rolled out to the live server, staff are briefed on what it does, and my own bots like Nova are watched by UptimeRobot.", ["Rollout", "Staff briefing", "UptimeRobot"]]
+      ]
+    };
+    var LABELS = { mod: ["01", "02", "03a", "04a", "03b", "05", "06"], test: ["01", "02", "03", "04", "05", "06", "07"] };
+    window.__flows = { data: FLOWS, open: function (k, i) {
+      var b = document.querySelector('.flow-tabs button[data-flow="' + k + '"]'); if (b) b.click();
+      var f = document.getElementById("flow-" + k); if (f && f.__show) f.__show(i); return f; } };
+    var flowTabs = document.querySelectorAll(".flow-tabs button");
+    function esc(t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+    document.querySelectorAll("[data-flow-panel]").forEach(function (fig) {
+      var key = fig.getAttribute("data-flow-panel"), steps = FLOWS[key];
+      var nodes = fig.querySelectorAll(".fnode"), detail = fig.querySelector(".flow-detail"), playBtn = fig.querySelector(".flow-play");
+      var timer = null, cur = -1;
+      function show(i) {
+        cur = i;
+        nodes.forEach(function (n) { n.classList.toggle("on", +n.getAttribute("data-i") === i); });
+        var st = steps[i];
+        detail.innerHTML = '<span class="big">' + LABELS[key][i] + '</span><h3>' + esc(st[0]) + '</h3><p>' + esc(st[1]) + '</p><div class="pills">' +
+          st[2].map(function (x) { return '<span class="pill">' + esc(x) + '</span>'; }).join("") + "</div>";
+        if (!reduce) { detail.classList.remove("swap"); void detail.offsetWidth; detail.classList.add("swap"); }
+      }
+      function stop() { clearInterval(timer); timer = null; playBtn.textContent = "Play the flow"; }
+      function play() {
+        if (timer) { stop(); return; }
+        playBtn.textContent = "Pause";
+        show(cur + 1 >= steps.length ? 0 : cur + 1);
+        timer = setInterval(function () { if (cur + 1 >= steps.length) { stop(); return; } show(cur + 1); }, 4200);
+      }
+      nodes.forEach(function (n) {
+        function pick() { stop(); show(+n.getAttribute("data-i")); }
+        n.addEventListener("click", pick);
+        n.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+      });
+      playBtn.addEventListener("click", play);
+      fig.__stop = stop;
+      show(0);
+    });
+    flowTabs.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-flow");
+        flowTabs.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        document.querySelectorAll("[data-flow-panel]").forEach(function (f) {
+          var on = f.getAttribute("data-flow-panel") === k; f.hidden = !on; if (!on && f.__stop) f.__stop();
+          if (on) { f.classList.add("in", "live"); }
+        });
+      });
+    });
+  } catch (e) {}
+
+
+
+  // Test cards open their flowchart
+  try {
+    document.querySelectorAll(".tcard.flow-test").forEach(function (card) {
+      var key = card.getAttribute("data-flow") || (card.querySelector("code").textContent.indexOf("MOD") >= 0 ? "mod" : "test");
+      card.setAttribute("role", "button"); card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Open the " + (key === "mod" ? "moderation" : "bot") + " flowchart");
+      function go() { document.getElementById("process").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); setTimeout(function () { if (window.__flows) window.__flows.open(key, 0); }, 350); }
+      card.addEventListener("click", go);
+      card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
   } catch (e) {}
 
   // Copy email
