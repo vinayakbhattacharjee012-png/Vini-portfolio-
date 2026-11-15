@@ -95,3 +95,27 @@ export async function espnStandings(league: League): Promise<Envelope<StandingRo
     .map((r, i) => ({ ...r, rank: r.rank || i + 1 }));
   return { data, source: 'espn', fetchedAt: new Date().toISOString() };
 }
+
+/** Scoreboard for a date range ("YYYYMMDD-YYYYMMDD"), used by the archive backfill. */
+export async function espnScoreboardRange(league: League, range: string): Promise<Match[]> {
+  const cricket = league.sport === 'cricket';
+  const json: any = await getJson(`${BASE}/site/v2/sports/${pathFor(league)}/scoreboard?dates=${range}&limit=1000`, 15_000);
+  return (json?.events ?? []).map((ev: any) => {
+    const comp = ev.competitions?.[0] ?? {};
+    const cs: any[] = comp.competitors ?? [];
+    const home = cs.find((c) => c.homeAway === 'home') ?? cs[0];
+    const away = cs.find((c) => c.homeAway === 'away') ?? cs[1];
+    const st = ev.status ?? comp.status ?? {};
+    return {
+      id: String(ev.id),
+      league: league.id,
+      status: status(st.type?.state),
+      clock: st.type?.shortDetail,
+      start: ev.date,
+      venue: comp.venue?.fullName,
+      home: side(home, cricket),
+      away: side(away, cricket),
+      note: comp.status?.summary,
+    };
+  });
+}

@@ -7,6 +7,8 @@ import { espnScoreboard, espnStandings } from './espn.ts';
 import { tsdbStandings, tsdbTeam } from './thesportsdb.ts';
 import { geminiAnswer, geminiEnabled, geminiNews, geminiScoreboard, geminiStandings } from './gemini.ts';
 import { espnMatchCentre } from './match.ts';
+import { matchCount, recordFor, resultsFor, syncStatus, teamNames } from './db.ts';
+import { startIngest } from './ingest.ts';
 import { sampleNews, sampleScoreboard, sampleStandings } from './sample.ts';
 
 try {
@@ -103,6 +105,36 @@ async function api(url: URL): Promise<unknown> {
       return cached(`mc:${league.id}:${id}`, 45_000, [{ name: 'ESPN', run: () => espnMatchCentre(league, id) }]);
     }
 
+    case '/api/results': {
+      const league = q('league') || undefined;
+      const days = Math.min(Number(q('days') || 365), 730);
+      const since = new Date(Date.now() - days * 86_400_000).toISOString();
+      const rows = resultsFor({ league, limit: Number(q('limit') || 200), finishedOnly: q('finished') !== '0' }).filter((r) => r.start >= since);
+      return { data: rows, source: 'db', fetchedAt: new Date().toISOString(), total: matchCount() };
+    }
+
+    case '/api/teams/search': {
+      return { data: teamNames(q('q'), 8) };
+    }
+
+    case '/api/club': {
+      const name = q('name').trim();
+      if (!name) throw new HttpError(400, 'Missing club name');
+      const past = resultsFor({ team: name, limit: 60, finishedOnly: true });
+      const upcoming = resultsFor({ team: name, limit: 10 }).filter((r) => r.status !== 'finished').reverse();
+      const profile = await cached(`team:${name.toLowerCase()}`, 60 * 60_000, [{ name: 'TheSportsDB', run: () => tsdbTeam(name) }]).catch(() => null);
+      return {
+        data: { name, record: recordFor(name), past, upcoming, profile: profile?.data ?? null },
+        source: 'db',
+        fetchedAt: new Date().toISOString(),
+        note: profile ? undefined : 'Club profile unavailable from TheSportsDB right now; results are from the stored archive.',
+      };
+    }
+
+    case '/api/db/status': {
+      return { matches: matchCount(), sync: syncStatus(), persistent: Boolean(process.env.DATA_DIR) };
+    }
+
     case '/api/team': {
       const name = q('name').trim();
       if (!name) throw new HttpError(400, 'Missing team name');
@@ -193,5 +225,6 @@ createServer(async (req, res) => {
     res.end(JSON.stringify({ error: (e as Error).message }));
   }
 }).listen(PORT, () => {
+  startIngest();
   console.log(`Apex API on http://localhost:${PORT} · Gemini grounding ${geminiEnabled() ? 'ON' : 'OFF (set GEMINI_API_KEY)'}`);
 });

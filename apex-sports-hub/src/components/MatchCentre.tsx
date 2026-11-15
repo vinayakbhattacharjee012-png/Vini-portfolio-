@@ -18,6 +18,18 @@ export interface MatchCentreData {
   teams: [string, string];
 }
 
+export function matchContext(context?: MatchCentreData) {
+  if (!context) return '';
+  return [
+    `Teams: ${context.teams.join(' vs ')}`,
+    context.venue && `Venue: ${context.venue}`,
+    context.officials.length && `Officials: ${context.officials.map((o) => `${o.name} (${o.role ?? 'official'})`).join(', ')}`,
+    context.stats.length && `Stats: ${context.stats.map((s) => `${s.label} ${s.home}-${s.away}`).join('; ')}`,
+    context.keyEvents.length && `Key events: ${context.keyEvents.slice(-8).map((e) => `${e.clock} ${e.type} ${e.text}`).join('; ')}`,
+    context.lineups.length && `Lineups: ${context.lineups.map((t) => `${t.team}: ${t.players.filter((p) => p.starter).map((p) => p.name).join(', ')}`).join(' | ')}`,
+  ].filter(Boolean).join('\n');
+}
+
 const Section = ({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) => (
   <div className="px-5 py-4">
     <h3 className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
@@ -154,12 +166,12 @@ export function MatchCentre({ leagueId, matchId, live }: { leagueId: string; mat
         </>
       )}
 
-      <AskAssistant leagueId={leagueId} matchId={matchId} context={d} />
+      <AskAssistant leagueId={leagueId} matchId={matchId} context={matchContext(d)} />
     </div>
   );
 }
 
-function AskAssistant({ leagueId, matchId, context }: { leagueId: string; matchId: string; context?: MatchCentreData }) {
+export function AskAssistant({ leagueId, matchId, scope, context }: { leagueId: string; matchId: string; scope?: string; context: string }) {
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState<{ q: string; text: string; citations?: Citation[] } | null>(null);
@@ -171,23 +183,11 @@ function AskAssistant({ leagueId, matchId, context }: { leagueId: string; matchI
     if (!question.trim() || busy) return;
     setBusy(true);
     setErr(null);
-    const summary = context
-      ? [
-          `Teams: ${context.teams.join(' vs ')}`,
-          context.venue && `Venue: ${context.venue}`,
-          context.officials.length && `Officials: ${context.officials.map((o) => `${o.name} (${o.role ?? 'official'})`).join(', ')}`,
-          context.stats.length && `Stats: ${context.stats.map((s) => `${s.label} ${s.home}-${s.away}`).join('; ')}`,
-          context.keyEvents.length && `Key events: ${context.keyEvents.slice(-8).map((e) => `${e.clock} ${e.type} ${e.text}`).join('; ')}`,
-          context.lineups.length && `Lineups: ${context.lineups.map((t) => `${t.team}: ${t.players.filter((p) => p.starter).map((p) => p.name).join(', ')}`).join(' | ')}`,
-        ]
-          .filter(Boolean)
-          .join('\n')
-      : '';
     try {
       const r = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ question, league: leagueId, matchId, context: summary }),
+        body: JSON.stringify({ question, league: leagueId, matchId, context: `${scope ? `Scope: ${scope}\n` : ''}${context}` }),
       });
       const body = await r.json();
       if (!r.ok) throw new Error(body.error ?? `HTTP ${r.status}`);

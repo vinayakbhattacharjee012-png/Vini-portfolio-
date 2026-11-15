@@ -15,3 +15,6 @@ services:
         value: gemini-2.5-flash
       - key: GEMINI_API_KEY
         sync: false   # set in the Render dashboard; never committed
+# Match archive storage. On the free plan the disk is wiped on every redeploy/restart, so the
+# archive refills from ESPN on boot. To keep history, upgrade to a paid plan, add a disk mounted at
+# /var/data, and set DATA_DIR=/var/data as an env var.

@@ -1,10 +1,10 @@
-import { useEffect, useRef, type ReactNode } from 'react';
-import { ArrowLeft, Clock, ExternalLink, MapPin, Shield, Users, X } from 'lucide-react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { ArrowLeft, Clock, ExternalLink, MapPin, Shield, X } from 'lucide-react';
 import type { Match, TeamProfile } from '../lib/types.ts';
 import { useApi } from '../lib/api.ts';
 import { cx, kickoff } from '../lib/format.ts';
 import { Crest, Empty, LiveBadge, Score, Skeleton, SourceBadge } from './ui.tsx';
-import { MatchCentre } from './MatchCentre.tsx';
+import { AskAssistant, MatchCentre } from './MatchCentre.tsx';
 
 export function Drawer({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: ReactNode; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -120,80 +120,191 @@ export function MatchDetail({ m, leagueId, leagueName, onClose, onTeam }: { m: M
   );
 }
 
+export interface StoredMatch {
+  id: string; league: string; start: string; status: 'live' | 'scheduled' | 'finished';
+  home: string; away: string; homeShort: string | null; awayShort: string | null;
+  homeScore: string | null; awayScore: string | null; homeLogo: string | null; awayLogo: string | null;
+  clock: string | null; venue: string | null; note: string | null;
+}
+interface ClubData {
+  name: string;
+  record: { form: ('W' | 'D' | 'L')[]; w: number; d: number; l: number; gf: number; ga: number };
+  past: StoredMatch[];
+  upcoming: StoredMatch[];
+  profile: TeamProfile | null;
+}
+
+const FORM: Record<string, string> = {
+  W: 'bg-live text-slate-950',
+  D: 'bg-slate-500 text-white',
+  L: 'bg-rose-500 text-white',
+};
+
+function ResultRow({ m, club }: { m: StoredMatch; club: string }) {
+  const home = m.home === club;
+  const us = home ? m.homeScore : m.awayScore;
+  const them = home ? m.awayScore : m.homeScore;
+  const won = Number(us) > Number(them);
+  const lost = Number(us) < Number(them);
+  return (
+    <li className="flex items-center gap-3 px-4 py-2.5 text-xs">
+      <span className="w-14 shrink-0 tabular-nums text-slate-500">{new Date(m.start).toLocaleDateString([], { day: 'numeric', month: 'short', year: '2-digit' })}</span>
+      <span className="min-w-0 flex-1 truncate text-slate-300">
+        {home ? 'vs' : '@'} {home ? m.away : m.home}
+      </span>
+      <span className={cx('w-12 text-center font-bold tabular-nums', won ? 'text-live' : lost ? 'text-rose-300' : 'text-slate-400')}>
+        {us ?? '–'}–{them ?? '–'}
+      </span>
+      <span className={cx('grid size-5 place-items-center rounded text-[10px] font-bold', won ? FORM.W : lost ? FORM.L : FORM.D)}>{won ? 'W' : lost ? 'L' : 'D'}</span>
+    </li>
+  );
+}
+
 export function TeamDetail({ name, onClose, onBack, now }: { name: string; onClose: () => void; onBack?: () => void; now: number }) {
-  const { data, loading, error } = useApi<TeamProfile>(`/api/team?name=${encodeURIComponent(name)}`);
-  const t = data?.data;
+  const { data, loading, error } = useApi<ClubData>(`/api/club?name=${encodeURIComponent(name)}`);
+  const c = data?.data;
+  const t = c?.profile;
+  const [tab, setTab] = useState<'overview' | 'results' | 'squad' | 'ask'>('overview');
+  const tabs: [typeof tab, string][] = [['overview', 'Overview'], ['results', 'Results'], ['squad', 'Squad'], ['ask', 'Ask AI']];
+
+  const context = c
+    ? [
+        `Club: ${name}`,
+        `Last ${c.record.form.length} form: ${c.record.form.join(' ') || 'none'}; W${c.record.w} D${c.record.d} L${c.record.l}, GF ${c.record.gf} GA ${c.record.ga}`,
+        c.past.length && `Recent results: ${c.past.slice(0, 10).map((m) => `${new Date(m.start).toISOString().slice(0, 10)} ${m.home} ${m.homeScore ?? '-'}-${m.awayScore ?? '-'} ${m.away} (${m.league})`).join('; ')}`,
+        c.upcoming.length && `Upcoming: ${c.upcoming.slice(0, 5).map((m) => `${m.start.slice(0, 10)} ${m.home} v ${m.away}`).join('; ')}`,
+        t?.stadium && `Ground: ${t.stadium}`,
+        t?.founded && `Founded: ${t.founded}`,
+        t?.league && `League: ${t.league}`,
+        t?.description && `About: ${t.description.slice(0, 800)}`,
+        t?.players.length && `Squad: ${t.players.slice(0, 25).map((p) => p.name).join(', ')}`,
+      ]
+        .filter(Boolean)
+        .join('\n')
+    : '';
+
   return (
     <>
-      <CloseBar onClose={onClose} onBack={onBack} title="Team profile" />
-      {loading ? (
+      <CloseBar onClose={onClose} onBack={onBack} title="Club profile" />
+      {loading && !c ? (
         <div className="space-y-4 p-5">
           <Skeleton className="h-32" />
           <Skeleton className="h-4 w-1/2" />
           <Skeleton className="h-24" />
         </div>
-      ) : error || !t ? (
-        <Empty icon={<Shield className="size-8" />} title={`No profile found for ${name}`} body="TheSportsDB's free tier may be rate-limited. Try again in a minute." />
+      ) : error || !c ? (
+        <Empty icon={<Shield className="size-8" />} title={`No data found for ${name}`} body="Check the spelling, or try again in a minute." />
       ) : (
         <>
-          <div className="relative h-36 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
-            {t.banner && <img src={t.banner} alt="" className="size-full object-cover opacity-40" />}
+          <div className="relative h-32 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900">
+            {t?.banner && <img src={t.banner} alt="" className="size-full object-cover opacity-40" />}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
           </div>
           <div className="relative -mt-12 px-5">
-            <Crest src={t.badge} name={t.name} size={80} />
-            <h2 className="mt-3 text-2xl font-bold tracking-tight">{t.name}</h2>
+            <Crest src={t?.badge} name={c.name} size={80} />
+            <h2 className="mt-3 text-2xl font-bold tracking-tight">{c.name}</h2>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-400">
-              {t.league && <span>{t.league}</span>}
-              {t.country && <span>· {t.country}</span>}
+              {t?.league && <span>{t.league}</span>}
+              {t?.country && <span>· {t.country}</span>}
               <SourceBadge source={data?.source} at={data?.fetchedAt} now={now} />
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-2 text-xs">
-              {t.stadium && (
-                <div className="rounded-xl bg-white/[0.03] p-3 ring-1 ring-white/10">
-                  <dt className="text-slate-500">Ground</dt>
-                  <dd className="mt-0.5 font-medium text-slate-200">{t.stadium}</dd>
-                </div>
-              )}
-              {t.founded && (
-                <div className="rounded-xl bg-white/[0.03] p-3 ring-1 ring-white/10">
-                  <dt className="text-slate-500">Founded</dt>
-                  <dd className="mt-0.5 font-medium tabular-nums text-slate-200">{t.founded}</dd>
-                </div>
-              )}
-            </dl>
-            {t.description && <p className="mt-4 line-clamp-6 text-sm leading-relaxed text-slate-400">{t.description}</p>}
-            {t.website && (
-              <a href={t.website} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs text-live hover:underline">
-                Official site <ExternalLink className="size-3" />
-              </a>
+            {c.record.form.length > 0 && (
+              <div className="mt-4 grid grid-cols-4 gap-2 text-center text-xs">
+                <Stat label="Form" value={<span className="flex justify-center gap-1">{c.record.form.map((r, i) => <span key={i} className={cx('grid size-5 place-items-center rounded text-[10px] font-bold', FORM[r])}>{r}</span>)}</span>} />
+                <Stat label="W-D-L" value={`${c.record.w}-${c.record.d}-${c.record.l}`} />
+                <Stat label="Scored" value={String(c.record.gf)} />
+                <Stat label="Conceded" value={String(c.record.ga)} />
+              </div>
             )}
           </div>
-          <div className="px-5 pt-6 pb-8">
-            <h3 className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-500">
-              <Users className="size-3.5" /> Squad
-            </h3>
-            {t.players.length ? (
-              <ul className="grid grid-cols-2 gap-2">
-                {t.players.map((p) => (
-                  <li key={p.name} className="flex items-center gap-2.5 rounded-xl bg-white/[0.03] p-2 ring-1 ring-white/10">
-                    <Crest src={p.thumb} name={p.name} size={32} />
-                    <div className="min-w-0">
-                      <p className="truncate text-xs font-medium text-slate-200">{p.name}</p>
-                      <p className="truncate text-[10px] text-slate-500">
-                        {p.number && <span className="tabular-nums">#{p.number} · </span>}
-                        {p.position}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-xs text-slate-500">Squad list isn't available on TheSportsDB's free tier for this team.</p>
-            )}
+
+          <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-white/5 px-4 pb-2" role="tablist">
+            {tabs.map(([id, label]) => (
+              <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)} className={cx('shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition', tab === id ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-slate-200')}>
+                {label}
+              </button>
+            ))}
           </div>
+
+          {tab === 'overview' && (
+            <div className="px-5 pt-5 pb-8">
+              <dl className="grid grid-cols-2 gap-2 text-xs">
+                {t?.stadium && <Stat label="Ground" value={t.stadium} />}
+                {t?.founded && <Stat label="Founded" value={t.founded} />}
+              </dl>
+              {t?.description && <p className="mt-4 text-sm leading-relaxed text-slate-400">{t.description}</p>}
+              {t?.website && (
+                <a href={t.website} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-xs text-live hover:underline">
+                  Official site <ExternalLink className="size-3" />
+                </a>
+              )}
+              {c.upcoming.length > 0 && (
+                <>
+                  <h3 className="mt-6 mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-500">Next fixtures</h3>
+                  <ul className="divide-y divide-white/5 rounded-xl ring-1 ring-white/10">
+                    {c.upcoming.slice(0, 5).map((m) => (
+                      <li key={m.id} className="flex items-center justify-between px-3 py-2 text-xs">
+                        <span className="truncate text-slate-300">{m.home} v {m.away}</span>
+                        <span className="shrink-0 tabular-nums text-slate-500">{new Date(m.start).toLocaleDateString([], { day: 'numeric', month: 'short' })}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {c.past.length === 0 && !c.upcoming.length && <p className="mt-4 text-xs text-slate-500">No stored matches for this club yet. The archive fills in from the feeds in the background.</p>}
+            </div>
+          )}
+
+          {tab === 'results' && (
+            <div className="pb-8">
+              <p className="px-5 pt-4 pb-2 text-[11px] text-slate-500">{c.past.length} stored results · archive updates every 10 minutes</p>
+              {c.past.length ? (
+                <ul className="divide-y divide-white/5">
+                  {c.past.map((m) => <ResultRow key={m.id} m={m} club={c.name} />)}
+                </ul>
+              ) : (
+                <Empty icon={<Shield className="size-8" />} title="No results stored yet" body="The archive is still backfilling, or this club plays in a competition we don't track." />
+              )}
+            </div>
+          )}
+
+          {tab === 'squad' && (
+            <div className="px-5 pt-5 pb-8">
+              {t?.players.length ? (
+                <ul className="grid grid-cols-2 gap-2">
+                  {t.players.map((p) => (
+                    <li key={p.name} className="flex items-center gap-2.5 rounded-xl bg-white/[0.03] p-2 ring-1 ring-white/10">
+                      <Crest src={p.thumb} name={p.name} size={32} />
+                      <div className="min-w-0">
+                        <p className="truncate text-xs font-medium text-slate-200">{p.name}</p>
+                        <p className="truncate text-[10px] text-slate-500">
+                          {p.number && <span className="tabular-nums">#{p.number} · </span>}
+                          {p.position}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-xs text-slate-500">Squad list isn't available on TheSportsDB's free tier for this club.</p>
+              )}
+            </div>
+          )}
+
+          {tab === 'ask' && (
+            <AskAssistant leagueId="" matchId="" scope={`Club profile: ${c.name}`} context={context} />
+          )}
         </>
       )}
     </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="rounded-xl bg-white/[0.03] p-3 ring-1 ring-white/10">
+      <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
+      <div className="mt-1 font-semibold tabular-nums text-slate-200">{value}</div>
+    </div>
   );
 }
