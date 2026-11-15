@@ -735,6 +735,18 @@
   .bg-fx .grid-lines { display: none; }
   .bg-fx .blob { opacity: .35; }
   @media (max-width: 820px) { section { padding-block: 72px; } .sec-head { margin-bottom: 32px; } .card { padding: 22px; } }
+  /* ---- Moving diagrams (solar-system style) ---- */
+  .diagram svg .orbit-fx { transform-box: view-box; transform-origin: 50% 50%; animation: spin 38s linear infinite; animation-play-state: paused; }
+  .diagram.live svg .orbit-fx { animation-play-state: running; }
+  .diagram svg .orbit-fx .ring { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 6; opacity: .8; }
+  .diagram svg .orbit-fx .planet { fill: var(--star); filter: none; }
+  .diagram svg .orbit-fx .planet.teal { fill: var(--nebula); }
+  .diagram svg .node { animation: bob 7s ease-in-out infinite; animation-play-state: paused; }
+  .diagram.live svg .node { animation-play-state: running; }
+  .diagram svg .node:nth-of-type(3n+2) { animation-delay: -2.3s; }
+  .diagram svg .node:nth-of-type(3n) { animation-delay: -4.6s; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .diagram svg .edge.flow { stroke-dasharray: 6 7; }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -2369,6 +2381,28 @@
       setTimeout(storm, 2500);
       var nrt; window.addEventListener("resize", function () { clearTimeout(nrt); nrt = setTimeout(nsize, 150); });
     }
+  } catch (e) {}
+
+
+  // Solar-system motion for every diagram: an orbit ring with two planets circling the centre
+  try {
+    document.querySelectorAll("figure.diagram svg").forEach(function (svg, idx) {
+      var vb = (svg.getAttribute("viewBox") || "0 0 800 400").split(/\s+/).map(Number);
+      var cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2, R = Math.min(vb[2], vb[3]) * 0.48;
+      var NS = "http://www.w3.org/2000/svg", g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "orbit-fx"); g.setAttribute("aria-hidden", "true");
+      var ring = document.createElementNS(NS, "circle");
+      ring.setAttribute("class", "ring"); ring.setAttribute("cx", cx); ring.setAttribute("cy", cy); ring.setAttribute("r", R);
+      g.appendChild(ring);
+      for (var k = 0; k < 2; k++) {
+        var pl = document.createElementNS(NS, "circle");
+        pl.setAttribute("class", "planet" + (k ? " teal" : ""));
+        pl.setAttribute("cx", cx + R * Math.cos(k * Math.PI)); pl.setAttribute("cy", cy + R * Math.sin(k * Math.PI));
+        pl.setAttribute("r", k ? 3 : 4); g.appendChild(pl);
+      }
+      var first = svg.querySelector(":scope > *:not(defs)");
+      svg.insertBefore(g, first || null);
+    });
   } catch (e) {}
 
   // Toast + "galaxy" easter egg
