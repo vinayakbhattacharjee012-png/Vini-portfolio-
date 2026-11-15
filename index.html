@@ -287,7 +287,13 @@
   @keyframes eq { 0%, 100% { height: 25%; } 50% { height: 100%; } }
 
   /* Scroll reveal: content is visible at rest; it only animates when it enters view. */
-  .reveal.in { animation: rise .6s ease both; }
+  .reveal.in { animation: riseIn .8s cubic-bezier(.2,.7,.2,1) both; }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  .grid > .reveal.in:nth-child(2) { animation-delay: .08s; } .grid > .reveal.in:nth-child(3) { animation-delay: .16s; }
+  .grid > .reveal.in:nth-child(4) { animation-delay: .24s; } .grid > .reveal.in:nth-child(5) { animation-delay: .32s; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 22px 0 0; padding: 0; }
+  .hero-tags li { font: 500 0.8rem var(--font-body); padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+  .hero-tags li:hover { border-color: var(--star); color: var(--ink); }
   @keyframes rise { from { opacity: .25; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
 
@@ -984,9 +990,12 @@
     <div class="eyebrow">Builder · Community founder · Creator</div>
     <h1>I build <span class="rotator" id="rotator">health AI</span><br />and run communities at scale.</h1>
     <p class="lede">
-      I design health AI tools, engineer Discord bots, prototype full-stack web apps and lead the Galaxy
-      Discord network. I've moderated communities of up to 90,000 members and built the security that keeps them safe.
+      I build <strong>health AI apps and Discord bots</strong>, and I keep big communities safe. I've moderated
+      servers with <strong>90,000 members</strong> and run the <strong>Galaxy network</strong>.
     </p>
+    <ul class="hero-tags" aria-label="What I do">
+      <li>Health AI</li><li>Discord bots</li><li>Server security</li><li>Community leadership</li><li>Football edits</li>
+    </ul>
     <div class="ctas">
       <a class="cta primary" href="#advertise">Advertise with me</a>
       <a class="cta" href="#ai">See my work</a>
