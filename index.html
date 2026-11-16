@@ -796,6 +796,10 @@
   .botroll-track span::after { content: "✦"; color: var(--star); font-size: .7rem; }
   @keyframes botRoll { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .botroll-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .botroll-track span:nth-child(n+10) { display: none; } }
+  .subhead { display: grid; gap: 8px; margin: 56px 0 24px; max-width: 62ch; }
+  .subhead h3 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -.03em; }
+  .subhead p { margin: 0; color: var(--muted); }
+  .xp-wrap { grid-template-columns: minmax(0, 1fr); }
   .flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
   .flow-tabs button { font: 600 0.9rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
     border: 1px solid var(--line); background: var(--surface); color: var(--muted); transition: all .15s ease; }
@@ -1522,17 +1526,7 @@
         </div>
         <figcaption><b>My skill stack.</b> Each layer rests on the one below it: AI products are only as safe as the testing and moderation under them.</figcaption>
       </figure>
-    </div>
-  </section>
-
-  <!-- TESTING -->
-  <section id="testing">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Testing &amp; experience</span>
-        <h2>How I test, and where I've worked</h2>
-        <p>Every bot runs through the same attacks in a private sandbox before it touches a live community.</p>
-      </div>
+      <div class="subhead reveal"><span class="kicker">Testing</span><h3>How I test every bot</h3><p>Every bot runs through the same attacks in a private sandbox before it touches a live community.</p></div>
       <div class="test-grid">
         <div class="tcard reveal"><code>SPAM</code><b>Message floods</b><span>Can it stop a flood without slowing normal chat?</span></div>
         <div class="tcard reveal"><code>JOIN</code><b>Mass joins</b><span>Alt accounts join at once. Does it react fast enough?</span></div>
@@ -1543,8 +1537,8 @@
         <div class="tcard reveal flow-test" data-flow="mod"><code>MOD FLOW</code><b>Moderation flow test</b><span>A test case runs through every step: detect, triage, action ladder, log, then appeal and tune.</span></div>
         <div class="tcard reveal flow-test" data-flow="test"><code>BOT FLOW</code><b>Bot flow test</b><span>Sandbox, permissions, simulate, check. A fail goes back to tune and re-test, and only a pass goes live.</span></div>
       </div>
+      <div class="subhead reveal"><span class="kicker">Experience</span><h3>Where I've worked</h3></div>
       <div class="xp-wrap">
-        <div class="xp-head reveal"><span class="kicker">Experience</span><h3>Where I've worked</h3></div>
         <ol class="xp">
           <li class="reveal"><time>Now</time><div><b>Founder &amp; director, <a href="https://discord.gg/JJkyD2Rhc" target="_blank" rel="noopener">Galaxy Empire ↗</a></b><span>Five community brands, 1.5k–2k members. Governance, mergers and treaties.</span></div></li>
           <li class="reveal"><time>Moderation</time><div><b>Junior moderator, <a href="https://discord.gg/vtacNP4kG" target="_blank" rel="noopener">Roblox community server ↗</a></b><span>Moderating a server of 90,000 members.</span></div></li>
@@ -1555,7 +1549,6 @@
     </div>
   </section>
 
-  <div class="band"><div class="wrap"><span class="eyebrow">Part two</span><h2>Projects &amp; creative</h2><p>Apps, websites, bots and football edits.</p></div></div>
   <!-- AI & SOFTWARE -->
   <section id="ai">
     <div class="wrap">
