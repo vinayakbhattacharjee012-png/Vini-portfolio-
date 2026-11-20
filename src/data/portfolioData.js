@@ -3,7 +3,7 @@
 
 export const site = {
   name: "Vini",
-  url: "https://vini-portfolio-galaxy.netlify.app/",
+  url: "https://vini-portfolio.onrender.com/",
   version: "v2.6.0-static",
   tagline: "I build AI tools, Discord systems and the communities they run in.",
   roles: ["Full-Stack AI Builder", "Telemetry & Systems Architect", "Discord Automation Engineer", "Interactive Web Prototyper"],
@@ -140,7 +140,7 @@ export const projects = [
     metrics: ["0 API keys", "Hash routing", "Lazy sandboxes"],
     stack: ["React", "Tailwind", "Vite", "Canvas"],
     repo: "https://github.com/vinayakbhattacharjee012-png/Vini-portfolio-",
-    live: "https://vini-portfolio-galaxy.netlify.app/",
+    live: "https://vini-portfolio.onrender.com/",
     sandbox: null,
     problem: "A résumé can say \"interactive\"; it can't prove it.",
     design: "One data file drives every section; heavy canvases and sandboxes only load when you reach them.",
