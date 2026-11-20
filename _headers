@@ -7,3 +7,7 @@
   Cache-Control: public, max-age=604800
 /og.png
   Cache-Control: public, max-age=604800
+/logo-vini-256.webp
+  Cache-Control: public, max-age=604800
+/favicon-64.png
+  Cache-Control: public, max-age=604800

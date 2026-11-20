@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Vini · Builder, Community Founder, Creator</title>
 <link rel="canonical" href="https://vini-portfolio.onrender.com/" />
-<link rel="icon" href="logo-vini.png" type="image/png" />
+<link rel="icon" href="favicon-64.png" type="image/png" />
+<link rel="apple-touch-icon" href="logo-vini-256.webp" />
 <meta name="theme-color" content="#080b1a" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#f4f5fa" media="(prefers-color-scheme: light)" />
 <meta property="og:type" content="website" />
@@ -1261,7 +1262,10 @@
     box-shadow: 0 6px 20px -8px rgba(0,0,0,.35), 0 0 calc(16px * var(--fx-glow) * var(--fx-tone)) -6px var(--star); transition: border-color .2s ease, transform .2s ease; }
   .fab:hover { border-color: var(--star); transform: translateY(-1px); }
   .fab kbd { font: 500 .7rem var(--font-mono); color: var(--star); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
-  @media (max-width: 520px) { .fab .lbl { display: none; } }
+  @media (max-width: 520px) { .fab .lbl { display: none; } .fab { width: 40px; height: 40px; padding: 0; justify-content: center; } }
+  .fab-ic { flex: none; color: var(--star); }
+  @media (hover: none) { .fab kbd { display: none; } }
+  @media (max-width: 480px) { .tele .tl { display: none; } .tele { gap: 6px; padding: 8px 11px; } }
   footer { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
 
   .vt { position: fixed; left: max(14px, env(safe-area-inset-left, 0px)); bottom: calc(60px + env(safe-area-inset-bottom, 0px)); z-index: 31;
@@ -1342,10 +1346,11 @@
 <div class="progress" id="progress" aria-hidden="true"></div>
 <nav>
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Vini, back to top"><img class="brand-img" src="logo-vini.png" alt="Vini logo" width="34" height="34" decoding="async" />Vini</a>
+    <a class="brand" href="#top" aria-label="Vini, back to top"><img class="brand-img" src="logo-vini-256.webp" alt="Vini logo" width="34" height="34" decoding="async" />Vini</a>
     <div class="nav-right">
     <div class="nav-links" id="navLinks">
       <a href="#about">About</a>
+      <a href="#skills">Skills</a>
       <a href="#community">Discord work</a>
       <a href="#process">How I work</a>
       <a href="#ai">Projects</a>
@@ -1403,7 +1408,7 @@
       <div class="orb o1">
         <span class="planet"><a href="#ai" style="--c: var(--nebula)">AI</a></span>
       </div>
-      <div class="core" aria-hidden="true"><img class="core-img" src="logo-vini.png" alt="" width="256" height="256" decoding="async" /></div>
+      <div class="core" aria-hidden="true"><img class="core-img" src="logo-vini-256.webp" alt="" width="256" height="256" decoding="async" /></div>
     </div>
    </div>
     <div class="stats three">
@@ -1424,7 +1429,7 @@
       </div>
       <div class="about-grid">
         <article class="card id-card reveal">
-          <div class="avatar"><img class="avatar-img" src="logo-vini.png" alt="" width="256" height="256" decoding="async" /></div>
+          <div class="avatar"><img class="avatar-img" src="logo-vini-256.webp" alt="" width="256" height="256" decoding="async" /></div>
           <h3>Vini</h3>
           <span class="role-line">Builder · Community founder · Creator</span>
           <span class="status"><i></i>Open to projects &amp; collabs</span>
@@ -1664,7 +1669,7 @@
       <figure class="diagram flowchart reveal" id="flow-mod" data-flow-panel="mod">
         <p class="swipe">Swipe sideways to see the whole flow →</p>
         <div class="diagram-scroll">
-          <svg viewBox="0 0 900 370" role="img" aria-label="Moderation flowchart: detect, triage, then either an anti-nuke lockdown for raids or the action ladder of warn, mute, jail, kick and ban for rule breaks; both are logged, then reviewed and appeals handled, which feeds back into detection.">
+          <svg viewBox="0 0 900 370" role="group" aria-label="Moderation flowchart: detect, triage, then either an anti-nuke lockdown for raids or the action ladder of warn, mute, jail, kick and ban for rule breaks; both are logged, then reviewed and appeals handled, which feeds back into detection.">
             <defs>
               <marker id="arrM" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z" /></marker>
               <marker id="arrMh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead hot" d="M0,0 L10,5 L0,10 z" /></marker>
@@ -2016,7 +2021,7 @@
         <figcaption><b>How a health AI product gets built.</b> Safety guardrails come before the prototype, not after, and every product is tested before launch.</figcaption>
       </figure>
       <figure class="diagram span reveal stackg" id="stackGraph">
-        <div class="stage"><svg class="gx" id="stackSvg" viewBox="0 0 900 470" role="img" aria-label="How my stack connects"></svg></div>
+        <div class="stage"><svg class="gx" id="stackSvg" viewBox="0 0 900 470" role="group" aria-label="How my stack connects"></svg></div>
         <div class="gx-tip" id="stackTip" role="status" aria-live="polite"></div>
         <figcaption><b>How my stack connects.</b> Hover, tap or tab through any tool to light up the pipelines it feeds and see how I use it.</figcaption>
       </figure>
@@ -2269,7 +2274,7 @@
       <div><span class="kicker" id="archKicker"></span><h3 id="archTitle"></h3></div>
       <button class="drawer-close" type="button" data-close aria-label="Close architecture">×</button>
     </div>
-    <div class="stage"><svg class="gx" id="archSvg" viewBox="0 0 780 380" role="img"></svg></div>
+    <div class="stage"><svg class="gx" id="archSvg" viewBox="0 0 780 380" role="group"></svg></div>
     <p class="drawer-desc" id="archDesc" aria-live="polite"></p>
     <p class="drawer-hint">Hover, tap or tab through the nodes to trace each path.</p>
     <div class="metrics" id="archMetrics"></div>
@@ -2294,8 +2299,8 @@
   </div>
 </dialog>
 <button class="tele" id="tele" type="button" aria-label="System telemetry. Open the terminal" aria-haspopup="dialog" aria-expanded="false">
-  <i class="status-dot live" aria-hidden="true"></i><span>SYSTEM: <b id="teleState">ONLINE</b></span>
-  <span class="sep">//</span><span>LATENCY: <b id="teleLat">…</b></span>
+  <i class="status-dot live" aria-hidden="true"></i><span><span class="tl">SYSTEM: </span><b id="teleState">ONLINE</b></span>
+  <span class="sep">//</span><span><span class="tl">LATENCY: </span><b id="teleLat">…</b></span>
   <span class="wide"><span class="sep">//</span> STACK: <b>PYTHON + AI</b></span>
 </button>
 <div class="vt" id="vt" role="dialog" aria-label="Terminal" hidden>
@@ -2303,7 +2308,7 @@
   <div class="vt-out" id="vtOut" aria-live="polite"></div>
   <div class="vt-line"><label for="vtIn">vini@portfolio:~$</label><input id="vtIn" autocomplete="off" spellcheck="false" autocapitalize="off" /></div>
 </div>
-<button class="fab" id="fab" type="button" aria-label="Open command palette"><span class="lbl">Commands</span><kbd id="fabKey">Ctrl K</kbd></button>
+<button class="fab" id="fab" type="button" aria-label="Open command palette"><svg class="fab-ic" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span class="lbl">Commands</span><kbd id="fabKey">Ctrl K</kbd></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -3799,6 +3804,12 @@
     add("Open terminal", "Type help, stack, projects or ping", "cli console shell easter egg", function () { openTerminal(); });
     add("Visual effects: on / off", "Toggle glow, pulses and holographic sheen", "fx animation motion glow hologram", function () { FX.enabled ? FX.off() : FX.on(); toast(FX.enabled ? "Effects on" : "Effects off"); });
     window.__cmds = C;
+    document.querySelectorAll(".diagram-scroll, .stage").forEach(function (el) {
+      if (el.hasAttribute("tabindex")) return;
+      var fig = el.closest("figure, dialog"), cap = fig && fig.querySelector("figcaption b, h3");
+      el.tabIndex = 0; el.setAttribute("role", "region");
+      el.setAttribute("aria-label", (cap ? cap.textContent.replace(/\.$/, "") : "Diagram") + " (scrollable)");
+    });
     var fab = $("fab"), sb = $("searchBtn");
     if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) $("fabKey").textContent = "⌘K";
     if (fab && sb) fab.addEventListener("click", function () { sb.click(); }); else if (fab) fab.hidden = true;
