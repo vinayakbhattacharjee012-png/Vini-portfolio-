@@ -484,10 +484,171 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
     html { scroll-behavior: auto; }
   }
+
+  /* ================================================================
+     FX LAYER: glow, motion and live micro-visuals (additive only).
+     Tune here:  --fx-glow  0 = off, 1 = default, up to ~1.6
+                 --fx-speed 1 = default, 0.5 = half speed, 2 = double
+     Or in JS: window.FX.set({ glow: .6, speed: 1.2 }) / FX.off() / FX.on()
+     ================================================================ */
+  :root { --fx-glow: 1; --fx-speed: 1; --fx-tone: .5; --fx-violet: #6d5cf0; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fx-tone: 1; --fx-violet: #9b8cff; } }
+  :root[data-theme="dark"], :root[data-theme="black"] { --fx-tone: 1; --fx-violet: #9b8cff; }
+
+  section, header.hero { scroll-margin-top: 64px; }
+
+  /* 1. Ambient glow orbs: fixed behind all content, transform-only drift */
+  .fx-orbs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .fx-orbs i {
+    position: absolute; width: 52vmax; height: 52vmax; border-radius: 50%;
+    opacity: calc(var(--fx-glow) * var(--fx-tone) * .32); will-change: transform;
+    animation: fxDrift calc(42s / var(--fx-speed)) ease-in-out infinite alternate;
+  }
+  .fx-orbs i:nth-child(1) { left: -18vmax; top: 8vh; background: radial-gradient(circle, var(--nebula), transparent 62%); }
+  .fx-orbs i:nth-child(2) { right: -20vmax; top: 38vh; background: radial-gradient(circle, var(--fx-violet), transparent 62%); animation-delay: calc(-14s / var(--fx-speed)); }
+  .fx-orbs i:nth-child(3) { left: 30vw; bottom: -30vmax; background: radial-gradient(circle, var(--star), transparent 62%); opacity: calc(var(--fx-glow) * var(--fx-tone) * .16); animation-delay: calc(-28s / var(--fx-speed)); }
+  @keyframes fxDrift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(6vmax, -5vmax, 0) scale(1.12); } }
+
+  /* Rim lighting on cards: gradient border that blooms on hover/focus */
+  .card { position: relative; }
+  .card::after {
+    content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+    background: linear-gradient(135deg, var(--nebula), var(--fx-violet) 50%, var(--star));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude;
+    opacity: 0; transition: opacity .35s ease;
+  }
+  .card:hover::after, .card:focus-within::after { opacity: calc(var(--fx-glow) * .85); }
+  .card:hover { box-shadow: var(--glow), 0 14px 44px -16px color-mix(in srgb, var(--nebula) calc(var(--fx-glow) * var(--fx-tone) * 55%), transparent); }
+
+  /* Featured project cards: resting rim, cursor sheen, magnetic button */
+  .card.featured::after { opacity: calc(var(--fx-glow) * .32); }
+  .card.featured:hover::after { opacity: calc(var(--fx-glow) * .95); }
+  .card.featured::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, color-mix(in srgb, var(--fx-violet) calc(var(--fx-glow) * var(--fx-tone) * 16%), transparent) 50%, transparent 65%);
+    background-size: 260% 100%; background-position: calc(100% - var(--sx, .5) * 100%) 0;
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .card.featured:hover::before { opacity: 1; }
+  .card.featured > * { position: relative; z-index: 1; }
+  .magnetic { transition: transform .25s cubic-bezier(.2,.8,.3,1.2), border-color .2s ease, box-shadow .2s ease; }
+  .arch-btn { align-self: flex-start; margin-top: 4px; }
+  .arch-btn:hover { box-shadow: 0 0 calc(18px * var(--fx-glow)) -4px var(--nebula); border-color: var(--nebula); }
+
+  /* 2. Scroll choreography: stagger, draw-in heading lines, glowing progress */
+  .reveal.in { animation-duration: calc(.6s / var(--fx-speed)); animation-delay: calc(min(var(--i, 0), 6) * 70ms / var(--fx-speed)); }
+  .sec-head h2 { position: relative; }
+  .sec-head h2::after {
+    content: ""; position: absolute; left: 0; bottom: -7px; width: 72px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--star), var(--fx-violet), var(--nebula));
+    box-shadow: 0 0 calc(10px * var(--fx-glow) * var(--fx-tone)) color-mix(in srgb, var(--nebula) 70%, transparent);
+    transform-origin: 0 50%; transition: transform calc(.9s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1) .15s;
+  }
+  .fx-ready .sec-head:not(.in) h2::after { transform: scaleX(0); }
+  .progress { box-shadow: 0 0 calc(12px * var(--fx-glow)) color-mix(in srgb, var(--nebula) 75%, transparent), 0 0 calc(4px * var(--fx-glow)) var(--star); }
+  .nav-links a { position: relative; transition: color .2s ease; }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px;
+    background: var(--nebula); box-shadow: 0 0 calc(8px * var(--fx-glow)) var(--nebula);
+    transform: scaleX(0); transition: transform .3s ease;
+  }
+  .nav-links a.active { color: var(--ink); }
+  .nav-links a.active::after { transform: scaleX(1); }
+
+  /* 4. Live micro-visuals: status pulses, metric badges, tab underline glide */
+  .status-dot { --dot: var(--nebula); position: relative; display: inline-block; width: 7px; height: 7px; margin-right: 7px; vertical-align: 1px;
+    border-radius: 50%; background: var(--dot); box-shadow: 0 0 calc(8px * var(--fx-glow)) var(--dot); }
+  .status-dot.build { --dot: var(--star); }
+  .status-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--dot);
+    animation: fxPing calc(2.2s / var(--fx-speed)) cubic-bezier(0,0,.2,1) infinite; }
+  @keyframes fxPing { from { transform: scale(1); opacity: .7; } to { transform: scale(3); opacity: 0; } }
+
+  .metrics { display: flex; flex-wrap: wrap; gap: 8px; }
+  .metric { font: 500 0.74rem/1 var(--font-mono); padding: 6px 10px; border-radius: 999px; color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--nebula) 45%, var(--line));
+    background: color-mix(in srgb, var(--nebula) 7%, var(--surface));
+    box-shadow: 0 0 calc(16px * var(--fx-glow) * var(--fx-tone)) -6px var(--nebula); }
+  .metric b { color: var(--nebula); font-weight: 600; margin-right: 4px; }
+
+  .ptabs { position: relative; display: flex; flex-wrap: wrap; gap: 4px; margin: -10px 0 22px; border-bottom: 1px solid var(--line); }
+  .ptabs button { font: 500 0.88rem var(--font-body); color: var(--muted); background: none; border: 0; padding: 8px 12px 10px; cursor: pointer; transition: color .2s ease; }
+  .ptabs button:hover { color: var(--ink); }
+  .ptabs button[aria-pressed="true"] { color: var(--ink); }
+  .ptabs-ink { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; border-radius: 2px; pointer-events: none;
+    background: linear-gradient(90deg, var(--nebula), var(--fx-violet)); box-shadow: 0 0 calc(10px * var(--fx-glow)) var(--nebula);
+    transition: transform calc(.4s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1), width calc(.4s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1); }
+  .fx-in { animation: fxIn calc(.45s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes fxIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+
+  /* 3. Architecture drawer with interactive SVG diagrams */
+  dialog.arch { width: min(820px, 100vw); max-width: 100vw; max-height: 100dvh; height: 100dvh; margin: 0 0 0 auto; padding: 0;
+    border: 0; border-left: 1px solid var(--line); background: var(--surface); color: var(--ink); overflow: auto; }
+  dialog.arch[open] { animation: fxDrawer calc(.4s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1) both; }
+  dialog.arch::backdrop { background: rgba(4, 6, 16, .55); backdrop-filter: blur(4px); }
+  @keyframes fxDrawer { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (max-width: 640px) {
+    dialog.arch { width: 100vw; height: auto; max-height: 92dvh; margin: auto 0 0; border-left: 0; border-top: 1px solid var(--line); border-radius: 16px 16px 0 0; }
+    @keyframes fxDrawer { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  }
+  .arch-inner { padding: 22px max(16px, env(safe-area-inset-right, 0px)) 28px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 16px; }
+  .arch-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .arch-head h3 { font-size: 1.3rem; margin-top: 6px; }
+  .arch-close { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); font-size: 1.2rem; cursor: pointer; }
+  .arch-close:hover { border-color: var(--nebula); box-shadow: 0 0 calc(14px * var(--fx-glow)) -4px var(--nebula); }
+  .arch-stage { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); overflow-x: auto; }
+  .arch-stage svg { display: block; width: 100%; min-width: 600px; height: auto; color: var(--ink); }
+  .arch-desc { margin: 0; min-height: 3.2em; padding: 12px 14px; border-radius: 10px; background: var(--surface-2); color: var(--ink); font-size: .94rem; }
+  .arch-desc b { color: var(--nebula); }
+  .arch-hint { margin: 0; color: var(--muted); font-size: .82rem; }
+
+  .arch-svg .ae { fill: none; stroke: var(--muted); stroke-opacity: .5; stroke-width: 1.4; transition: stroke-opacity .25s ease, stroke .25s ease; }
+  .arch-svg .ae.dash { stroke-dasharray: 5 5; }
+  .arch-svg .ae.draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: fxDraw calc(.9s / var(--fx-speed)) cubic-bezier(.3,.7,.2,1) forwards; }
+  @keyframes fxDraw { to { stroke-dashoffset: 0; } }
+  .arch-svg .ap { fill: var(--nebula); filter: drop-shadow(0 0 calc(4px * var(--fx-glow)) var(--nebula)); transition: opacity .25s ease; }
+  .arch-svg .ap.warm { fill: var(--star); filter: drop-shadow(0 0 calc(4px * var(--fx-glow)) var(--star)); }
+  .arch-svg .an rect { fill: var(--surface); stroke: var(--line); stroke-width: 1.3; transition: stroke .2s ease, filter .2s ease; }
+  .arch-svg .an.an-hub rect { stroke: var(--nebula); }
+  .arch-svg .an { cursor: pointer; outline: none; animation: fxIn calc(.5s / var(--fx-speed)) cubic-bezier(.2,.8,.2,1) both; }
+  .arch-svg .an text { fill: var(--ink); }
+  .arch-svg .an .t-sub { fill: var(--muted); }
+  .arch-svg .grp { fill: none; stroke: var(--muted); stroke-opacity: .4; stroke-dasharray: 4 6; }
+  .arch-svg .grp-l { font: 500 10.5px var(--font-mono); fill: var(--muted); letter-spacing: .06em; }
+  .arch-svg.focus .ae { stroke-opacity: .15; }
+  .arch-svg.focus .ap { opacity: .15; }
+  .arch-svg.focus .an { opacity: .45; }
+  .arch-svg .an.on { opacity: 1; }
+  .arch-svg .an.on rect { stroke: var(--nebula); stroke-width: 1.8; filter: drop-shadow(0 0 calc(8px * var(--fx-glow)) color-mix(in srgb, var(--nebula) 60%, transparent)); }
+  .arch-svg .ae.on { stroke: var(--nebula); stroke-opacity: 1; }
+  .arch-svg .ap.on { opacity: 1; }
+
+  /* Master switch: <html data-fx="off"> */
+  [data-fx="off"] .fx-orbs, [data-fx="off"] .card::after, [data-fx="off"] .card::before { display: none; }
+  [data-fx="off"] .status-dot::after { animation: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fx-orbs i, .status-dot::after { animation: none !important; }
+    .arch-svg .ae.draw { stroke-dashoffset: 0; }
+    .magnetic { transform: none !important; }
+  }
 </style>
 </head>
 <body>
 <div class="progress" id="progress" aria-hidden="true"></div>
+<div class="fx-orbs" aria-hidden="true"><i></i><i></i><i></i></div>
+<dialog class="arch" id="arch" aria-labelledby="archTitle">
+  <div class="arch-inner">
+    <div class="arch-head">
+      <div><span class="kicker" id="archKicker"></span><h3 id="archTitle"></h3></div>
+      <button class="arch-close" type="button" id="archClose" aria-label="Close architecture">×</button>
+    </div>
+    <div class="arch-stage"><svg class="arch-svg" id="archSvg" viewBox="0 0 780 380" role="img"></svg></div>
+    <p class="arch-desc" id="archDesc" aria-live="polite"></p>
+    <p class="arch-hint">Hover, tap or tab through the nodes to trace each path.</p>
+    <div class="metrics" id="archMetrics"></div>
+  </div>
+</dialog>
 <nav>
   <div class="wrap">
     <a class="brand" href="#top"><i></i>Vini</a>
@@ -587,15 +748,23 @@
         <h2>Products, bots and prototypes</h2>
         <p>From a health AI app with safety guardrails to a Discord bot running in live communities.</p>
       </div>
+      <div class="ptabs reveal" id="ptabs" role="group" aria-label="Filter projects">
+        <button type="button" aria-pressed="true" data-f="all">All</button>
+        <button type="button" aria-pressed="false" data-f="ai">AI</button>
+        <button type="button" aria-pressed="false" data-f="bots">Bots</button>
+        <button type="button" aria-pressed="false" data-f="web">Web</button>
+        <button type="button" aria-pressed="false" data-f="ops">Ops</button>
+        <span class="ptabs-ink" aria-hidden="true"></span>
+      </div>
       <div class="grid">
-        <article class="card reveal">
-          <span class="kicker">Product · in progress</span>
+        <article class="card reveal" data-tags="ai">
+          <span class="kicker"><i class="status-dot build" aria-hidden="true"></i>Product · in progress</span>
           <h3>Polo, a health AI app</h3>
           <p>Designing and building Polo, a health AI application focused on structured wellness workflows and clinical safety guardrails.</p>
           <div class="pills"><span class="pill">Wellness workflows</span><span class="pill">Safety guardrails</span><span class="pill">Product design</span></div>
         </article>
-        <article class="card reveal">
-          <span class="kicker">Python · live</span>
+        <article class="card reveal" data-tags="bots">
+          <span class="kicker"><i class="status-dot" aria-hidden="true"></i>Python · live</span>
           <h3>Nova 3.0 Ultimate</h3>
           <p>A multi-purpose Python Discord bot running across live communities.</p>
           <ul>
@@ -605,7 +774,7 @@
             <li>AFK tracking</li>
           </ul>
         </article>
-        <article class="card reveal">
+        <article class="card reveal" data-tags="web ai">
           <span class="kicker">Web</span>
           <h3>Full-stack AI prototyping</h3>
           <p>Shipping rapid web prototypes and UI architectures, including <strong>Apex Sports Hub</strong>.</p>
@@ -614,7 +783,7 @@
             <span class="pill">Lovable</span><span class="pill">Replit Agent</span><span class="pill">Google AI Studio</span><span class="pill">Claude Pro</span>
           </div>
         </article>
-        <article class="card reveal">
+        <article class="card reveal" data-tags="ops">
           <span class="kicker">Ops</span>
           <h3>Deployment &amp; monitoring</h3>
           <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
@@ -622,12 +791,39 @@
           <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
         </article>
 
-        <article class="card terminal reveal" style="grid-column: 1 / -1;">
+        <article class="card reveal featured" data-tags="bots ops">
+          <span class="kicker"><i class="status-dot build" aria-hidden="true"></i>Python · in progress</span>
+          <h3>Eclipse</h3>
+          <p>A discord.py bot for moderation, leveling and utility, built on slash commands and split into six self-contained cogs.</p>
+          <ul>
+            <li>Kick, ban, timeout, warnings, purge, lock and slowmode</li>
+            <li>Automatic anti-spam and join-burst anti-raid</li>
+            <li>XP leveling, level roles and leaderboard</li>
+            <li>Button verification that survives restarts, plus AFK</li>
+          </ul>
+          <div class="metrics"><span class="metric"><b>31</b>slash commands</span><span class="metric"><b>6</b>cogs</span><span class="metric"><b>/health</b>keep-alive</span></div>
+          <button class="cta arch-btn magnetic" type="button" data-arch="eclipse">View architecture</button>
+        </article>
+        <article class="card reveal featured" data-tags="ai web">
+          <span class="kicker"><i class="status-dot" aria-hidden="true"></i>AI · prototype</span>
+          <h3>Apex, an AI co-pilot</h3>
+          <p>A single-file chat app that runs my Apex system prompt on the Anthropic API: a direct, builder-to-builder co-pilot with scope and safety guardrails.</p>
+          <ul>
+            <li>Zero-build HTML and JavaScript</li>
+            <li>API key stays in the browser tab's session</li>
+            <li>Guardrails for destructive commands and health questions</li>
+            <li>Light and dark themes</li>
+          </ul>
+          <div class="metrics"><span class="metric"><b>1</b>file</span><span class="metric"><b>0</b>build steps</span><span class="metric"><b>session</b>only key</span></div>
+          <button class="cta arch-btn magnetic" type="button" data-arch="apex">View architecture</button>
+        </article>
+
+        <article class="card terminal reveal" style="grid-column: 1 / -1;" data-tags="bots">
           <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
           <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
         </article>
 
-        <figure class="diagram span reveal">
+        <figure class="diagram span reveal" data-tags="ops">
           <div class="diagram-scroll">
             <svg viewBox="0 0 780 210" role="img" aria-label="Shipping loop: prototype with AI builders, deploy on Render, monitor with UptimeRobot, get alerts on downtime or latency, then fix and redeploy.">
               <defs>
@@ -664,7 +860,7 @@
           <figcaption><b>The shipping loop.</b> Prototypes go live on Render, UptimeRobot watches uptime and latency, and alerts feed straight back into the next fix.</figcaption>
         </figure>
 
-        <figure class="diagram span reveal">
+        <figure class="diagram span reveal" data-tags="bots">
           <div class="diagram-scroll">
             <svg viewBox="0 0 780 250" role="img" aria-label="Nova 3.0 Ultimate flow: a new member joins, passes an interactive verification view, then the leveling, anti-spam and AFK modules run for verified members.">
               <defs>
@@ -1541,6 +1737,252 @@
     }
     var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { size(); paint(0); }, 150); });
   } catch (e) {}
+})();
+</script>
+<script>
+/* FX LAYER: glow, motion, project filters and architecture diagrams. */
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia && matchMedia("(hover: hover)").matches;
+
+  var FX = window.FX = {
+    glow: 1, speed: 1,
+    set: function (o) {
+      if (o.glow != null) { FX.glow = o.glow; root.style.setProperty("--fx-glow", o.glow); }
+      if (o.speed != null) { FX.speed = o.speed; root.style.setProperty("--fx-speed", o.speed); }
+    },
+    off: function () { root.setAttribute("data-fx", "off"); },
+    on: function () { root.removeAttribute("data-fx"); }
+  };
+
+  if ("IntersectionObserver" in window && !reduce) root.classList.add("fx-ready");
+
+  // Stagger index for sibling reveals
+  var groups = new Map();
+  document.querySelectorAll(".reveal").forEach(function (el) {
+    var p = el.parentNode, n = groups.get(p) || 0;
+    el.style.setProperty("--i", n); groups.set(p, n + 1);
+  });
+
+  // Active section glow in the nav
+  var links = {};
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+  if ("IntersectionObserver" in window) {
+    var navIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = links[en.target.id]; if (!a) return;
+        if (en.isIntersecting) {
+          Object.keys(links).forEach(function (k) { links[k].classList.remove("active"); });
+          a.classList.add("active");
+        }
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    document.querySelectorAll("main section[id]").forEach(function (s) { navIO.observe(s); });
+  }
+
+  // Featured cards: cursor sheen and magnetic button
+  if (!reduce && finePointer) {
+    document.querySelectorAll(".card.featured").forEach(function (c) {
+      var btn = c.querySelector(".magnetic");
+      c.addEventListener("pointermove", function (e) {
+        var r = c.getBoundingClientRect();
+        c.style.setProperty("--sx", ((e.clientX - r.left) / r.width).toFixed(3));
+        if (!btn) return;
+        var b = btn.getBoundingClientRect(), dx = e.clientX - (b.left + b.width / 2), dy = e.clientY - (b.top + b.height / 2);
+        var d = Math.hypot(dx, dy);
+        btn.style.transform = d < 110 ? "translate(" + (dx * .18).toFixed(1) + "px," + (dy * .25).toFixed(1) + "px)" : "";
+      });
+      c.addEventListener("pointerleave", function () { if (btn) btn.style.transform = ""; });
+    });
+  }
+
+  // Project filter tabs with gliding underline
+  var tabs = document.getElementById("ptabs");
+  if (tabs) {
+    var ink = tabs.querySelector(".ptabs-ink"), btns = tabs.querySelectorAll("button");
+    var items = document.querySelectorAll("#ai .grid > [data-tags]");
+    function moveInk(b) { ink.style.width = b.offsetWidth + "px"; ink.style.transform = "translateX(" + b.offsetLeft + "px)"; }
+    function current() { return tabs.querySelector('[aria-pressed="true"]'); }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+        moveInk(b);
+        var f = b.getAttribute("data-f");
+        items.forEach(function (el) {
+          var show = f === "all" || el.getAttribute("data-tags").split(" ").indexOf(f) > -1;
+          var was = el.hidden; el.hidden = !show;
+          if (show && was && !reduce) { el.classList.remove("fx-in"); void el.offsetWidth; el.classList.add("fx-in"); }
+        });
+      });
+    });
+    moveInk(current());
+    window.addEventListener("resize", function () { moveInk(current()); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moveInk(current()); });
+  }
+
+  // Architecture diagrams
+  var ARCH = {
+    eclipse: {
+      kicker: "Python · discord.py", title: "Eclipse architecture",
+      intro: "<b>Eclipse</b> runs one asyncio process: the Discord gateway connection and a tiny health server side by side, with every feature in its own cog.",
+      metrics: [["31", "slash commands"], ["6", "cogs"], ["1", "process"], ["/health", "keep-alive"]],
+      groups: [{ x: 210, y: 20, w: 190, h: 340, label: "RENDER WEB SERVICE" }],
+      nodes: [
+        { id: "gw", x: 95, y: 110, t: "Discord", s: "gateway + API", d: "<b>Discord gateway.</b> Events (messages, joins, button clicks) stream in; slash command replies and mod actions go back out." },
+        { id: "ur", x: 95, y: 290, t: "UptimeRobot", s: "pings every 5 min", d: "<b>UptimeRobot</b> pings the service so Render's free tier never spins it down." },
+        { id: "bot", x: 305, y: 110, t: "bot.py", s: "asyncio event loop", hub: true, d: "<b>bot.py</b> loads the six cogs, syncs slash commands and keeps the gateway connection alive." },
+        { id: "ka", x: 305, y: 290, t: "keepalive.py", s: "GET / and /health", d: "<b>Keep-alive server.</b> Answers HTTP on $PORT with live status, latency and guild count." },
+        { id: "mod", x: 520, y: 45, t: "Moderation", s: "+ anti-spam", d: "<b>Moderation cog.</b> Kick, ban, timeout, warnings, purge, lock, slowmode and automatic anti-spam timeouts." },
+        { id: "raid", x: 520, y: 103, t: "Anti-raid", s: "join-burst detection", d: "<b>Anti-raid cog.</b> Spots a burst of joins and can auto-kick very new accounts while the raid is active." },
+        { id: "lvl", x: 520, y: 161, t: "Leveling", s: "XP · roles · board", d: "<b>Leveling cog.</b> XP per message with a 60-second cooldown, level roles and a leaderboard." },
+        { id: "ver", x: 520, y: 219, t: "Verification", s: "persistent buttons", d: "<b>Verification cog.</b> A button that grants a role and keeps working across restarts." },
+        { id: "afk", x: 520, y: 277, t: "AFK", s: "auto-clear on reply", d: "<b>AFK cog.</b> Tells anyone who mentions you that you're away, and clears when you post again." },
+        { id: "util", x: 520, y: 335, t: "Utility", s: "polls · roles · info", d: "<b>Utility cog.</b> Ping, server and user info, polls, announcements, reaction roles and help." },
+        { id: "db", x: 700, y: 190, w: 120, t: "storage.py", s: "atomic JSON store", d: "<b>storage.py.</b> Per-server settings, warnings and XP saved with atomic writes and corrupt-file recovery." }
+      ],
+      edges: [["gw", "bot", "both"], ["ur", "ka"], ["ka", "bot", "dash"], ["bot", "mod"], ["bot", "raid"], ["bot", "lvl"], ["bot", "ver"], ["bot", "afk"], ["bot", "util"],
+        ["mod", "db"], ["raid", "db"], ["lvl", "db"], ["ver", "db"], ["afk", "db"], ["util", "db"]]
+    },
+    apex: {
+      kicker: "AI · single file", title: "Apex request flow",
+      intro: "<b>Apex</b> is one HTML file. Every message travels from the chat UI to the Anthropic Messages API with the Apex system prompt attached, and the reply renders back in the thread.",
+      metrics: [["1", "file"], ["0", "build steps"], ["0", "servers"], ["session", "only key"]],
+      groups: [{ x: 150, y: 20, w: 420, h: 340, label: "YOUR BROWSER TAB" }],
+      nodes: [
+        { id: "you", x: 70, y: 190, w: 100, t: "You", s: "type a message", d: "<b>You</b> send a message from any device with a browser." },
+        { id: "ui", x: 270, y: 190, t: "Chat UI", s: "index.html", hub: true, d: "<b>Chat UI.</b> Keeps the conversation history in memory and renders each reply as plain text." },
+        { id: "key", x: 270, y: 70, t: "API key", s: "sessionStorage", d: "<b>API key.</b> Lives only in this tab's sessionStorage and clears when the tab closes. Never baked into the page." },
+        { id: "sys", x: 270, y: 310, t: "Apex prompt", s: "persona + guardrails", d: "<b>Apex system prompt.</b> Zero-filler tone, scope enforcement, and guardrails for destructive commands and health questions." },
+        { id: "req", x: 470, y: 190, t: "Messages request", s: "fetch · JSON", d: "<b>Request.</b> One fetch per turn with the model, system prompt and full message history." },
+        { id: "api", x: 680, y: 190, w: 130, t: "Anthropic API", s: "Messages endpoint", d: "<b>Anthropic API.</b> Generates the reply, which comes back as the next message in the chat." }
+      ],
+      edges: [["you", "ui"], ["key", "ui", "dash"], ["ui", "req"], ["sys", "req"], ["req", "api"], ["api", "ui", "back"]]
+    }
+  };
+
+  var dlg = document.getElementById("arch");
+  var svg = document.getElementById("archSvg");
+  var NS = "http://www.w3.org/2000/svg";
+  var H = 40;
+
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  function anchor(a, b) {
+    var aw = (a.w || 140) / 2, bw = (b.w || 140) / 2, dx = b.x - a.x, dy = b.y - a.y;
+    if (Math.abs(dx) > Math.abs(dy) * 1.2 || Math.abs(dx) > 120) {
+      var s = dx > 0 ? 1 : -1;
+      return { x1: a.x + s * aw, y1: a.y, x2: b.x - s * bw, y2: b.y, h: true };
+    }
+    var v = dy > 0 ? 1 : -1;
+    return { x1: a.x, y1: a.y + v * H / 2, x2: b.x, y2: b.y - v * H / 2, h: false };
+  }
+
+  function pathFor(a, b, kind) {
+    if (kind === "back") {
+      var x1 = a.x, y1 = a.y - H / 2, x2 = b.x + (b.w || 140) / 2 - 20, y2 = b.y - H / 2;
+      return "M" + x1 + "," + y1 + " C" + x1 + "," + (y1 - 90) + " " + x2 + "," + (y2 - 90) + " " + x2 + "," + y2;
+    }
+    var p = anchor(a, b);
+    if (p.h) { var mx = (p.x1 + p.x2) / 2; return "M" + p.x1 + "," + p.y1 + " C" + mx + "," + p.y1 + " " + mx + "," + p.y2 + " " + p.x2 + "," + p.y2; }
+    var my = (p.y1 + p.y2) / 2; return "M" + p.x1 + "," + p.y1 + " C" + p.x1 + "," + my + " " + p.x2 + "," + my + " " + p.x2 + "," + p.y2;
+  }
+
+  function build(key) {
+    var A = ARCH[key];
+    document.getElementById("archKicker").textContent = A.kicker;
+    document.getElementById("archTitle").textContent = A.title;
+    svg.setAttribute("aria-label", A.title + ". " + A.nodes.map(function (n) { return n.t; }).join(", ") + ".");
+    var desc = document.getElementById("archDesc");
+    desc.innerHTML = A.intro;
+    document.getElementById("archMetrics").innerHTML = A.metrics.map(function (m) {
+      return '<span class="metric"><b>' + m[0] + "</b>" + m[1] + "</span>";
+    }).join("");
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var defs = el("defs", {}, svg);
+    var mk = el("marker", { id: "fxArr", viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "arrowhead" }, mk);
+
+    A.groups.forEach(function (g) {
+      el("rect", { x: g.x, y: g.y, width: g.w, height: g.h, rx: 14, "class": "grp" }, svg);
+      el("text", { x: g.x + 12, y: g.y + 16, "class": "grp-l" }, svg).textContent = g.label;
+    });
+
+    var byId = {}; A.nodes.forEach(function (n) { byId[n.id] = n; });
+    var edgeLayer = el("g", {}, svg), pulseLayer = el("g", {}, svg), nodeLayer = el("g", {}, svg);
+    var edges = A.edges.map(function (e, i) {
+      var a = byId[e[0]], b = byId[e[1]], d = pathFor(a, b, e[2]);
+      var cls = "ae" + (e[2] === "dash" ? " dash" : "") + (reduce || e[2] === "dash" ? "" : " draw");
+      var p = el("path", { d: d, "class": cls, pathLength: 1, "marker-end": "url(#fxArr)" }, edgeLayer);
+      if (e[2] === "both") p.setAttribute("marker-start", "url(#fxArr)");
+      p.style.animationDelay = (i * 0.05 / FX.speed) + "s";
+      var pulses = [];
+      if (!reduce) {
+        var dur = (2.4 + (i % 3) * 0.35) / FX.speed;
+        var c = el("circle", { r: 3.2, "class": "ap" + (e[2] === "back" ? " warm" : "") }, pulseLayer);
+        el("animateMotion", { dur: dur + "s", repeatCount: "indefinite", path: d, begin: (i * 0.2) + "s" }, c);
+        pulses.push(c);
+        if (e[2] === "both") {
+          var c2 = el("circle", { r: 3.2, "class": "ap warm" }, pulseLayer);
+          el("animateMotion", { dur: dur + "s", repeatCount: "indefinite", path: d, keyPoints: "1;0", keyTimes: "0;1", calcMode: "linear", begin: (i * 0.2 + dur / 2) + "s" }, c2);
+          pulses.push(c2);
+        }
+      }
+      return { a: e[0], b: e[1], path: p, pulses: pulses };
+    });
+
+    function focusNode(n) {
+      svg.classList.add("focus");
+      nodeLayer.querySelectorAll(".an").forEach(function (g) { g.classList.toggle("on", g.getAttribute("data-id") === n.id); });
+      edges.forEach(function (e) {
+        var on = e.a === n.id || e.b === n.id;
+        e.path.classList.toggle("on", on);
+        e.pulses.forEach(function (c) { c.classList.toggle("on", on); });
+        if (on) nodeLayer.querySelector('[data-id="' + (e.a === n.id ? e.b : e.a) + '"]').classList.add("on");
+      });
+      desc.innerHTML = n.d;
+    }
+    function clear() {
+      svg.classList.remove("focus");
+      svg.querySelectorAll(".on").forEach(function (x) { x.classList.remove("on"); });
+      desc.innerHTML = A.intro;
+    }
+
+    A.nodes.forEach(function (n, i) {
+      var w = n.w || 140;
+      var g = el("g", { "class": "an" + (n.hub ? " an-hub" : ""), tabindex: 0, role: "button", "data-id": n.id, "aria-label": n.t + ", " + n.s }, nodeLayer);
+      g.style.animationDelay = (0.1 + i * 0.04 / FX.speed) + "s";
+      el("rect", { x: n.x - w / 2, y: n.y - H / 2, width: w, height: H, rx: 9 }, g);
+      el("text", { x: n.x, y: n.y - 3, "text-anchor": "middle", "class": "t-title" }, g).textContent = n.t;
+      el("text", { x: n.x, y: n.y + 12, "text-anchor": "middle", "class": "t-sub" }, g).textContent = n.s;
+      g.addEventListener("pointerenter", function () { focusNode(n); });
+      g.addEventListener("focus", function () { focusNode(n); });
+      g.addEventListener("click", function () { focusNode(n); });
+      g.addEventListener("pointerleave", clear);
+      g.addEventListener("blur", clear);
+    });
+  }
+
+  if (dlg && typeof dlg.showModal === "function") {
+    var opener = null;
+    document.querySelectorAll("[data-arch]").forEach(function (b) {
+      b.addEventListener("click", function () { opener = b; build(b.getAttribute("data-arch")); dlg.showModal(); });
+    });
+    document.getElementById("archClose").addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) {
+      var r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+    });
+    dlg.addEventListener("close", function () { if (opener) opener.focus(); });
+  } else {
+    document.querySelectorAll("[data-arch]").forEach(function (b) { b.hidden = true; });
+  }
 })();
 </script>
 </body>
