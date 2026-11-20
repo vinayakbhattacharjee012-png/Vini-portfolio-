@@ -1463,6 +1463,188 @@
     .diagram-scroll svg, .stage svg { min-width: 0 !important; width: 100% !important; }
     a { color: inherit !important; }
   }
+
+  /* ================================================================
+     HOLOGRAM: VEGA voice assistant + interactive 3D portfolio hologram
+     Tune: --holo-c (hologram colour, as R,G,B), --holo-a (accent, R,G,B)
+     ================================================================ */
+  :root { --holo-c: 90, 225, 255; --holo-a: 255, 186, 92; }
+
+  /* Entry points: hero button + floating arc reactor */
+  .holo-cta { gap: 10px; border-color: rgba(var(--holo-c), .55) !important; box-shadow: 0 0 calc(18px * var(--fx-glow, 1)) -6px rgba(var(--holo-c), .9); }
+  .holo-cta:hover { box-shadow: 0 0 calc(26px * var(--fx-glow, 1)) -4px rgba(var(--holo-c), 1); }
+  .mini-reactor { position: relative; width: 16px; height: 16px; flex: none; border-radius: 50%;
+    background: radial-gradient(circle, #fff 0 18%, rgba(var(--holo-c), 1) 30%, rgba(var(--holo-c), .15) 62%, transparent 64%);
+    box-shadow: 0 0 10px rgba(var(--holo-c), .9), inset 0 0 0 1.5px rgba(var(--holo-c), .9); }
+  .holo-fab { position: fixed; right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(62px + env(safe-area-inset-bottom, 0px)); z-index: 12;
+    width: 48px; height: 48px; border-radius: 50%; padding: 0; cursor: pointer; display: grid; place-items: center;
+    background: radial-gradient(circle, #04131c 0 58%, #020a10 60%); border: 1px solid rgba(var(--holo-c), .6);
+    box-shadow: 0 0 0 4px rgba(var(--holo-c), .08), 0 0 calc(26px * var(--fx-glow, 1)) -4px rgba(var(--holo-c), .9), 0 8px 24px -10px rgba(0,0,0,.6);
+    transition: transform .2s ease, box-shadow .2s ease; }
+  .holo-fab:hover { transform: scale(1.06); box-shadow: 0 0 0 6px rgba(var(--holo-c), .12), 0 0 calc(36px * var(--fx-glow, 1)) -2px rgba(var(--holo-c), 1), 0 8px 24px -10px rgba(0,0,0,.6); }
+  .holo-fab .reactor { position: relative; width: 30px; height: 30px; border-radius: 50%; }
+  .holo-fab .reactor i { position: absolute; inset: 0; border-radius: 50%; }
+  .holo-fab .reactor i:nth-child(1) { background: repeating-conic-gradient(rgba(var(--holo-c), .95) 0 14deg, transparent 14deg 30deg);
+    -webkit-mask: radial-gradient(circle, transparent 0 54%, #000 56% 72%, transparent 74%); mask: radial-gradient(circle, transparent 0 54%, #000 56% 72%, transparent 74%);
+    animation: reactorSpin 9s linear infinite; }
+  .holo-fab .reactor i:nth-child(2) { inset: 6px; border: 1.5px solid rgba(var(--holo-c), .9); box-shadow: 0 0 8px rgba(var(--holo-c), .9), inset 0 0 6px rgba(var(--holo-c), .7); }
+  .holo-fab .reactor i:nth-child(3) { inset: 10px; background: radial-gradient(circle, #fff 0 30%, rgba(var(--holo-c), 1) 55%, rgba(var(--holo-c), 0) 75%); animation: reactorPulse 2.4s ease-in-out infinite; }
+  .holo-fab .lbl { position: absolute; right: calc(100% + 10px); top: 50%; transform: translate(6px, -50%); white-space: nowrap; pointer-events: none;
+    font: 600 .78rem var(--font-display); color: rgb(var(--holo-c)); padding: 6px 10px; border-radius: 8px; background: rgba(2, 10, 16, .92);
+    border: 1px solid rgba(var(--holo-c), .45); opacity: 0; transition: opacity .2s ease, transform .2s ease; }
+  .holo-fab:hover .lbl, .holo-fab:focus-visible .lbl { opacity: 1; transform: translate(0, -50%); }
+  @keyframes reactorSpin { to { transform: rotate(360deg); } }
+  @keyframes reactorPulse { 50% { transform: scale(.82); opacity: .8; } }
+
+  /* The hologram overlay */
+  dialog.holo { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; overflow: hidden;
+    color: rgb(200, 244, 255); background: radial-gradient(1200px 700px at 50% 45%, rgba(10, 60, 90, .55), rgba(1, 6, 12, .96) 70%), #01060c;
+    font: 400 14px/1.5 var(--font-body); color-scheme: dark; }
+  dialog.holo::backdrop { background: rgba(0, 4, 10, .7); }
+  dialog.holo[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .holo-fx { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .holo-fx::before { content: ""; position: absolute; left: -50%; right: -50%; bottom: -10%; height: 55%;
+    background-image: linear-gradient(rgba(var(--holo-c), .16) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--holo-c), .16) 1px, transparent 1px);
+    background-size: 48px 48px; transform: perspective(500px) rotateX(62deg); transform-origin: 50% 100%;
+    -webkit-mask: linear-gradient(transparent, #000 40%, #000 70%, transparent); mask: linear-gradient(transparent, #000 40%, #000 70%, transparent); }
+  .holo-fx::after { content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(var(--holo-c), .045) 0 1px, transparent 1px 3px), radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, .55)); }
+  .holo > header, .holo-main, .holo > footer { position: relative; z-index: 1; }
+  .holo[open] .holo-main, .holo[open] > header, .holo[open] > footer { animation: holoBoot calc(.7s / var(--fx-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+  .holo[open] > header { animation-delay: .05s; } .holo[open] > footer { animation-delay: .12s; }
+  @keyframes holoBoot { 0% { opacity: 0; transform: scaleY(.04); filter: brightness(3); } 40% { opacity: 1; transform: scaleY(1.02); filter: brightness(1.8); } 100% { opacity: 1; transform: none; filter: none; } }
+
+  .holo > header { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: calc(12px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+    border-bottom: 1px solid rgba(var(--holo-c), .18); }
+  .holo-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .holo-brand .mini-reactor { width: 22px; height: 22px; }
+  .holo-brand h2 { font: 700 1.05rem var(--font-display); letter-spacing: .32em; color: rgb(var(--holo-c)); text-shadow: 0 0 12px rgba(var(--holo-c), .8); }
+  .holo-brand span { display: block; font: 500 .7rem var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: rgba(var(--holo-c), .6); }
+  .holo-hr { display: flex; align-items: center; gap: 10px; flex: none; }
+  .holo-clock { font: 500 .78rem var(--font-mono); letter-spacing: .1em; color: rgba(var(--holo-c), .75); }
+  .holo-btn { height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(var(--holo-c), .4); background: rgba(var(--holo-c), .06); color: rgb(205, 245, 255);
+    font: 500 .78rem var(--font-mono); letter-spacing: .06em; cursor: pointer; transition: background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .holo-btn:hover { background: rgba(var(--holo-c), .14); border-color: rgba(var(--holo-c), .9); box-shadow: 0 0 16px -4px rgba(var(--holo-c), .9); }
+  .holo-btn[aria-pressed="true"] { border-color: rgba(var(--holo-a), .9); color: rgb(var(--holo-a)); }
+  .holo-x { width: 34px; padding: 0; font-size: 1.1rem; }
+  .holo :focus-visible { outline: 2px solid rgb(var(--holo-a)); outline-offset: 2px; }
+
+  .holo-main { display: grid; grid-template-columns: 270px minmax(0, 1fr) 340px; min-height: 0; }
+  .holo-panel { min-height: 0; overflow: auto; padding: 16px; display: grid; align-content: start; gap: 14px; overscroll-behavior: contain; }
+  .holo-left { border-right: 1px solid rgba(var(--holo-c), .14); }
+  .holo-right { border-left: 1px solid rgba(var(--holo-c), .14); grid-template-rows: auto minmax(0, 1fr) auto; align-content: stretch; }
+  .holo-panel h3 { font: 600 .68rem var(--font-mono); letter-spacing: .18em; text-transform: uppercase; color: rgba(var(--holo-c), .7); display: flex; align-items: center; gap: 8px; }
+  .holo-panel h3::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--holo-c), .4), transparent); }
+  .holo-box { position: relative; padding: 12px; border: 1px solid rgba(var(--holo-c), .22); background: rgba(var(--holo-c), .035); clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+  .holo-id b { display: block; font: 700 1.3rem var(--font-display); color: #e9fbff; letter-spacing: .02em; }
+  .holo-id span { display: block; font-size: .8rem; color: rgba(200, 244, 255, .75); }
+  .holo-id .avail { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font: 500 .72rem var(--font-mono); color: #6dffb0; }
+  .holo-id .avail i { width: 7px; height: 7px; border-radius: 50%; background: #2fbf71; box-shadow: 0 0 8px #2fbf71; }
+  .holo-stats { display: grid; gap: 8px; }
+  .holo-stat { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; font-size: .78rem; color: rgba(200, 244, 255, .75); }
+  .holo-stat b { font: 600 .9rem var(--font-mono); color: rgb(var(--holo-c)); }
+  .holo-stat i { grid-column: 1 / -1; height: 3px; background: rgba(var(--holo-c), .12); position: relative; overflow: hidden; }
+  .holo-stat i::after { content: ""; position: absolute; inset: 0; width: var(--w, 50%); background: linear-gradient(90deg, rgba(var(--holo-c), .4), rgb(var(--holo-c))); box-shadow: 0 0 8px rgb(var(--holo-c)); }
+  .holo-list { display: grid; gap: 4px; }
+  .holo-list button { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; cursor: pointer;
+    font: 500 .8rem var(--font-body); color: rgb(205, 245, 255); background: transparent; border: 1px solid transparent; border-radius: 6px; transition: background .15s ease, border-color .15s ease; }
+  .holo-list button span { font: 500 .66rem var(--font-mono); color: rgba(var(--holo-c), .6); letter-spacing: .08em; text-transform: uppercase; }
+  .holo-list button:hover, .holo-list button.on { background: rgba(var(--holo-c), .08); border-color: rgba(var(--holo-c), .35); }
+  .holo-list button.on { border-color: rgba(var(--holo-a), .7); }
+
+  .holo-stage { position: relative; min-height: 0; overflow: hidden; touch-action: none; }
+  .holo-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+  .holo-stage canvas.drag { cursor: grabbing; }
+  .holo-stage canvas.hover { cursor: pointer; }
+  .holo-stage::before { content: ""; position: absolute; left: 50%; bottom: 0; width: 70%; height: 62%; transform: translateX(-50%); pointer-events: none;
+    background: linear-gradient(0deg, rgba(var(--holo-c), .22), rgba(var(--holo-c), .02) 85%, transparent);
+    clip-path: polygon(44% 100%, 56% 100%, 100% 0, 0 0); filter: blur(2px); }
+  .holo-stage::after { content: ""; position: absolute; left: 50%; bottom: 10px; width: 180px; height: 26px; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+    background: radial-gradient(ellipse, rgba(var(--holo-c), .9), rgba(var(--holo-c), .2) 45%, transparent 70%); animation: emitter 2.6s ease-in-out infinite; }
+  @keyframes emitter { 50% { opacity: .65; transform: translateX(-50%) scaleX(.92); } }
+  .holo-scan { position: absolute; left: 0; right: 0; top: -20%; height: 18%; pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(var(--holo-c), .08), transparent); animation: holoScan 5.5s linear infinite; }
+  @keyframes holoScan { to { transform: translateY(650%); } }
+  .holo-hint { position: absolute; left: 0; right: 0; top: 12px; text-align: center; margin: 0; pointer-events: none;
+    font: 500 .7rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(var(--holo-c), .55); }
+  .holo-focus { position: absolute; left: 14px; right: 14px; bottom: 18px; margin-inline: auto; width: min(460px, calc(100% - 28px)); z-index: 2;
+    padding: 14px 16px; background: rgba(2, 14, 22, .88); border: 1px solid rgba(var(--holo-c), .5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    box-shadow: 0 0 30px -10px rgba(var(--holo-c), .9), inset 0 0 20px -12px rgba(var(--holo-c), .9);
+    clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px); animation: fxIn .3s ease both; }
+  .holo-focus[hidden] { display: none !important; }
+  .holo-focus .k { font: 600 .66rem var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: rgb(var(--holo-a)); }
+  .holo-focus h4 { font: 700 1.05rem var(--font-display); color: #e9fbff; margin: 2px 0 4px; }
+  .holo-focus p { margin: 0; font-size: .86rem; color: rgba(205, 245, 255, .85); }
+  .holo-focus .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .holo-focus .x { position: absolute; right: 8px; top: 8px; width: 26px; height: 26px; border: 0; background: none; color: rgba(var(--holo-c), .8); cursor: pointer; font-size: 1rem; }
+
+  .holo-log { min-height: 0; overflow: auto; display: grid; align-content: start; gap: 10px; padding-right: 4px; overscroll-behavior: contain; }
+  .holo-msg { font-size: .88rem; animation: fxIn .25s ease both; }
+  .holo-msg b { display: block; font: 600 .62rem var(--font-mono); letter-spacing: .16em; color: rgba(var(--holo-c), .6); margin-bottom: 2px; }
+  .holo-msg p { margin: 0; white-space: pre-line; }
+  .holo-msg.you p { color: #fff; }
+  .holo-msg.vega p { color: rgb(205, 245, 255); }
+  .holo-msg.vega b { color: rgb(var(--holo-c)); }
+  .holo-msg.sys p { font: 500 .74rem var(--font-mono); color: rgba(var(--holo-c), .6); }
+  .holo-msg .acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .holo-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .holo-chips button { font: 500 .74rem var(--font-body); color: rgb(205, 245, 255); background: rgba(var(--holo-c), .05); border: 1px solid rgba(var(--holo-c), .3);
+    border-radius: 999px; padding: 6px 10px; cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+  .holo-chips button:hover { background: rgba(var(--holo-c), .14); border-color: rgba(var(--holo-c), .8); }
+
+  .holo > footer { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 14px;
+    padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    border-top: 1px solid rgba(var(--holo-c), .18); background: rgba(1, 8, 14, .6); }
+  .holo-mic { position: relative; width: 62px; height: 62px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; padding: 0;
+    color: #e9fbff; background: radial-gradient(circle, rgba(var(--holo-c), .35), rgba(var(--holo-c), .06) 70%); border: 1.5px solid rgba(var(--holo-c), .8);
+    box-shadow: 0 0 24px -4px rgba(var(--holo-c), .9), inset 0 0 14px -4px rgba(var(--holo-c), .9); transition: transform .15s ease; }
+  .holo-mic:hover { transform: scale(1.05); }
+  .holo-mic svg { width: 24px; height: 24px; }
+  .holo-mic::before, .holo-mic::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid rgba(var(--holo-c), .7); opacity: 0; pointer-events: none; }
+  .holo[data-state="listening"] .holo-mic { border-color: rgb(var(--holo-a)); color: rgb(var(--holo-a)); box-shadow: 0 0 30px -2px rgba(var(--holo-a), .9), inset 0 0 16px -4px rgba(var(--holo-a), .9); }
+  .holo[data-state="listening"] .holo-mic::before, .holo[data-state="listening"] .holo-mic::after { border-color: rgba(var(--holo-a), .8); animation: micRing 1.6s ease-out infinite; }
+  .holo[data-state="listening"] .holo-mic::after { animation-delay: .8s; }
+  @keyframes micRing { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(1.7); } }
+  .holo-wave { display: flex; align-items: center; gap: 3px; height: 34px; width: 74px; }
+  .holo-wave i { flex: 1; height: 18%; border-radius: 2px; background: rgb(var(--holo-c)); box-shadow: 0 0 6px rgba(var(--holo-c), .9); transform-origin: 50% 50%; opacity: .45; }
+  .holo[data-state="listening"] .holo-wave i, .holo[data-state="speaking"] .holo-wave i { opacity: 1; animation: holoWave .9s ease-in-out infinite; }
+  .holo[data-state="listening"] .holo-wave i { background: rgb(var(--holo-a)); box-shadow: 0 0 6px rgba(var(--holo-a), .9); }
+  .holo-wave i:nth-child(2) { animation-delay: -.2s !important; } .holo-wave i:nth-child(3) { animation-delay: -.5s !important; } .holo-wave i:nth-child(4) { animation-delay: -.1s !important; }
+  .holo-wave i:nth-child(5) { animation-delay: -.65s !important; } .holo-wave i:nth-child(6) { animation-delay: -.35s !important; } .holo-wave i:nth-child(7) { animation-delay: -.8s !important; }
+  @keyframes holoWave { 0%, 100% { height: 18%; } 50% { height: 100%; } }
+  .holo-ask { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; min-width: 0; }
+  .holo-ask input { min-width: 0; height: 42px; padding: 0 14px; border-radius: 8px; border: 1px solid rgba(var(--holo-c), .4); background: rgba(var(--holo-c), .05);
+    color: #fff; font: 500 .95rem var(--font-body); outline: none; }
+  .holo-ask input::placeholder { color: rgba(var(--holo-c), .5); }
+  .holo-ask input:focus { border-color: rgb(var(--holo-c)); box-shadow: 0 0 16px -6px rgb(var(--holo-c)); }
+  .holo-ask .holo-btn { height: 42px; }
+  .holo-privacy { grid-column: 1 / -1; margin: -4px 0 0; font: 500 .66rem var(--font-mono); letter-spacing: .04em; color: rgba(var(--holo-c), .5); }
+
+  @media (max-width: 1100px) { .holo-main { grid-template-columns: 240px minmax(0, 1fr) 300px; } }
+  @media (max-width: 900px) {
+    .holo-main { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(260px, 46%) minmax(0, 1fr); }
+    .holo-left { display: none; }
+    .holo-right { border-left: 0; border-top: 1px solid rgba(var(--holo-c), .14); padding: 12px 16px; }
+    .holo-clock { display: none; }
+    .holo > footer { grid-template-columns: auto minmax(0, 1fr); gap: 10px; }
+    .holo-wave { display: none; }
+    .holo-mic { width: 52px; height: 52px; }
+    .holo-focus { display: none !important; }
+    .holo-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .holo-chips::-webkit-scrollbar { display: none; }
+    .holo-chips button { flex: none; }
+  }
+  @media (max-width: 480px) { .holo-ask { grid-template-columns: minmax(0, 1fr) auto; } .holo-ask .holo-mute { display: none; } .holo-brand span { display: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .holo-fab .reactor i, .holo-scan, .holo-stage::after, .holo-wave i, .holo-mic::before, .holo-mic::after { animation: none !important; }
+    .holo[open] .holo-main, .holo[open] > header, .holo[open] > footer { animation: none !important; }
+  }
+  @media print { .holo-fab, dialog.holo { display: none !important; } }
+  .holo-mic:focus-visible, .holo-fab:focus-visible, .drawer-close:focus-visible { border-radius: 50%; }
+  .fab:focus-visible, .tele:focus-visible { border-radius: 999px; }
+  footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 </style>
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
 </head>
@@ -1520,6 +1702,7 @@
     <div class="ctas">
       <a class="cta primary" href="#contact">Work with me</a>
       <a class="cta" href="#ai">See my work</a>
+      <button class="cta holo-cta" type="button" data-holo><span class="mini-reactor" aria-hidden="true"></span>Talk to my hologram</button>
     </div>
     <a class="scroll-cue" href="#about" aria-label="Scroll down to About me"><span>Scroll</span><i></i></a>
     </div>
@@ -2468,6 +2651,55 @@
   </div>
 </dialog>
 <div id="cvPrint" aria-hidden="true"></div>
+<dialog class="holo" id="holo" aria-labelledby="holoTitle" data-state="idle">
+  <div class="holo-fx" aria-hidden="true"></div>
+  <header>
+    <div class="holo-brand"><span class="mini-reactor" aria-hidden="true"></span><div><h2 id="holoTitle">VEGA</h2><span>Holographic assistant · Vini's portfolio</span></div></div>
+    <div class="holo-hr"><span class="holo-clock" id="holoClock" aria-hidden="true"></span><button class="holo-btn holo-x" type="button" data-close aria-label="Close hologram">×</button></div>
+  </header>
+  <div class="holo-main">
+    <aside class="holo-panel holo-left" aria-label="System readout">
+      <h3>Identity</h3>
+      <div class="holo-box holo-id" id="holoId"></div>
+      <h3>Metrics</h3>
+      <div class="holo-box holo-stats" id="holoStats"></div>
+      <h3>Modules</h3>
+      <div class="holo-list" id="holoModules"></div>
+      <h3>Projects</h3>
+      <div class="holo-list" id="holoProjects"></div>
+    </aside>
+    <div class="holo-stage" id="holoStage">
+      <canvas id="holoCanvas" role="img" aria-label="Rotating hologram of Vini's portfolio: sections, projects and skill groups orbit a central core. Use the lists or ask VEGA to explore it."></canvas>
+      <div class="holo-scan" aria-hidden="true"></div>
+      <p class="holo-hint" aria-hidden="true">Drag to rotate · tap a node · or ask VEGA</p>
+      <div class="holo-focus" id="holoFocus" hidden>
+        <button class="x" type="button" id="holoFocusX" aria-label="Clear selection">×</button>
+        <span class="k" id="holoFocusK"></span>
+        <h4 id="holoFocusT"></h4>
+        <p id="holoFocusD"></p>
+        <div class="acts" id="holoFocusA"></div>
+      </div>
+    </div>
+    <aside class="holo-panel holo-right" aria-label="Assistant">
+      <h3>Assistant</h3>
+      <div class="holo-log" id="holoLog" aria-live="polite"></div>
+      <div class="holo-chips" id="holoChips" role="group" aria-label="Suggested questions"></div>
+    </aside>
+  </div>
+  <footer>
+    <button class="holo-mic" type="button" id="holoMic" aria-pressed="false" aria-label="Talk to VEGA" autofocus>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="holo-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <form class="holo-ask" id="holoAsk">
+      <input id="holoInput" type="text" autocomplete="off" spellcheck="false" placeholder="Ask VEGA about Vini…" aria-label="Ask VEGA a question" enterkeyhint="send" />
+      <button class="holo-btn" type="submit">Send</button>
+      <button class="holo-btn holo-mute" type="button" id="holoMute" aria-pressed="false">Voice: on</button>
+    </form>
+    <p class="holo-privacy" id="holoPrivacy">Voice is turned into text by your browser's speech service (in Chrome, that's Google). This site doesn't store anything you say or type.</p>
+  </footer>
+</dialog>
+<button class="holo-fab" id="holoFab" type="button" data-holo aria-label="Open the hologram assistant"><span class="reactor" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl" aria-hidden="true">Talk to VEGA</span></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -4269,6 +4501,648 @@
   }
 
   window.__features = { openResume: openResume, printCV: printCV, resumeText: function () { return asText(data()); }, openKeys: openKeys, share: share };
+})();
+</script>
+<script>
+/* HOLOGRAM: VEGA, a voice assistant with an interactive 3D hologram of the whole portfolio. */
+(function () {
+  "use strict";
+  var dlg = document.getElementById("holo");
+  var triggers = document.querySelectorAll("[data-holo]");
+  if (!dlg || typeof dlg.showModal !== "function" || !window.CanvasRenderingContext2D) { triggers.forEach(function (b) { b.hidden = true; }); return; }
+  var root = document.documentElement;
+  var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function $(id) { return document.getElementById(id); }
+  function T(el) { return el ? el.textContent.replace(/↗/g, "").replace(/\s+/g, " ").trim() : ""; }
+  function mk(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function fx() { return window.__fx || {}; }
+  function feats() { return window.__features || {}; }
+  var stage = $("holoStage"), cv = $("holoCanvas"), ctx = cv.getContext("2d");
+  var logEl = $("holoLog"), input = $("holoInput"), micBtn = $("holoMic"), muteBtn = $("holoMute");
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var synth = window.speechSynthesis || null;
+  var voiceOn = true; try { voiceOn = localStorage.getItem("vegaVoice") !== "off"; } catch (e) {}
+
+  /* ---------------- Knowledge, read live from the page ---------------- */
+  var K = null;
+  function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+  function buildK() {
+    var k = { sections: [], projects: [], skills: [], stats: [] };
+    [["about", "About"], ["skills", "Skills"], ["community", "Community"], ["security", "Security"], ["process", "How I work"],
+     ["ai", "Projects"], ["creative", "Creative"], ["advertise", "Advertise"], ["contact", "Contact"]].forEach(function (p) {
+      var s = $(p[0]); if (!s) return;
+      var d = T(s.querySelector(".sec-head p")) || T(s.querySelector(".contact p")) || T(s.querySelector(".about-text p"));
+      k.sections.push({ id: "sec-" + p[0], key: p[0], g: "sections", t: p[1], h: T(s.querySelector("h2")), d: d });
+    });
+    document.querySelectorAll("#ai .grid > article.card[data-sim]").forEach(function (c) {
+      var key = c.getAttribute("data-sim");
+      k.projects.push({ id: "prj-" + key, key: key, g: "projects", t: T(c.querySelector("h3")), k: T(c.querySelector(".kicker")), d: T(c.querySelector("p")),
+        sim: key, arch: c.querySelector("[data-arch]") ? key : null });
+    });
+    document.querySelectorAll(".specs .spec").forEach(function (s) {
+      var t = T(s.querySelector("h3")), tl = t.toLowerCase();
+      if (!t || k.projects.some(function (p) { return p.t.toLowerCase().indexOf(tl) === 0; })) return;
+      k.projects.push({ id: "prj-" + slug(t), key: slug(t), g: "projects", t: t, k: T(s.querySelector(".kicker")), d: T(s.querySelector("dd")) });
+    });
+    document.querySelectorAll("#skills .sk-card").forEach(function (c) {
+      var key = c.getAttribute("data-k");
+      k.skills.push({ id: "skl-" + key, key: key, g: "skills", t: T(c.querySelector("h3")), d: T(c.querySelector("p")), items: [].map.call(c.querySelectorAll(".sk-pills li"), T) });
+    });
+    var ss = k.sections.filter(function (s) { return s.key === "skills"; })[0];
+    if (ss) ss.d = k.skills.length + " skill groups: " + k.skills.map(function (s) { return s.t; }).join(", ") + ".";
+    document.querySelectorAll(".hero .stat").forEach(function (s) {
+      var b = s.querySelector("b"), v = b && b.hasAttribute("data-count") ? Number(b.getAttribute("data-count")) : null;
+      k.stats.push({ v: v, txt: v != null ? v.toLocaleString("en-US") : T(b), label: T(s.querySelector("span")) });
+    });
+    k.name = T(document.querySelector(".id-card h3")) || "Vini";
+    k.role = T(document.querySelector(".id-card .role-line"));
+    k.avail = T(document.querySelector(".id-card .status"));
+    k.lede = T(document.querySelector(".hero .lede"));
+    k.about = [].map.call(document.querySelectorAll(".about-text p"), T);
+    k.email = T($("mailText")); k.discord = T($("handle"));
+    k.all = k.sections.concat(k.projects, k.skills);
+    return k;
+  }
+  function item(id) { for (var i = 0; i < K.all.length; i++) if (K.all[i].id === id) return K.all[i]; return null; }
+  function short(it) { return it.g === "projects" ? it.t.split(",")[0] : it.t; }
+
+  /* ---------------- Speech out ---------------- */
+  var voice = null;
+  function pickVoice() {
+    if (!synth) return null;
+    var vs = synth.getVoices() || [], en = vs.filter(function (v) { return /^en(-|_|$)/i.test(v.lang); });
+    var pref = /(Google UK English Male|Daniel|Microsoft (Ryan|Guy|George|Christopher)|Arthur|Alex|Google US English)/;
+    return en.filter(function (v) { return pref.test(v.name); })[0] || en[0] || vs[0] || null;
+  }
+  if (synth) { voice = pickVoice(); if (synth.addEventListener) synth.addEventListener("voiceschanged", function () { voice = pickVoice(); }); }
+  function setState(s) { dlg.setAttribute("data-state", s); }
+  function sayable(text) {
+    return text.replace(/·/g, ",").replace(/&/g, " and ").replace(/(\d(?:\.\d)?)k\b/gi, "$1 thousand").replace(/[–—]/g, " to ")
+      .replace(/\bVEGA\b/g, "Vega").replace(/\bAI\b/g, "A.I.").replace(/\s+/g, " ").trim();
+  }
+  var speakGen = 0;
+  function stopSpeaking() { speakGen++; if (synth) synth.cancel(); if (dlg.getAttribute("data-state") === "speaking") setState("idle"); }
+  function speak(text, done) {
+    if (!voiceOn || !synth || !text) { if (done) done(); return; }
+    synth.cancel();
+    var g = ++speakGen, parts = sayable(text).match(/[^.!?]+[.!?]*/g) || [text], i = 0;
+    function next() {
+      if (g !== speakGen) return;
+      if (i >= parts.length) { if (dlg.getAttribute("data-state") === "speaking") setState("idle"); if (done) done(); return; }
+      var u = new SpeechSynthesisUtterance(parts[i++].trim());
+      if (voice) u.voice = voice;
+      u.lang = (voice && voice.lang) || "en-GB"; u.rate = 1.02; u.pitch = .92;
+      var fired = false, guard = setTimeout(function () { if (!fired) { fired = true; next(); } }, 12000);
+      u.onstart = function () { if (g === speakGen) setState("speaking"); };
+      u.onend = u.onerror = function () { clearTimeout(guard); if (!fired) { fired = true; next(); } };
+      synth.speak(u);
+    }
+    next();
+  }
+  function setVoice(on) {
+    voiceOn = on; try { localStorage.setItem("vegaVoice", on ? "on" : "off"); } catch (e) {}
+    muteBtn.textContent = on ? "Voice: on" : "Voice: off"; muteBtn.setAttribute("aria-pressed", on ? "false" : "true");
+    if (!on) stopSpeaking();
+  }
+
+  /* ---------------- Speech in ---------------- */
+  var rec = null, listening = false;
+  function listen() {
+    if (!SR) { sys("Voice input isn't available in this browser. Type your question instead."); input.focus(); return; }
+    if (listening) { try { rec.stop(); } catch (e) {} return; }
+    stopSpeaking();
+    var finalText = "";
+    try {
+      rec = new SR();
+      var lang = navigator.language || "en-US"; rec.lang = /^en/i.test(lang) ? lang : "en-US";
+      rec.interimResults = true; rec.maxAlternatives = 1; rec.continuous = false;
+      rec.onstart = function () { listening = true; setState("listening"); micBtn.setAttribute("aria-pressed", "true"); micBtn.setAttribute("aria-label", "Stop listening"); input.placeholder = "Listening…"; };
+      rec.onresult = function (e) {
+        var t = "";
+        for (var i = 0; i < e.results.length; i++) { t += e.results[i][0].transcript; if (e.results[i].isFinal) finalText = t; }
+        input.value = t;
+      };
+      rec.onerror = function (e) {
+        var m = { "not-allowed": "Microphone access is blocked. Allow it in your browser's site settings, or type your question.",
+          "service-not-allowed": "Voice input is turned off in this browser. You can type instead.",
+          "no-speech": "I didn't catch anything. Tap the mic and try again.",
+          "audio-capture": "I can't find a microphone. You can type instead.",
+          "network": "Voice input needs an internet connection. You can type instead." }[e.error];
+        if (m) sys(m);
+      };
+      rec.onend = function () {
+        listening = false; micBtn.setAttribute("aria-pressed", "false"); micBtn.setAttribute("aria-label", "Talk to VEGA"); input.placeholder = "Ask VEGA about Vini…";
+        if (dlg.getAttribute("data-state") === "listening") setState("idle");
+        var t = (finalText || input.value).trim(); input.value = "";
+        if (t && dlg.open) respond(t);
+      };
+      rec.start();
+    } catch (err) { listening = false; sys("Voice input couldn't start. Type your question instead."); }
+  }
+
+  /* ---------------- Assistant log ---------------- */
+  function scrollLog() { logEl.scrollTop = logEl.scrollHeight; }
+  function sys(text) { var m = mk("div", "holo-msg sys"); m.appendChild(mk("p", null, text)); logEl.appendChild(m); scrollLog(); }
+  function logMsg(who, text, acts) {
+    var m = mk("div", "holo-msg " + who); m.appendChild(mk("b", null, who === "you" ? "YOU" : "VEGA"));
+    var p = mk("p"); m.appendChild(p); logEl.appendChild(m);
+    if (who === "vega" && !reduce && text.length > 24) {
+      var words = text.split(" "), i = 0;
+      (function tick() { if (i >= words.length) return; p.textContent += (i ? " " : "") + words[i++]; scrollLog(); setTimeout(tick, 22); })();
+    } else p.textContent = text;
+    if (acts && acts.length) {
+      var row = mk("div", "acts");
+      acts.forEach(function (a) { var b = mk("button", "holo-btn", a.label); b.type = "button"; b.addEventListener("click", function () { pending = null; a.run(); }); row.appendChild(b); });
+      m.appendChild(row);
+    }
+    scrollLog();
+  }
+
+  /* ---------------- Actions ---------------- */
+  function closeHolo(keepVoice, nav) { if (!dlg.open) return; dlg._keep = !!keepVoice; dlg._nav = !!nav; dlg.close(); }
+  function go(id) {
+    closeHolo(true, true);
+    setTimeout(function () { var el = $(id); if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); }, 60);
+  }
+  function openSim(key) { closeHolo(true, true); setTimeout(function () { if (fx().openSim) fx().openSim(key); }, 60); }
+  function openArch(key) { closeHolo(true, true); setTimeout(function () { if (fx().openArch) fx().openArch(key); }, 60); }
+  function showSkills(key) {
+    closeHolo(true, true);
+    setTimeout(function () { if (window.__skillsFilter) window.__skillsFilter(key); var s = $("skills"); if (s) s.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); }, 60);
+  }
+  function openResume() { closeHolo(true, true); setTimeout(function () { if (feats().openResume) feats().openResume(); }, 60); }
+  function setTheme(t) { var b = document.querySelector('.themes button[data-set="' + t + '"]'); if (b) b.click(); }
+  function actionsFor(it) {
+    var a = [];
+    if (it.g === "sections") a.push({ label: "Go to " + it.t, run: function () { go(it.key); } });
+    if (it.g === "projects") {
+      if (it.sim) a.push({ label: "Run simulation", run: function () { openSim(it.sim); } });
+      if (it.arch) a.push({ label: "Architecture", run: function () { openArch(it.arch); } });
+      a.push({ label: "View in Projects", run: function () { go("ai"); } });
+    }
+    if (it.g === "skills") a.push({ label: "Show these skills", run: function () { showSkills(it.key); } });
+    return a;
+  }
+  function describe(it) {
+    if (it.g === "sections") return it.t + ". " + (it.h ? it.h + ". " : "") + it.d;
+    if (it.g === "projects") return it.t + (it.k ? " (" + it.k.toLowerCase() + ")" : "") + ". " + it.d;
+    var list = it.items.slice(0, 7).join(", ") + (it.items.length > 7 ? ", and more" : "");
+    return it.t + ". " + it.d + " Includes " + list + ".";
+  }
+
+  /* ---------------- Selection + focus card ---------------- */
+  var sel = null, hlGroup = null;
+  function select(it, talk) {
+    sel = it ? it.id : null;
+    document.querySelectorAll(".holo-list button").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-id") === sel); });
+    var box = $("holoFocus");
+    if (!it) { box.hidden = true; return; }
+    $("holoFocusK").textContent = it.g === "sections" ? "Module" : it.g === "projects" ? (it.k || "Project") : "Skill group";
+    $("holoFocusT").textContent = it.t;
+    $("holoFocusD").textContent = it.g === "skills" ? it.items.join(" · ") : (it.d || it.h);
+    var acts = $("holoFocusA"); acts.innerHTML = "";
+    actionsFor(it).forEach(function (a) { var b = mk("button", "holo-btn", a.label); b.type = "button"; b.addEventListener("click", a.run); acts.appendChild(b); });
+    box.hidden = false;
+    if (talk) reply({ text: describe(it), offer: actionsFor(it)[0] });
+  }
+  $("holoFocusX").addEventListener("click", function () { select(null); });
+
+  /* ---------------- Understanding questions ---------------- */
+  var pending = null;
+  function norm(s) {
+    return s.toLowerCase().replace(/[’`]/g, "'").replace(/résumé|resumé|résume/g, "resume").replace(/vini's|vinis|vinny's|vinnie's/g, "vini")
+      .replace(/\b(vinny|vinnie|vinie|veenee)\b/g, "vini").replace(/[^a-z0-9' .-]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function by(g, key) { return K[g].filter(function (x) { return x.key === key; })[0] || null; }
+  function findProject(q) {
+    if (/\bsports? hub\b/.test(q)) return by("projects", "apex-sports-hub");
+    if (/\b(this|your|the) (portfolio|site|website)\b/.test(q)) return by("projects", "this-portfolio");
+    if (/\bpolo\b/.test(q)) return by("projects", "polo");
+    if (/\bnova\b/.test(q)) return by("projects", "nova");
+    if (/\beclipse\b/.test(q)) return by("projects", "eclipse");
+    if (/\bapex\b/.test(q)) return by("projects", "apex");
+    return null;
+  }
+  var SEC_RE = [["skills", /\bskills?\b/], ["process", /\b(how (i|he|vini) works?|process|workflow|flowcharts?)\b/], ["community", /\b(community|communities|discord work|galaxy)\b/],
+    ["security", /\b(security|defen[cs]e)\b/], ["ai", /\b(projects?|software)\b/], ["creative", /\b(creative|edits?|editing|videos?|music|soundtracks?)\b/],
+    ["advertise", /\b(advertis\w*|ads?|promotion)\b/], ["contact", /\b(contact|email)\b/], ["about", /\b(about|bio|intro)\b/], ["top", /\b(top|home|start|beginning)\b/]];
+  function findSection(q) { for (var i = 0; i < SEC_RE.length; i++) if (SEC_RE[i][1].test(q)) return SEC_RE[i][0]; return null; }
+  function findSkill(q) {
+    if (/\b(ai|health|prompt\w*|llm)\b/.test(q)) return by("skills", "ai");
+    if (/\b(security|moderat\w*|raid|nuke|automod)\b/.test(q)) return by("skills", "sec");
+    if (/\b(bots?|discord|python|community)\b/.test(q)) return by("skills", "bots");
+    if (/\b(web|ui|frontend|front end|design|interactive)\b/.test(q)) return by("skills", "web");
+    if (/\b(hosting|deploy\w*|render|netlify|prototyp\w*|tools?|github)\b/.test(q)) return by("skills", "ops");
+    return null;
+  }
+  function skillHits(q) {
+    var toks = q.split(" ").filter(function (w) { return w.length > 2 && STOP.indexOf(w) < 0 && !/^(know|knows|use|uses|using|does|good|experience|skilled|familiar|work)$/.test(w); }), out = [];
+    K.skills.forEach(function (g) { g.items.forEach(function (it) { var l = it.toLowerCase();
+      if (toks.some(function (w) { return new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).test(l); })) out.push({ item: it, group: g.t, id: g.id }); }); });
+    return out;
+  }
+  function list(arr) { return arr.length > 1 ? arr.slice(0, -1).join(", ") + " and " + arr[arr.length - 1] : arr.join(""); }
+  function secOf(key) { return by("sections", key); }
+
+  function understand(q) {
+    var words = q.split(" ").length, p, s, k;
+    if (pending && /^(yes|yeah|yep|sure|ok|okay|do it|go ahead|please|run it|show me|open it|let's go|go|yes please)\b/.test(q)) {
+      var a = pending; pending = null; return { text: "On it.", run: a.run };
+    }
+    if (pending && /^(no|nope|nah|not now|cancel|no thanks)\b/.test(q)) { pending = null; return { text: "No problem. What else would you like to know?" }; }
+    if (/^(hi|hello|hey|yo|hiya|howdy|sup|good (morning|afternoon|evening))\b/.test(q) && words <= 4) return { text: "Hello. I'm VEGA. Ask me about Vini's projects, skills, community work, or how to get in touch." };
+    if (/\b(thanks|thank you|cheers|nice one|appreciate)\b/.test(q) && words <= 5) return { text: "Anytime." };
+    if (/\b(jarvis|friday|iron ?man|tony stark|stark industries)\b/.test(q)) return { text: "Close, but no. I'm VEGA. Mr. Stark has his own assistant; I look after Vini's work." };
+    if (/\b(who|what) are you\b|\byour name\b|\babout yourself\b/.test(q)) return { text: "I'm VEGA, Vini's holographic assistant. I live inside this portfolio and I know everything on it, but nothing beyond it." };
+    if (/\b(help|what can you do|what do you do|commands|how do (i|you) use|options)\b/.test(q))
+      return { text: "I can tell you who Vini is, walk you through every project, explain the skills, run live simulations, open architecture maps or the résumé, switch the theme, and take you to any section. Try: \"Tell me about Eclipse\", \"Run the Nova simulation\" or \"How do I contact Vini?\"" };
+    if (/^(stop|cancel|never ?mind|be quiet|quiet|shush)\b/.test(q)) { return { text: "Standing by.", silent: true }; }
+    if (/\b(mute|stop talking|silence|shut up|voice off|no voice)\b|\bturn off (the |your )?(voice|sound|speech)\b/.test(q)) return { text: "Voice off. I'll reply in text.", run: function () { setVoice(false); }, silent: true };
+    if (/\b(unmute|voice on|speak again|talk to me|turn on (your )?voice)\b/.test(q)) return { text: "Voice back on.", run: function () { setVoice(true); } };
+    if (/\b(close|exit|quit|goodbye|bye|dismiss|shut ?down|power (off|down)|turn off)\b/.test(q) && !/\b(resume|simulation|diagram|voice|sound|speech)\b/.test(q))
+      return { text: "Powering down the hologram.", run: function () { setTimeout(function () { closeHolo(true); }, 700); } };
+    k = q.match(/\b(light|dark|black)\b/);
+    if (k && /\b(theme|mode|switch|change|turn|make|go|set|use)\b/.test(q)) return { text: "Switching the site to the " + k[1] + " theme.", run: function () { setTheme(k[1]); } };
+    if (/\b(resume|cv|curriculum)\b/.test(q)) {
+      if (/\b(print|pdf|download|save)\b/.test(q)) return { text: "Opening the print dialog. Choose \"Save as PDF\" to download it.", run: function () { closeHolo(true, true); setTimeout(function () { if (feats().printCV) feats().printCV(); }, 120); } };
+      if (/\b(copy|text|paste)\b/.test(q)) return { text: "Copied the résumé as plain text, ready to paste.", run: function () { var tx = feats().resumeText ? feats().resumeText() : ""; if (navigator.clipboard && tx) navigator.clipboard.writeText(tx).catch(function () {}); } };
+      return { text: "Opening Vini's one-page résumé. You can print it, save it as a PDF or copy it as text.", run: openResume };
+    }
+    if (/\bcopy\b/.test(q) && /\b(email|mail)\b/.test(q)) return { text: "Copied: " + K.email + ".", run: function () { if (navigator.clipboard) navigator.clipboard.writeText(K.email).catch(function () {}); } };
+    if (/\bcopy\b/.test(q) && /\bdiscord\b/.test(q)) return { text: "Copied the Discord handle: " + K.discord + ".", run: function () { if (navigator.clipboard) navigator.clipboard.writeText(K.discord).catch(function () {}); } };
+    if (/\bdiscord\b/.test(q) && (/\b(handle|username|user name|tag|name|add|dm|profile|id)\b/.test(q) || !/\b(bots?|work|servers?|communit\w*|galaxy|moderat\w*|security)\b/.test(q))) return { text: "Vini's Discord handle is " + K.discord + ".", group: "sections", focus: "sec-contact" };
+    if (/\b(available|availability|open to|freelanc\w*|commission\w*)\b/.test(q))
+      return { text: (K.avail || "Open to work") + ". The fastest way in is email: " + K.email + ".", focus: "sec-contact", offer: { label: "Go to Contact", run: function () { go("contact"); } } };
+    if (/\b(contact|email|e mail|reach|hire|get in touch|work with|message|book|collab\w*)\b/.test(q)) {
+      return { text: "Email " + K.email + ", or find Vini on Discord as " + K.discord + ". Bots, moderation, edits and ads are all welcome.",
+        focus: "sec-contact", offer: { label: "Go to Contact", run: function () { go("contact"); } } };
+    }
+    if (/\b(simulat\w*|demo|test it|run)\b/.test(q)) {
+      p = findProject(q);
+      if (p && p.sim) return { text: "Launching the " + short(p) + " simulation. Everything in it is mock data, run in your browser.", run: function () { openSim(p.sim); } };
+      if (p) return { text: short(p) + " doesn't have a simulation. I can simulate Polo, Nova, Eclipse or Apex." };
+      return { text: "I can run simulations for Polo, Nova 3.0, Eclipse and Apex. Which one?", group: "projects" };
+    }
+    if (/\b(architecture|diagram|system design|under the hood|how (is|was) (it|eclipse|apex) built)\b/.test(q)) {
+      p = findProject(q);
+      if (p && p.arch) return { text: "Opening the " + short(p) + " architecture map.", run: function () { openArch(p.arch); } };
+      return { text: "I have interactive architecture maps for Eclipse and Apex. Which one?", group: "projects" };
+    }
+    if (/\b(go to|take me|navigate|scroll|jump|bring me|open|show me the .* section)\b/.test(q)) {
+      s = findSection(q);
+      if (s === "top") return { text: "Back to the top.", run: function () { go("top"); } };
+      if (s) { var si = secOf(s); return { text: "Taking you to " + (si ? si.t : s) + ".", run: function () { go(s); } }; }
+    }
+    p = findProject(q);
+    if (p) return { text: describe(p), focus: p.id, offer: actionsFor(p)[0] };
+    if (/\b(skills?|good at|tech stack|stack|tools?|languages?|technolog\w*|abilities|expertise|know how)\b/.test(q)) {
+      k = findSkill(q.replace(/\bskills?\b/g, ""));
+      if (k) return { text: describe(k), focus: k.id, offer: actionsFor(k)[0] };
+      var total = K.skills.reduce(function (n, x) { return n + x.items.length; }, 0);
+      return { text: "Vini has " + total + " skills across " + K.skills.length + " groups: " + list(K.skills.map(function (x) { return x.t; })) + ". Ask about any group for details.",
+        group: "skills", offer: { label: "Show skills", run: function () { showSkills("all"); } } };
+    }
+    if (/\b(projects?|portfolio|building|built|working on|products?|apps?|made|make)\b/.test(q)) {
+      return { text: "Vini's projects: " + list(K.projects.map(function (x) { return short(x) + " (" + (x.k || "").split("·").pop().trim().toLowerCase() + ")"; })) + ". Ask about any of them, or say \"run the Nova simulation\".",
+        group: "projects" };
+    }
+    if (/\b(how (many|big)|members|stats|numbers|largest|biggest|achievements?|highlights?)\b/.test(q))
+      return { text: "Highlights: " + list(K.stats.map(function (x) { return x.txt + " " + x.label; })) + "." };
+    if (/\b(advertis\w*|ads?|promot\w*|sponsor\w*|price|pricing|rates?|cost)\b/.test(q)) {
+      s = secOf("advertise"); return { text: s.h + ". " + s.d + " Rates are on request, and payment works in INR or crypto.", focus: s.id, offer: { label: "Go to Advertise", run: function () { go("advertise"); } } };
+    }
+    if (/\b(security|raids?|nukes?|anti|protect\w*|vault)\b/.test(q)) { s = secOf("security"); return { text: s.h + ". " + s.d, focus: s.id, offer: { label: "Go to Security", run: function () { go("security"); } } }; }
+    if (/\b(galaxy|community|communities|servers?|network|moderat\w*|roblox)\b/.test(q)) { s = secOf("community"); return { text: s.h + ". " + s.d, focus: s.id, offer: { label: "Go to Community", run: function () { go("community"); } } }; }
+    if (/\b(edit\w*|videos?|music|soundtracks?|football|creative|la liga)\b/.test(q)) { s = secOf("creative"); return { text: s.h + ". " + s.d, focus: s.id, offer: { label: "Go to Creative", run: function () { go("creative"); } } }; }
+    if (/\b(process|testing|flowcharts?|workflow|how (do|does) (you|he|vini) work)\b/.test(q)) { s = secOf("process"); return { text: s.h + ". " + s.d, focus: s.id, offer: { label: "Go to How I work", run: function () { go("process"); } } }; }
+    var known = skillHits(q);
+    if (known.length && /\b(know|knows|use|uses|using|do|does|can|good|experience|work with|skilled|familiar)\b/.test(q))
+      return { text: "Yes. On the site: " + list(known.slice(0, 4).map(function (x) { return x.item + " (" + x.group + ")"; })) + ".", group: "skills", focus: known[0].id };
+    if (/\b(who is|who's|whos|bio|introduce|background|what does (he|vini) do)\b|\babout (vini|him)\b|^(vini|who)$/.test(q))
+      return { text: K.name + ": " + K.role + ". " + K.lede + (K.about[0] ? " " + K.about[0] : ""), group: null, focus: "sec-about" };
+    if (/\b(latency|ping|status|online|uptime|system)\b/.test(q)) {
+      var lat = T($("teleLat")), st = T($("teleState"));
+      return { text: "All systems " + (st || "online").toLowerCase() + "." + (lat && /\d/.test(lat) ? " Latency to the site is " + lat + "." : "") };
+    }
+    if (/\b(time|date|day|today)\b/.test(q)) {
+      var d = new Date();
+      return { text: "It's " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " on " + d.toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" }) + ", your time." };
+    }
+    if (/\b(where (is|are|does) (he|vini|you)|located|location|lives?|country|city|how old|age|birthday|real name|school|girlfriend|boyfriend)\b/.test(q))
+      return { text: "That isn't on the site, so I won't guess. You can ask Vini directly at " + K.email + "." };
+    return null;
+  }
+  var STOP = "a an the is are was were be to of and or in on at for with about me my you your his him he vini what who how do does did can could would should tell show please i it this that".split(" ");
+  function searchPage(q) {
+    var toks = q.split(" ").filter(function (w) { return w.length > 2 && STOP.indexOf(w) < 0; });
+    if (!toks.length) return null;
+    var best = null;
+    document.querySelectorAll("main article.card, main .spec, #skills .sk-card, main .tcard, main .xp li, main figure.diagram, main .skb, main .sec-head").forEach(function (el) {
+      if (el.closest("#holo")) return;
+      var head = (T(el.querySelector("h3, h2, b, figcaption b")) || "").toLowerCase(), body = T(el).toLowerCase(), sc = 0;
+      toks.forEach(function (w) { var re = new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")); if (re.test(body)) sc += 1; if (re.test(head)) sc += 2; });
+      if (sc > 0 && (!best || sc > best.sc)) best = { sc: sc, el: el, head: T(el.querySelector("h3, h2, b, figcaption b")), body: T(el.querySelector("p, figcaption, dd, span, li")) || T(el) };
+    });
+    return best;
+  }
+  function respond(raw) {
+    var q = norm(raw); if (!q) return;
+    logMsg("you", raw.trim());
+    var r = understand(q);
+    if (!r) {
+      var hit = searchPage(q);
+      if (hit) {
+        var sec = hit.el.closest("section, .sk-sec"), secName = sec ? T(sec.querySelector(".sec-head .eyebrow, .sec-head h2")).replace(/^\d+\s*\/\s*/, "") : "the site";
+        var snippet = hit.body.length > 220 ? hit.body.slice(0, 220).replace(/\s\S*$/, "") + "…" : hit.body;
+        r = { text: "From " + secName.toLowerCase() + ": " + (hit.head ? hit.head + ". " : "") + snippet,
+          offer: { label: "Show me", run: function () { closeHolo(true, true); setTimeout(function () { hit.el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }); hit.el.classList.remove("flash"); void hit.el.offsetWidth; hit.el.classList.add("flash"); }, 60); } } };
+      } else r = { text: "I don't have that on record. I only know what's on this site. Try asking about projects, skills, security, or how to contact Vini." };
+    }
+    reply(r);
+  }
+  function reply(r) {
+    if (r.group !== undefined) hlGroup = r.group;
+    if (r.focus) { var it = item(r.focus); if (it) select(it, false); }
+    pending = r.offer || null;
+    logMsg("vega", r.text, r.offer ? [r.offer] : null);
+    if (r.silent) stopSpeaking(); else speak(r.say || r.text);
+    if (r.run) r.run();
+  }
+
+  /* ---------------- Hologram renderer ---------------- */
+  var W = 0, H = 0, DPR = 1, CX = 0, CY = 0, R = 100, FOV = 9;
+  var view = { ry: 0.5, rx: -0.36, idle: 0 }, pts = [], circles = [], rings = [], nodes = [], hits = [];
+  var spriteC = null, spriteA = null, raf = 0, last = 0, flickUntil = 0;
+  function rgb(v) { return "rgb(" + v + ")"; }
+  var C = getComputedStyle(root).getPropertyValue("--holo-c").trim() || "90, 225, 255";
+  var A = getComputedStyle(root).getPropertyValue("--holo-a").trim() || "255, 186, 92";
+  function sprite(c) {
+    var s = document.createElement("canvas"); s.width = s.height = 64; var g = s.getContext("2d"), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(.18, "rgba(" + c + ",.95)"); gr.addColorStop(.45, "rgba(" + c + ",.28)"); gr.addColorStop(1, "rgba(" + c + ",0)");
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return s;
+  }
+  function rotX(p, a) { var c = Math.cos(a), s = Math.sin(a); return [p[0], p[1] * c - p[2] * s, p[1] * s + p[2] * c]; }
+  function rotY(p, a) { var c = Math.cos(a), s = Math.sin(a); return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c]; }
+  function rotZ(p, a) { var c = Math.cos(a), s = Math.sin(a); return [p[0] * c - p[1] * s, p[0] * s + p[1] * c, p[2]]; }
+  function proj(p) { var q = rotX(rotY(p, view.ry), view.rx), f = FOV / (FOV - q[2]); return { x: CX + q[0] * R * f, y: CY - q[1] * R * f, z: q[2], f: f }; }
+  function depth(z) { return Math.max(0, Math.min(1, (z + 2.3) / 4.6)); }
+  function buildScene() {
+    spriteC = spriteC || sprite(C); spriteA = spriteA || sprite(A);
+    var n = innerWidth < 700 ? 150 : 240; pts = [];
+    for (var i = 0; i < n; i++) {
+      var y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+      pts.push({ v: [Math.cos(th) * r, y, Math.sin(th) * r], ph: Math.random() * 6.28 });
+    }
+    circles = [];
+    [-60, -30, 0, 30, 60].forEach(function (lat) {
+      var phi = lat * Math.PI / 180, c = [];
+      for (var j = 0; j <= 48; j++) { var a = j / 48 * Math.PI * 2; c.push([Math.cos(a) * Math.cos(phi), Math.sin(phi), Math.sin(a) * Math.cos(phi)]); }
+      circles.push(c);
+    });
+    for (var m = 0; m < 6; m++) {
+      var lon = m / 6 * Math.PI, c2 = [];
+      for (var k2 = 0; k2 <= 48; k2++) { var b = k2 / 48 * Math.PI * 2; c2.push([Math.cos(b) * Math.cos(lon), Math.sin(b), Math.cos(b) * Math.sin(lon)]); }
+      circles.push(c2);
+    }
+    rings = [{ g: "sections", r: 1.42, tx: 0.16, tz: 0.2, w: 0.00011, ph: 0 }, { g: "projects", r: 1.82, tx: -0.38, tz: -0.26, w: -0.00008, ph: 1 },
+      { g: "skills", r: 2.2, tx: 0.55, tz: 0.12, w: 0.00006, ph: 2 }];
+    nodes = [];
+    rings.forEach(function (rg) {
+      var items = K[rg.g];
+      items.forEach(function (it, i) { nodes.push({ it: it, ring: rg, a0: i / items.length * Math.PI * 2, label: rg.g === "projects" ? short(it) : it.t.toUpperCase() }); });
+    });
+  }
+  function ringPoint(rg, a) { return rotX(rotZ([Math.cos(a) * rg.r, 0, Math.sin(a) * rg.r], rg.tz), rg.tx); }
+  function resize() {
+    var w = stage.clientWidth, hh = stage.clientHeight; if (!w || !hh) return;
+    DPR = Math.min(2, window.devicePixelRatio || 1); W = w; H = hh;
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    CX = W / 2; CY = H * 0.5; R = Math.max(40, Math.min(W * 0.16, H * 0.19));
+  }
+  function stroke(paths, style, lw) { ctx.strokeStyle = style; ctx.lineWidth = lw; ctx.stroke(paths); }
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    var fl = 1;
+    if (!reduce && Math.random() < 0.005) flickUntil = now + 80;
+    if (now < flickUntil) fl = 0.55 + Math.random() * 0.3;
+    ctx.globalCompositeOperation = "lighter";
+    // particle shell
+    for (var i = 0; i < pts.length; i++) {
+      var p = proj(pts[i].v), d = depth(p.z * 2.2), a = (0.1 + 0.45 * d) * (0.7 + 0.3 * Math.sin(now * 0.002 + pts[i].ph)) * fl, sz = (5 + 6 * d) * p.f;
+      ctx.globalAlpha = a; ctx.drawImage(spriteC, p.x - sz / 2, p.y - sz / 2, sz, sz);
+    }
+    // wireframe globe
+    ctx.globalAlpha = fl;
+    var back = new Path2D(), front = new Path2D();
+    circles.forEach(function (c) {
+      var prev = proj(c[0]);
+      for (var j = 1; j < c.length; j++) { var cur = proj(c[j]), path = prev.z + cur.z > 0 ? front : back; path.moveTo(prev.x, prev.y); path.lineTo(cur.x, cur.y); prev = cur; }
+    });
+    stroke(back, "rgba(" + C + ",.07)", 1); stroke(front, "rgba(" + C + ",.22)", 1);
+    // orbit rings
+    rings.forEach(function (rg) {
+      var hl = hlGroup === rg.g, bk = new Path2D(), fr = new Path2D(), prev = proj(ringPoint(rg, 0));
+      for (var j = 1; j <= 96; j++) { var cur = proj(ringPoint(rg, j / 96 * Math.PI * 2)), path = prev.z + cur.z > 0 ? fr : bk; path.moveTo(prev.x, prev.y); path.lineTo(cur.x, cur.y); prev = cur; }
+      var col = hl ? A : C;
+      stroke(bk, "rgba(" + col + "," + (hl ? .25 : .09) + ")", 1); stroke(fr, "rgba(" + col + "," + (hl ? .7 : .32) + ")", hl ? 1.6 : 1.1);
+    });
+    // core
+    var core = R * 0.62, pulse = reduce ? 1 : 1 + 0.06 * Math.sin(now * 0.003);
+    ctx.globalAlpha = 0.55 * fl; ctx.drawImage(spriteC, CX - core * 1.6 * pulse, CY - core * 1.6 * pulse, core * 3.2 * pulse, core * 3.2 * pulse);
+    // nodes
+    hits = [];
+    var drawn = nodes.map(function (n) {
+      var pt = proj(ringPoint(n.ring, n.a0 + n.ring.ph)), d = depth(pt.z);
+      var isSel = sel === n.it.id, isHov = hover === n, inG = hlGroup && hlGroup === n.it.g, dim = hlGroup && !inG && !isSel;
+      var big = n.it.g === "projects" ? 1.35 : 1, sz = (16 + 14 * d) * pt.f * big * (isSel || isHov ? 1.7 : inG ? 1.35 : 1);
+      ctx.globalAlpha = (dim ? 0.25 : 0.4 + 0.6 * d) * fl;
+      ctx.drawImage(isSel || inG ? spriteA : spriteC, pt.x - sz / 2, pt.y - sz / 2, sz, sz);
+      hits.push({ x: pt.x, y: pt.y, r: Math.max(14, sz * 0.45), n: n, z: pt.z });
+      return { n: n, pt: pt, d: d, isSel: isSel, isHov: isHov, inG: inG, dim: dim };
+    });
+    // selection beam
+    var selD = drawn.filter(function (x) { return x.isSel; })[0];
+    if (selD) {
+      ctx.globalAlpha = 0.9 * fl; ctx.strokeStyle = "rgba(" + A + ",.75)"; ctx.lineWidth = 1.4; ctx.setLineDash([4, 5]); ctx.lineDashOffset = reduce ? 0 : -now * 0.03;
+      ctx.beginPath(); ctx.moveTo(CX, CY); ctx.lineTo(selD.pt.x, selD.pt.y); ctx.stroke(); ctx.setLineDash([]);
+      var rr = 14 + (reduce ? 0 : 3 * Math.sin(now * 0.006));
+      ctx.beginPath(); ctx.arc(selD.pt.x, selD.pt.y, rr, 0, Math.PI * 2); ctx.stroke();
+    }
+    // HUD rings (screen space)
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = fl;
+    var rot = reduce ? 0 : now * 0.00025;
+    ctx.strokeStyle = "rgba(" + C + ",.35)"; ctx.lineWidth = 1;
+    for (var t = 0; t < 120; t++) {
+      var ang = t / 120 * Math.PI * 2 + rot, r1 = R * 1.12, r2 = r1 + (t % 10 === 0 ? 9 : 4);
+      ctx.beginPath(); ctx.moveTo(CX + Math.cos(ang) * r1, CY + Math.sin(ang) * r1); ctx.lineTo(CX + Math.cos(ang) * r2, CY + Math.sin(ang) * r2); ctx.stroke();
+    }
+    ctx.strokeStyle = "rgba(" + C + ",.55)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(CX, CY, R * 1.28, -rot * 2, -rot * 2 + 1.2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(CX, CY, R * 1.28, Math.PI - rot * 2, Math.PI - rot * 2 + 0.7); ctx.stroke();
+    ctx.strokeStyle = "rgba(" + A + ",.5)"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(CX, CY, R * 1.36, rot * 3, rot * 3 + 0.5); ctx.stroke();
+    // core label
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(235,252,255," + (0.9 * fl) + ")"; ctx.font = "700 " + Math.round(Math.max(13, R * 0.2)) + "px 'Space Grotesk', system-ui, sans-serif";
+    ctx.fillText(K.name.toUpperCase(), CX, CY - 2);
+    ctx.fillStyle = "rgba(" + C + "," + (0.75 * fl) + ")"; ctx.font = "500 " + Math.round(Math.max(8, R * 0.085)) + "px 'JetBrains Mono', ui-monospace, monospace";
+    ctx.fillText("CORE · ONLINE", CX, CY + Math.max(13, R * 0.2));
+    // labels, back to front
+    drawn.sort(function (a, b) { var sa = a.isSel || a.isHov ? 1 : 0, sb = b.isSel || b.isHov ? 1 : 0; return sa - sb || a.pt.z - b.pt.z; }).forEach(function (x) {
+      var proj_ = x.n.it.g === "projects", strong = x.isSel || x.isHov;
+      if (W < 560 && !strong && !x.inG && !(proj_ && x.d > 0.55)) return;
+      var al = (x.dim ? 0.22 : 0.3 + 0.7 * x.d) * fl * (strong ? 1.3 : 1);
+      ctx.font = proj_ ? "600 " + (strong ? 14 : 12) + "px 'Space Grotesk', system-ui, sans-serif" : "500 " + (strong ? 11.5 : 10) + "px 'JetBrains Mono', ui-monospace, monospace";
+      var tw = ctx.measureText(x.n.label).width, left = x.pt.x + 12 + tw > W - 8, tx = left ? x.pt.x - 12 : x.pt.x + 12;
+      ctx.textAlign = left ? "right" : "left";
+      if (strong) {
+        ctx.fillStyle = "rgba(2,14,22,.82)"; ctx.fillRect(left ? tx - tw - 6 : tx - 6, x.pt.y - 11, tw + 12, 22);
+        ctx.strokeStyle = "rgba(" + (x.isSel ? A : C) + ",.8)"; ctx.lineWidth = 1; ctx.strokeRect(left ? tx - tw - 6 : tx - 6, x.pt.y - 11, tw + 12, 22);
+      }
+      ctx.fillStyle = (x.isSel || x.inG ? "rgba(" + A + "," : proj_ ? "rgba(235,252,255," : "rgba(" + C + ",") + Math.min(1, al) + ")";
+      ctx.fillText(x.n.label, tx, x.pt.y);
+    });
+    // corner readouts
+    ctx.font = "500 10px 'JetBrains Mono', ui-monospace, monospace"; ctx.fillStyle = "rgba(" + C + "," + (0.55 * fl) + ")"; ctx.textBaseline = "alphabetic";
+    var lat = T($("teleLat")), deg = Math.round(((view.ry % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) * 180 / Math.PI);
+    ctx.textAlign = "left"; ctx.fillText("ROT " + ("00" + deg).slice(-3) + "°", 14, H - 16); ctx.fillText("NODES " + nodes.length, 14, H - 30);
+    ctx.textAlign = "right"; ctx.fillText("LINK " + (navigator.onLine === false ? "OFFLINE" : "STABLE"), W - 14, H - 30); ctx.fillText("LAT " + (lat && /\d/.test(lat) ? lat : "--"), W - 14, H - 16);
+    ctx.globalAlpha = 1;
+  }
+  function frame(now) {
+    if (!dlg.open) { raf = 0; return; }
+    raf = requestAnimationFrame(frame);
+    var dt = last ? Math.min(50, now - last) : 16; last = now;
+    if (!drag && now > view.idle) view.ry += dt * (reduce ? 0.00003 : 0.00014);
+    rings.forEach(function (rg) { rg.ph += dt * rg.w * (reduce ? 0.2 : 1); });
+    if (W) draw(now);
+  }
+  function start() { if (!raf) { last = 0; raf = requestAnimationFrame(frame); } }
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (dlg.open) resize(); }).observe(stage);
+
+  // Pointer: drag to rotate, tap a node to select it
+  var drag = null, hover = null, moved = false;
+  function hit(x, y) {
+    var best = null, bd = 1e9;
+    hits.forEach(function (h) { var d = Math.hypot(h.x - x, h.y - y); if (d < h.r && (d < bd || (best && h.z > best.z && d < h.r))) { best = h; bd = d; } });
+    return best ? best.n : null;
+  }
+  function local(e) { var r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * (W / (r.width || W)), (e.clientY - r.top) * (H / (r.height || H))]; }
+  cv.addEventListener("pointerdown", function (e) {
+    drag = { x: e.clientX, y: e.clientY, ry: view.ry, rx: view.rx }; moved = false;
+    try { cv.setPointerCapture(e.pointerId); } catch (er) {}
+  });
+  cv.addEventListener("pointermove", function (e) {
+    var l = local(e);
+    if (drag) {
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!moved && Math.abs(dx) + Math.abs(dy) > 5) { moved = true; cv.classList.add("drag"); }
+      if (moved) { view.ry = drag.ry + dx * 0.008; view.rx = Math.max(-1.1, Math.min(0.5, drag.rx + dy * 0.006)); view.idle = performance.now() + 3500; }
+      return;
+    }
+    hover = hit(l[0], l[1]); cv.classList.toggle("hover", !!hover);
+  });
+  function endDrag(e) {
+    if (drag && !moved && e.type === "pointerup") { var l = local(e), n = hit(l[0], l[1]); if (n) select(n.it, true); else select(null); }
+    drag = null; cv.classList.remove("drag");
+  }
+  cv.addEventListener("pointerup", endDrag);
+  cv.addEventListener("pointercancel", endDrag);
+  cv.addEventListener("pointerleave", function () { if (!drag) { hover = null; cv.classList.remove("hover"); } });
+
+  /* ---------------- Side panels ---------------- */
+  function fillPanels() {
+    var id = $("holoId"); id.innerHTML = "";
+    id.appendChild(mk("b", null, K.name)); id.appendChild(mk("span", null, K.role));
+    if (K.avail) { var av = mk("span", "avail"); av.appendChild(mk("i")); av.appendChild(document.createTextNode(K.avail)); id.appendChild(av); }
+    var st = $("holoStats"); st.innerHTML = "";
+    K.stats.forEach(function (s) {
+      var row = mk("div", "holo-stat"); row.appendChild(mk("span", null, s.label)); row.appendChild(mk("b", null, s.txt));
+      var bar = mk("i"); bar.style.setProperty("--w", Math.min(100, 28 + Math.log10((s.v || 1) + 1) * 14) + "%"); row.appendChild(bar); st.appendChild(row);
+    });
+    var lat = mk("div", "holo-stat"); lat.appendChild(mk("span", null, "Live latency")); var lb = mk("b", null, "--"); lb.id = "holoLat"; lat.appendChild(lb);
+    var lbar = mk("i"); lbar.style.setProperty("--w", "60%"); lat.appendChild(lbar); st.appendChild(lat);
+    function fillList(el, arr) {
+      el.innerHTML = "";
+      arr.forEach(function (it, i) {
+        var b = mk("button"); b.type = "button"; b.setAttribute("data-id", it.id);
+        b.appendChild(document.createTextNode(short(it)));
+        b.appendChild(mk("span", null, it.g === "sections" ? ("0" + (i + 1)).slice(-2) : (it.k || "").split("·").pop().trim()));
+        b.addEventListener("click", function () { select(it, true); });
+        el.appendChild(b);
+      });
+    }
+    fillList($("holoModules"), K.sections); fillList($("holoProjects"), K.projects);
+    var chips = $("holoChips"); chips.innerHTML = "";
+    ["Who is Vini?", "Show me the projects", "Tell me about Eclipse", "What are Vini's skills?", "Run the Nova simulation", "Open the résumé", "How do I contact Vini?"].forEach(function (c) {
+      var b = mk("button", null, c); b.type = "button"; b.addEventListener("click", function () { respond(c); }); chips.appendChild(b);
+    });
+  }
+  var clockT = 0;
+  function tickClock() {
+    var d = new Date(); $("holoClock").textContent = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    var l = $("holoLat"), tl = T($("teleLat")); if (l) l.textContent = tl && /\d/.test(tl) ? tl : (tl || "--");
+  }
+
+  /* ---------------- Open / close ---------------- */
+  var firstOpen = true, opener = null, baseHash = "";
+  function open(src) {
+    if (dlg.open) return;
+    K = buildK(); buildScene(); fillPanels(); select(null); hlGroup = null;
+    opener = src || document.activeElement;
+    if (fx().closeTerminal) fx().closeTerminal(false);
+    document.querySelectorAll("dialog[open]").forEach(function (d) { if (d !== dlg) d.close(); });
+    var s = $("search"); if (s && !s.hidden) { var sc = $("searchClose"); if (sc) sc.click(); }
+    dlg.showModal();
+    if (history.replaceState) { if (location.hash !== "#hologram") baseHash = location.hash; history.replaceState(null, "", "#hologram"); }
+    resize(); start(); tickClock(); clearInterval(clockT); clockT = setInterval(tickClock, 1000);
+    logEl.innerHTML = "";
+    sys("VEGA v1.0 · holographic link established");
+    sys("Mapped " + K.sections.length + " modules · " + K.projects.length + " projects · " + K.skills.length + " skill groups");
+    if (!SR) sys("Voice input isn't supported in this browser, so type your questions. VEGA still talks back.");
+    reply(firstOpen
+      ? { text: "Hello, I'm VEGA, Vini's holographic assistant. Tap the mic or type to ask me anything about Vini's work, or tap a node in the hologram.", say: "VEGA online. How can I help?" }
+      : { text: "Welcome back. What would you like to see?" });
+    firstOpen = false;
+  }
+  dlg.addEventListener("close", function () {
+    clearInterval(clockT);
+    if (rec) { try { rec.abort(); } catch (e) {} } listening = false;
+    if (!dlg._keep) stopSpeaking(); else if (dlg.getAttribute("data-state") !== "speaking") setState("idle");
+    if (location.hash === "#hologram" && history.replaceState) history.replaceState(null, "", location.pathname + location.search + baseHash);
+    var o = opener; opener = null;
+    if (!dlg._nav && o && document.contains(o) && o.focus) o.focus({ preventScroll: true });
+    dlg._keep = false; dlg._nav = false;
+  });
+  dlg.querySelector("[data-close]").addEventListener("click", function () { closeHolo(false); });
+  micBtn.addEventListener("click", listen);
+  muteBtn.addEventListener("click", function () { setVoice(!voiceOn); });
+  setVoice(voiceOn);
+  $("holoAsk").addEventListener("submit", function (e) { e.preventDefault(); var v = input.value.trim(); input.value = ""; if (v) respond(v); });
+  triggers.forEach(function (b) { b.addEventListener("click", function () { open(b); }); });
+
+  // Deep link: #hologram
+  function route() { if (location.hash === "#hologram" && !dlg.open) open(); }
+  function whenReady(fn) {
+    if (!root.classList.contains("loading")) { fn(); return; }
+    var mo = new MutationObserver(function () { if (!root.classList.contains("loading")) { mo.disconnect(); setTimeout(fn, 300); } });
+    mo.observe(root, { attributes: true, attributeFilter: ["class"] });
+  }
+  whenReady(route);
+  window.addEventListener("hashchange", route);
+
+  // Palette + terminal
+  var CM = window.__cmds = window.__cmds || [];
+  CM.push({ t: "Hologram assistant (VEGA)", d: "3D hologram of the whole portfolio, with a voice assistant", k: "hologram jarvis vega voice assistant ai talk iron man 3d", run: function () { open(); } });
+  var f = fx();
+  if (f.cmds && f.print) {
+    var oh = f.cmds.help;
+    f.cmds.help = function (a) { oh(a); f.print("o", "  holo             launch the hologram assistant (VEGA)"); };
+    f.cmds.holo = f.cmds.hologram = f.cmds.vega = function () { open(); };
+    f.cmds.jarvis = function () { f.print("w", "JARVIS is busy. Routing you to VEGA…"); setTimeout(function () { open(); }, 500); };
+  }
+  window.__holo = { open: open, close: function () { closeHolo(false); }, ask: function (q) { if (!dlg.open) open(); respond(q); } };
 })();
 </script>
 </body>
