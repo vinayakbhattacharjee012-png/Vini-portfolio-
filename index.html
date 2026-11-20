@@ -6,7 +6,8 @@
 <title>Vini · Builder, Community Founder, Creator</title>
 <link rel="canonical" href="https://vini-portfolio.onrender.com/" />
 <link rel="icon" href="favicon-64.png" type="image/png" />
-<link rel="apple-touch-icon" href="logo-vini-256.webp" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
 <meta name="theme-color" content="#080b1a" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="#f4f5fa" media="(prefers-color-scheme: light)" />
 <meta property="og:type" content="website" />
@@ -1336,6 +1337,132 @@
   .sk-grid.one .sk-pills li { font-size: .84rem; padding: 7px 12px; }
   .sk-card.sk-in { animation: fxIn .4s cubic-bezier(.2,.8,.2,1) both; }
   @media (prefers-reduced-motion: reduce) { .sk-card, .sk-card.sk-in { animation: none !important; transition: none; } }
+
+  /* ================================================================
+     FEATURES v3: résumé, scrollspy, deep links, shortcuts, share, print
+     ================================================================ */
+  html { scrollbar-gutter: stable; }
+  /* Availability reads as "available" */
+  .id-card .status i { background: #2fbf71; box-shadow: 0 0 0 0 #2fbf71; animation-name: availPing; }
+  @keyframes availPing { 0% { box-shadow: 0 0 0 0 rgba(47,191,113,.55); } 100% { box-shadow: 0 0 0 9px rgba(47,191,113,0); } }
+
+  /* Scrollspy: the nav shows where you are */
+  .nav-links a { position: relative; transition: color .2s ease; }
+  .nav-links a.active { color: var(--ink); }
+  @media (min-width: 1181px) {
+    .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 2px; border-radius: 2px;
+      background: var(--star); box-shadow: 0 0 calc(8px * var(--fx-glow, 1)) var(--star); transform: scaleX(0); transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+    .nav-links a.active::after { transform: scaleX(1); }
+  }
+  @media (max-width: 1180px) { .nav-links a.active { color: var(--star); box-shadow: inset 3px 0 0 var(--star); padding-left: 12px; } }
+
+  /* Small text buttons used in the footer */
+  .linkish { font: inherit; color: var(--muted); background: none; border: 0; padding: 4px 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--muted) 50%, transparent); }
+  .linkish:hover { color: var(--ink); text-decoration-color: var(--star); }
+  .linkish kbd { font: 500 .7rem var(--font-mono); color: var(--star); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; margin-left: 4px; text-decoration: none; display: inline-block; }
+  .foot-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+  .id-card .cv-btn { margin-top: -2px; }
+
+  /* Drawer head actions (copy link / share) */
+  .drawer-tools { display: flex; align-items: center; gap: 8px; flex: none; }
+  .drawer-link { height: 36px; display: inline-flex; align-items: center; gap: 6px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--ink); font: 500 .8rem var(--font-body); cursor: pointer; }
+  .drawer-link:hover { border-color: var(--star); box-shadow: 0 0 calc(14px * var(--fx-glow, 1)) -4px var(--star); }
+  .drawer-link svg { width: 15px; height: 15px; color: var(--star); }
+  @media (max-width: 420px) { .drawer-link span { display: none; } .drawer-link { width: 36px; padding: 0; justify-content: center; } }
+
+  /* Résumé drawer */
+  dialog.drawer.cv { width: min(900px, 100vw); }
+  .cv-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cv-actions .cta { padding: 9px 14px; font-size: .86rem; }
+  .cv-note { margin: 0; color: var(--muted); font-size: .82rem; }
+  .cv-paper { --c-ink: #15151b; --c-muted: #5a5a66; --c-line: #e2e2e8; --c-accent: #9b1d3a;
+    background: #fff; color: var(--c-ink); border-radius: 12px; padding: clamp(18px, 4vw, 40px); font: 400 13.5px/1.55 var(--font-body);
+    box-shadow: 0 30px 70px -30px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.06); }
+  .cv-paper h2, .cv-paper h3, .cv-paper h4 { font-family: var(--font-display); color: var(--c-ink); margin: 0; }
+  .cv-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-bottom: 14px; border-bottom: 2px solid var(--c-ink); }
+  .cv-name { font-size: 30px; letter-spacing: -.03em; line-height: 1.05; }
+  .cv-role { color: var(--c-accent); font: 600 12px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+  .cv-avail { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--c-muted); }
+  .cv-avail i { width: 7px; height: 7px; border-radius: 50%; background: #2fbf71; }
+  .cv-contact { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12.5px; text-align: right; align-content: start; }
+  .cv-contact b { font: 500 10.5px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--c-muted); margin-right: 6px; }
+  .cv-contact a { color: var(--c-ink); text-decoration: none; }
+  @media (max-width: 560px) { .cv-contact { text-align: left; } }
+  .cv-sec { margin-top: 18px; }
+  .cv-sec > h3 { font: 600 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent); padding-bottom: 6px; margin-bottom: 10px; border-bottom: 1px solid var(--c-line); }
+  .cv-sec p { margin: 0; }
+  .cv-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .cv-stats div { border: 1px solid var(--c-line); border-radius: 8px; padding: 8px 10px; }
+  .cv-stats b { display: block; font: 700 18px var(--font-display); color: var(--c-ink); }
+  .cv-stats span { font-size: 11.5px; color: var(--c-muted); }
+  .cv-xp { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .cv-xp li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 2px 12px; }
+  .cv-xp li > span { font: 500 10.5px var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--c-muted); padding-top: 3px; }
+  .cv-xp li b { font-weight: 600; }
+  .cv-xp li p { color: var(--c-muted); }
+  @media (max-width: 480px) { .cv-xp li { grid-template-columns: minmax(0, 1fr); } }
+  .cv-proj { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 22px; }
+  @media (max-width: 560px) { .cv-proj, .cv-stats { grid-template-columns: minmax(0, 1fr); } }
+  .cv-proj div { break-inside: avoid; }
+  .cv-proj h4 { font-size: 14px; }
+  .cv-proj h4 span { font: 500 10.5px var(--font-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--c-accent); margin-left: 6px; }
+  .cv-proj p { color: var(--c-muted); font-size: 12.5px; }
+  .cv-skills { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .cv-skills li { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 2px 12px; font-size: 12.5px; }
+  .cv-skills li b { font-weight: 600; }
+  .cv-skills li span { color: var(--c-muted); }
+  @media (max-width: 560px) { .cv-skills li { grid-template-columns: minmax(0, 1fr); } }
+  .cv-foot { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--c-line); font-size: 11px; color: var(--c-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  #cvPrint { display: none; }
+
+  /* Keyboard shortcuts */
+  dialog.keys { width: min(440px, calc(100vw - 32px)); padding: 0; border: 1px solid color-mix(in srgb, var(--star) 35%, var(--line)); border-radius: 16px;
+    background: var(--surface); color: var(--ink); box-shadow: 0 30px 80px -24px rgba(0,0,0,.55), 0 0 calc(40px * var(--fx-glow, 1)) -14px var(--star); }
+  dialog.keys[open] { animation: fxIn calc(.3s / var(--fx-speed, 1)) cubic-bezier(.2,.8,.2,1) both; }
+  dialog.keys::backdrop { background: rgba(4, 4, 8, .5); backdrop-filter: blur(3px); }
+  .keys-in { padding: 20px; display: grid; gap: 12px; }
+  .keys-in header { display: flex; justify-content: space-between; align-items: center; }
+  .keys-in h3 { font-size: 1.1rem; }
+  .keys-list { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px 16px; align-items: center; }
+  .keys-list dt { display: flex; gap: 4px; justify-content: flex-end; }
+  .keys-list dd { margin: 0; color: var(--muted); font-size: .9rem; }
+  .keys-list kbd { font: 500 .74rem var(--font-mono); min-width: 24px; text-align: center; padding: 3px 7px; border-radius: 6px; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line); border-bottom-width: 2px; }
+
+  /* Print: résumé only when printing it, otherwise a clean light page */
+  @media print {
+    @page { margin: 14mm; }
+    :root, :root[data-theme] { --bg: #fff !important; --surface: #fff !important; --surface-2: #f2f2f5 !important; --ink: #111 !important; --muted: #444 !important;
+      --line: #d4d4da !important; --star: #9b1d3a !important; --nebula: #4f5663 !important; --star-soft: rgba(155,29,58,.08) !important; color-scheme: light; }
+    *, *::before, *::after { animation: none !important; transition: none !important; box-shadow: none !important; text-shadow: none !important; }
+    html, body { background: #fff !important; color: #111 !important; }
+    html.print-cv body > *:not(#cvPrint) { display: none !important; }
+    html.print-cv #cvPrint { display: block !important; }
+    html, :root { color-scheme: light !important; }
+    html.print-cv .cv-paper { box-shadow: none; padding: 0; border-radius: 0; font-size: 11.5px; line-height: 1.45; }
+    html.print-cv .cv-name { font-size: 26px; }
+    html.print-cv .cv-top { padding-bottom: 10px; }
+    html.print-cv .cv-sec { margin-top: 12px; }
+    html.print-cv .cv-sec > h3 { margin-bottom: 7px; padding-bottom: 4px; break-after: avoid; }
+    html.print-cv .cv-stats b { font-size: 15px; }
+    html.print-cv .cv-stats div { padding: 6px 9px; }
+    html.print-cv .cv-xp { gap: 5px; }
+    html.print-cv .cv-proj { gap: 6px 20px; }
+    html.print-cv .cv-proj p, html.print-cv .cv-skills li, html.print-cv .cv-contact { font-size: 11px; }
+    html.print-cv .cv-skills { gap: 4px; }
+    html.print-cv .cv-xp li, html.print-cv .cv-skills li, html.print-cv .cv-proj div { break-inside: avoid; }
+    html.print-cv .cv-foot { margin-top: 12px; }
+    html:not(.print-cv) nav, .loader, .bg-fx, canvas, .night, .tele, .fab, .vt, .toast, dialog, .search, .progress, .scroll-cue, .orbit,
+    .skip, .ptabs, .card-actions, .botroll, .themes, .menu-btn, .holo-foil, .foot-links, .cv-btn, .gx-tip { display: none !important; }
+    .reveal, .card, .tcard, .skb, .diagram, .sec-head, .stat, .spec, .sk-card, .xp li, .role, .fact { opacity: 1 !important; transform: none !important; filter: none !important; rotate: none !important; translate: none !important; }
+    section, .sk-sec, .band { background: none !important; padding-block: 18px !important; }
+    .hero { min-height: 0 !important; padding-block: 12px !important; }
+    .card, .spec, .sk-card, figure, .tcard, .skb, .stat, .xp li { break-inside: avoid; }
+    .diagram-scroll, .stage { overflow: visible !important; }
+    .diagram-scroll svg, .stage svg { min-width: 0 !important; width: 100% !important; }
+    a { color: inherit !important; }
+  }
 </style>
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
 </head>
@@ -1434,6 +1561,7 @@
           <span class="role-line">Builder · Community founder · Creator</span>
           <span class="status"><i></i>Open to projects &amp; collabs</span>
           <a class="cta primary" href="#contact" style="margin-top:8px">Get in touch</a>
+          <button class="cta cv-btn" type="button" data-open="resume">View résumé</button>
         </article>
         <div class="about-text reveal">
           <p>I build things with AI and code, and I run the communities they're built for.</p>
@@ -2234,6 +2362,7 @@
           <span class="mail" id="mailText">vini.official.netops@gmail.com</span>
           <button class="cta" type="button" id="copyMail">Copy email</button>
           <a class="cta primary" href="mailto:vini.official.netops@gmail.com">Send an email</a>
+          <button class="cta" type="button" data-open="resume">View résumé</button>
         </div>
         <div class="mail-row join">
           <a class="cta" href="https://discord.gg/JJkyD2Rhc" target="_blank" rel="noopener">Join Galaxy Empire</a>
@@ -2253,6 +2382,7 @@
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <span class="hint">vini.official.netops@gmail.com</span>
+    <span class="foot-links"><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -2309,6 +2439,35 @@
   <div class="vt-line"><label for="vtIn">vini@portfolio:~$</label><input id="vtIn" autocomplete="off" spellcheck="false" autocapitalize="off" /></div>
 </div>
 <button class="fab" id="fab" type="button" aria-label="Open command palette"><svg class="fab-ic" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span class="lbl">Commands</span><kbd id="fabKey">Ctrl K</kbd></button>
+<dialog class="drawer cv" id="cvDlg" aria-labelledby="cvTitle">
+  <div class="drawer-inner">
+    <div class="drawer-head">
+      <div><span class="kicker">One page · always up to date</span><h3 id="cvTitle">Résumé</h3></div>
+      <button class="drawer-close" type="button" data-close aria-label="Close résumé">×</button>
+    </div>
+    <div class="cv-actions">
+      <button class="cta primary" type="button" id="cvPrintBtn">Print or save as PDF</button>
+      <button class="cta" type="button" id="cvCopyBtn">Copy as text</button>
+      <a class="cta" id="cvMail" href="#contact">Email me</a>
+    </div>
+    <p class="cv-note">Built live from this page, so it always matches the latest version of the site.</p>
+    <div id="cvHolder"></div>
+  </div>
+</dialog>
+<dialog class="keys" id="keysDlg" aria-labelledby="keysTitle">
+  <div class="keys-in">
+    <header><h3 id="keysTitle">Keyboard shortcuts</h3><button class="drawer-close" type="button" data-close aria-label="Close shortcuts">×</button></header>
+    <dl class="keys-list">
+      <dt><kbd id="keysMod">Ctrl</kbd><kbd>K</kbd></dt><dd>Command palette</dd>
+      <dt><kbd>/</kbd></dt><dd>Search the site</dd>
+      <dt><kbd>&gt;</kbd></dt><dd>In the palette: commands only</dd>
+      <dt><kbd>`</kbd></dt><dd>Terminal (try <code>help</code>)</dd>
+      <dt><kbd>?</kbd></dt><dd>This list</dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close any panel</dd>
+    </dl>
+  </div>
+</dialog>
+<div id="cvPrint" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -3161,6 +3320,7 @@
   function setupDrawer(dlg, onClose) {
     dlg.querySelector("[data-close]").addEventListener("click", function () { dlg.close(); });
     dlg.addEventListener("click", function (e) {
+      if (e.target !== dlg) return;
       var r = dlg.getBoundingClientRect();
       if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
     });
@@ -3376,6 +3536,7 @@
       setupDrawer(archDlg, function () { if (archSvg.pauseAnimations) archSvg.pauseAnimations(); });
       openArch = function (key, opener) {
         var A = ARCH[key]; if (!A) return false;
+        archDlg.dataset.key = key;
         $("archKicker").textContent = A.kicker; $("archTitle").textContent = A.title;
         archSvg.setAttribute("aria-label", A.title + ": " + A.nodes.map(function (n) { return n.t; }).join(", ") + ".");
         archDesc.innerHTML = A.intro;
@@ -3603,7 +3764,7 @@
       setupDrawer(simDlg, cancelAll);
       openSim = function (key, opener, presetIdx) {
         var S = SIMS[key]; if (!S) return false;
-        cancelAll(); current = key;
+        cancelAll(); current = key; simDlg.dataset.key = key;
         $("simKicker").textContent = S.kicker; $("simTitle").textContent = S.title;
         simPresets.innerHTML = "";
         S.presets.forEach(function (p, i) {
@@ -3814,6 +3975,9 @@
     if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) $("fabKey").textContent = "⌘K";
     if (fab && sb) fab.addEventListener("click", function () { sb.click(); }); else if (fab) fab.hidden = true;
   } catch (e) {}
+  window.__fx = { openSim: function (k, o) { return openSim(k, o); }, openArch: function (k, o) { return openArch(k, o); },
+    openTerminal: function () { return openTerminal(); }, closeTerminal: function (r) { return closeTerminal(r); }, filters: filters,
+    cmds: typeof CMDS !== "undefined" ? CMDS : null, print: typeof print === "function" ? print : null };
 })();
 </script>
 <script>
@@ -3851,6 +4015,260 @@
     var name = b.firstChild.textContent;
     C.push({ t: "Skills: " + name, d: "Show only " + name + " skills", k: "skills filter category", run: function () { document.getElementById("skills").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); set(k); } });
   });
+})();
+</script>
+<script>
+/* FEATURES v3: résumé, scrollspy, deep links, keyboard shortcuts, share. */
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var coarse = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches);
+  var fx = window.__fx || {};
+  var canonical = ((document.querySelector('link[rel="canonical"]') || {}).href || (location.origin + location.pathname)).replace(/#.*$/, "");
+  function $(id) { return document.getElementById(id); }
+  function T(el) { return el ? el.textContent.replace(/↗/g, "").replace(/\s+/g, " ").trim() : ""; }
+  function mk(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  var toastEl = $("toast"), toastT;
+  function toast(m) { if (!toastEl) return; toastEl.textContent = m; toastEl.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("show"); }, 2600); }
+  function copy(text, label) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { toast(label + " copied"); return true; }, function () { toast("Couldn't copy. Select and copy it manually."); return false; });
+    }
+    toast("Couldn't copy. Select and copy it manually."); return Promise.resolve(false);
+  }
+  function wire(dlg) {
+    if (!dlg) return;
+    var c = dlg.querySelector("[data-close]"); if (c) c.addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) {
+      if (e.target !== dlg) return;
+      var r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+    });
+    dlg.addEventListener("close", function () { var o = dlg._opener; dlg._opener = null; if (o && document.contains(o) && o.focus) o.focus(); });
+  }
+  function showModal(dlg, opener) {
+    if (!dlg || typeof dlg.showModal !== "function") return false;
+    if (fx.closeTerminal) fx.closeTerminal(false);
+    dlg._opener = opener || document.activeElement;
+    if (!dlg.open) dlg.showModal();
+    return true;
+  }
+
+  /* ---------- Lock page scroll while a panel is open ---------- */
+  var dialogs = [].slice.call(document.querySelectorAll("dialog"));
+  function syncLock() {
+    var s = $("search"), any = dialogs.some(function (d) { return d.open; }) || (s && !s.hidden);
+    document.body.style.overflow = any ? "hidden" : "";
+  }
+  if ("MutationObserver" in window) dialogs.forEach(function (d) { new MutationObserver(syncLock).observe(d, { attributes: true, attributeFilter: ["open"] }); });
+
+  /* ---------- Scrollspy: highlight the section you're reading ---------- */
+  try {
+    var links = {};
+    document.querySelectorAll('#navLinks a[href^="#"]').forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var alias = { "discord-work": "community", security: "community" }, current = null;
+    var setActive = function (id) {
+      var key = alias[id] || id; if (key === current) return; current = key;
+      Object.keys(links).forEach(function (k) {
+        var on = k === key; links[k].classList.toggle("active", on);
+        if (on) links[k].setAttribute("aria-current", "true"); else links[k].removeAttribute("aria-current");
+      });
+    };
+    if ("IntersectionObserver" in window) {
+      var spy = new IntersectionObserver(function (en) { en.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); }); }, { rootMargin: "-35% 0px -60% 0px" });
+      ["top", "about", "skills", "discord-work", "community", "security", "process", "ai", "creative", "advertise", "contact"].forEach(function (id) { var el = $(id); if (el) spy.observe(el); });
+    }
+  } catch (e) {}
+
+  /* ---------- Résumé, built live from the page ---------- */
+  function data() {
+    var d = {};
+    d.name = T(document.querySelector(".id-card h3")) || "Vini";
+    d.role = T(document.querySelector(".id-card .role-line")) || T(document.querySelector(".hero .eyebrow"));
+    d.avail = T(document.querySelector(".id-card .status"));
+    d.summary = T(document.querySelector(".hero .lede"));
+    d.stats = [].map.call(document.querySelectorAll(".hero .stat"), function (s) {
+      var b = s.querySelector("b"), v = b && b.hasAttribute("data-count") ? Number(b.getAttribute("data-count")).toLocaleString("en-US") : T(b);
+      return [v, T(s.querySelector("span"))];
+    });
+    d.xp = [].map.call(document.querySelectorAll(".xp li"), function (li) { return { k: T(li.querySelector("time")), t: T(li.querySelector("b")), d: T(li.querySelector("div > span")) }; });
+    var specs = [].map.call(document.querySelectorAll(".specs .spec"), function (s) { return { t: T(s.querySelector("h3")), k: T(s.querySelector(".kicker")), d: T(s.querySelector("dd")) }; });
+    var feat = [].map.call(document.querySelectorAll("#ai .card.featured"), function (c) { return { t: T(c.querySelector("h3")), k: T(c.querySelector(".kicker")), d: T(c.querySelector("p")) }; });
+    d.projects = specs.slice(0, 2).concat(feat, specs.slice(2));
+    d.skills = [].map.call(document.querySelectorAll("#skills .sk-card"), function (c) { return { t: T(c.querySelector("h3")), items: [].map.call(c.querySelectorAll(".sk-pills li"), T) }; });
+    var cr = [].map.call(document.querySelectorAll('.skillrow[data-skill-box="creative"] .skb b'), T);
+    if (cr.length) d.skills.push({ t: "Creative", items: cr });
+    d.email = T($("mailText")); d.discord = T($("handle"));
+    d.site = canonical.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return d;
+  }
+  function paper(d) {
+    var P = mk("article", "cv-paper"), top = mk("header", "cv-top"), left = mk("div");
+    left.appendChild(mk("h2", "cv-name", d.name));
+    left.appendChild(mk("div", "cv-role", d.role));
+    if (d.avail) { var av = mk("div", "cv-avail"); av.appendChild(mk("i")); av.appendChild(document.createTextNode(d.avail)); left.appendChild(av); }
+    var ul = mk("ul", "cv-contact");
+    function row(label, text, href) {
+      var li = mk("li"); li.appendChild(mk("b", null, label));
+      if (href) { var a = mk("a", null, text); a.href = href; li.appendChild(a); } else li.appendChild(document.createTextNode(text));
+      ul.appendChild(li);
+    }
+    if (d.email) row("Email", d.email, "mailto:" + d.email);
+    if (d.discord) row("Discord", d.discord);
+    row("Web", d.site, canonical);
+    top.appendChild(left); top.appendChild(ul); P.appendChild(top);
+    function sec(title) { var s = mk("div", "cv-sec"); s.appendChild(mk("h3", null, title)); P.appendChild(s); return s; }
+    if (d.summary) sec("Summary").appendChild(mk("p", null, d.summary));
+    if (d.stats.length) {
+      var g = mk("div", "cv-stats");
+      d.stats.forEach(function (st) { var x = mk("div"); x.appendChild(mk("b", null, st[0])); x.appendChild(mk("span", null, st[1])); g.appendChild(x); });
+      sec("Highlights").appendChild(g);
+    }
+    if (d.xp.length) {
+      var ol = mk("ol", "cv-xp");
+      d.xp.forEach(function (x) { var li = mk("li"), w = mk("div"); li.appendChild(mk("span", null, x.k)); w.appendChild(mk("b", null, x.t)); w.appendChild(mk("p", null, x.d)); li.appendChild(w); ol.appendChild(li); });
+      sec("Experience").appendChild(ol);
+    }
+    if (d.projects.length) {
+      var pg = mk("div", "cv-proj");
+      d.projects.forEach(function (p) { var x = mk("div"), h = mk("h4", null, p.t); if (p.k) h.appendChild(mk("span", null, p.k)); x.appendChild(h); x.appendChild(mk("p", null, p.d)); pg.appendChild(x); });
+      sec("Projects").appendChild(pg);
+    }
+    if (d.skills.length) {
+      var sl = mk("ul", "cv-skills");
+      d.skills.forEach(function (s) { var li = mk("li"); li.appendChild(mk("b", null, s.t)); li.appendChild(mk("span", null, s.items.join(" · "))); sl.appendChild(li); });
+      sec("Skills").appendChild(sl);
+    }
+    var f = mk("footer", "cv-foot");
+    f.appendChild(mk("span", null, d.site));
+    f.appendChild(mk("span", null, "Generated " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })));
+    P.appendChild(f);
+    return P;
+  }
+  function asText(d) {
+    var L = [d.name.toUpperCase(), d.role];
+    if (d.avail) L.push(d.avail);
+    L.push([d.email && "Email: " + d.email, d.discord && "Discord: " + d.discord, "Web: " + canonical].filter(Boolean).join(" | "));
+    function H(t) { L.push("", t.toUpperCase()); }
+    if (d.summary) { H("Summary"); L.push(d.summary); }
+    if (d.stats.length) { H("Highlights"); d.stats.forEach(function (s) { L.push("- " + s[0] + " " + s[1]); }); }
+    if (d.xp.length) { H("Experience"); d.xp.forEach(function (x) { L.push("- " + x.t + " (" + x.k + "): " + x.d); }); }
+    if (d.projects.length) { H("Projects"); d.projects.forEach(function (p) { L.push("- " + p.t + (p.k ? " [" + p.k + "]" : "") + ": " + p.d); }); }
+    if (d.skills.length) { H("Skills"); d.skills.forEach(function (s) { L.push("- " + s.t + ": " + s.items.join(", ")); }); }
+    return L.join("\n");
+  }
+  var cvDlg = $("cvDlg"), cvHolder = $("cvHolder"), printHolder = $("cvPrint");
+  function fillPrint() { printHolder.innerHTML = ""; printHolder.appendChild(paper(data())); }
+  function endPrint() { root.classList.remove("print-cv"); window.removeEventListener("afterprint", endPrint); }
+  function printCV() { fillPrint(); root.classList.add("print-cv"); window.addEventListener("afterprint", endPrint); window.print(); }
+  function openResume(opener) {
+    if (!cvDlg) return false;
+    cvHolder.innerHTML = ""; cvHolder.appendChild(paper(data()));
+    return showModal(cvDlg, opener);
+  }
+  if (cvDlg) {
+    wire(cvDlg);
+    $("cvPrintBtn").addEventListener("click", printCV);
+    $("cvCopyBtn").addEventListener("click", function () { copy(asText(data()), "Résumé"); });
+    var em = T($("mailText")); if (em) $("cvMail").href = "mailto:" + em + "?subject=" + encodeURIComponent("Hi Vini");
+    window.addEventListener("beforeprint", function () {
+      if (cvDlg.open && !root.classList.contains("print-cv")) { fillPrint(); root.classList.add("print-cv"); window.addEventListener("afterprint", endPrint); }
+    });
+    document.querySelectorAll('[data-open="resume"]').forEach(function (b) { b.addEventListener("click", function () { openResume(b); }); });
+  }
+
+  /* ---------- Keyboard shortcuts ---------- */
+  var keysDlg = $("keysDlg");
+  function openKeys(opener) { return showModal(keysDlg, opener); }
+  if (keysDlg) {
+    wire(keysDlg);
+    if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) $("keysMod").textContent = "⌘";
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "?" || e.ctrlKey || e.metaKey || e.altKey) return;
+      var t = e.target, tag = (t.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select" || t.isContentEditable) return;
+      var s = $("search");
+      if (document.querySelector("dialog[open]") || (s && !s.hidden)) return;
+      e.preventDefault(); openKeys();
+    });
+    document.querySelectorAll("[data-keys]").forEach(function (b) { b.addEventListener("click", function () { openKeys(b); }); });
+  }
+
+  /* ---------- Share ---------- */
+  function share(url, title) {
+    url = url || canonical;
+    if (navigator.share && coarse) return navigator.share({ title: title || document.title, url: url }).catch(function () {});
+    return copy(url, "Link");
+  }
+  var sb = $("shareBtn"); if (sb) sb.addEventListener("click", function () { share(); });
+
+  /* ---------- Deep links: #resume, #sim-nova, #arch-eclipse, #skills-sec, #projects-python ---------- */
+  var ROUTES = { resume: function () { return openResume(); } };
+  ["polo", "nova", "eclipse", "apex"].forEach(function (k) { ROUTES["sim-" + k] = function () { return fx.openSim && fx.openSim(k); }; });
+  ["eclipse", "apex"].forEach(function (k) { ROUTES["arch-" + k] = function () { return fx.openArch && fx.openArch(k); }; });
+  ["ai", "bots", "sec", "web", "ops"].forEach(function (k) {
+    ROUTES["skills-" + k] = function () { var s = $("skills"); if (!s || !window.__skillsFilter) return false; window.__skillsFilter(k); s.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return true; };
+  });
+  ["ai", "python", "web", "ops"].forEach(function (k) {
+    ROUTES["projects-" + k] = function () { var a = $("ai"); if (!a || !fx.filters) return false; fx.filters.set(k); a.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return true; };
+  });
+  function routeName(h) { try { return decodeURIComponent((h || "").replace(/^#/, "")).toLowerCase(); } catch (e) { return ""; } }
+  function route() { var r = ROUTES[routeName(location.hash)]; if (r) r(); }
+  function whenReady(fn) {
+    if (!root.classList.contains("loading")) { fn(); return; }
+    var mo = new MutationObserver(function () { if (!root.classList.contains("loading")) { mo.disconnect(); setTimeout(fn, 300); } });
+    mo.observe(root, { attributes: true, attributeFilter: ["class"] });
+  }
+  whenReady(route);
+  window.addEventListener("hashchange", route);
+
+  // Keep the address bar in sync so any open panel can be shared, then restore it on close.
+  function routeOf(d) {
+    if (d.id === "cvDlg") return "resume";
+    if ((d.id === "sim" || d.id === "arch") && d.dataset.key) return d.id + "-" + d.dataset.key;
+    return null;
+  }
+  var baseHash = "";
+  ["cvDlg", "sim", "arch"].forEach(function (id) {
+    var d = $(id); if (!d || !("MutationObserver" in window) || !history.replaceState) return;
+    new MutationObserver(function () {
+      var r = routeOf(d); if (!r) return;
+      if (d.open) {
+        if (!ROUTES[routeName(location.hash)]) baseHash = location.hash;
+        history.replaceState(null, "", "#" + r);
+      } else if (routeName(location.hash) === r) {
+        history.replaceState(null, "", location.pathname + location.search + baseHash); baseHash = "";
+      }
+    }).observe(d, { attributes: true, attributeFilter: ["open"] });
+    var head = d.querySelector(".drawer-head"), close = head && head.querySelector("[data-close]");
+    if (!close) return;
+    var tools = mk("div", "drawer-tools"), btn = mk("button", "drawer-link");
+    btn.type = "button";
+    btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    btn.appendChild(mk("span", null, navigator.share && coarse ? "Share" : "Copy link"));
+    btn.setAttribute("aria-label", navigator.share && coarse ? "Share a link to this panel" : "Copy a link to this panel");
+    btn.addEventListener("click", function () { var r = routeOf(d); share(canonical + (r ? "#" + r : ""), T(d.querySelector("h3")) + " · Vini"); });
+    head.insertBefore(tools, close); tools.appendChild(btn); tools.appendChild(close);
+  });
+
+  /* ---------- Palette + terminal commands ---------- */
+  var C = window.__cmds = window.__cmds || [];
+  C.push({ t: "Open résumé", d: "One-page résumé, built live from this site", k: "resume cv curriculum hire job", run: function () { openResume(); } });
+  C.push({ t: "Print or save résumé as PDF", d: "Opens your browser's print dialog", k: "resume cv pdf print download", run: printCV });
+  C.push({ t: "Copy résumé as text", d: "Plain text, ready to paste", k: "resume cv copy text clipboard", run: function () { copy(asText(data()), "Résumé"); } });
+  C.push({ t: "Share this portfolio", d: navigator.share && coarse ? "Open your share sheet" : "Copy the link", k: "share link url send", run: function () { share(); } });
+  C.push({ t: "Keyboard shortcuts", d: "Every shortcut on this site", k: "keys keyboard help hotkeys", run: function () { openKeys(); } });
+  if (fx.cmds && fx.print) {
+    var oldHelp = fx.cmds.help;
+    fx.cmds.help = function (a) { oldHelp(a); fx.print("o", "  resume           my one-page résumé\n  share            share this portfolio\n  keys             keyboard shortcuts"); };
+    fx.cmds.resume = function () { openResume(); };
+    fx.cmds.cv = fx.cmds.resume;
+    fx.cmds.share = function () { share(); fx.print("g", "link ready"); };
+    fx.cmds.keys = function () { openKeys(); };
+  }
+
+  window.__features = { openResume: openResume, printCV: printCV, resumeText: function () { return asText(data()); }, openKeys: openKeys, share: share };
 })();
 </script>
 </body>
