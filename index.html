@@ -1295,6 +1295,43 @@
     .gx .gx-e.draw { stroke-dashoffset: 0; }
     .holo { rotate: none !important; translate: none !important; }
   }
+
+  /* ---- Skills overview: filter tabs + category cards ---- */
+  .sk-sec { padding-block: 64px; border-bottom: 1px solid var(--line); scroll-margin-top: 64px; }
+  .sk-tabs { margin: 0 0 22px; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .sk-tabs::-webkit-scrollbar { display: none; }
+  .sk-tabs button { white-space: nowrap; flex: none; }
+  .sk-tabs button b { font: 500 .7rem var(--font-mono); margin-left: 6px; color: var(--muted); }
+  .sk-tabs button[aria-pressed="true"] b { color: var(--star); }
+  .sk-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+  .sk-grid > .sk-card { grid-column: span 2; }
+  .sk-grid > .sk-card:nth-child(n+4) { grid-column: span 3; }
+  .sk-grid.one > .sk-card { grid-column: 1 / -1; }
+  @media (max-width: 960px) {
+    .sk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .sk-grid > .sk-card, .sk-grid > .sk-card:nth-child(n+4) { grid-column: auto; }
+    .sk-grid > .sk-card:last-child, .sk-grid.one > .sk-card { grid-column: 1 / -1; }
+  }
+  @media (max-width: 600px) { .sk-grid { grid-template-columns: minmax(0, 1fr); } }
+  .sk-card { position: relative; display: grid; gap: 10px; align-content: start; min-width: 0; padding: 18px; border-radius: 14px;
+    background: var(--surface); border: 1px solid var(--line); transition: border-color .2s ease, box-shadow .25s ease, transform .2s ease; }
+  .sk-card::before { content: ""; position: absolute; left: 14px; right: 14px; top: -1px; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--star), var(--nebula)); opacity: .7; }
+  .sk-card:hover { border-color: color-mix(in srgb, var(--star) 55%, var(--line)); transform: translateY(-2px);
+    box-shadow: 0 14px 40px -18px color-mix(in srgb, var(--star) calc(var(--fx-tone, 1) * 55%), transparent); }
+  .sk-card header { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .sk-card code { flex: none; font: 600 .62rem var(--font-mono); letter-spacing: .04em; padding: 6px 7px; border-radius: 8px; color: var(--star); background: var(--star-soft);
+    box-shadow: 0 0 calc(12px * var(--fx-glow, 1) * var(--fx-tone, 1)) -4px var(--star); }
+  .sk-card h3 { flex: 1; min-width: 0; font-size: 1rem; letter-spacing: -.01em; }
+  .sk-n { font: 500 .72rem var(--font-mono); color: var(--muted); }
+  .sk-card p { margin: 0; color: var(--muted); font-size: .86rem; }
+  .sk-pills { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .sk-pills li { font: 500 .78rem/1.2 var(--font-body); padding: 6px 10px; border-radius: 999px; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line); transition: border-color .15s ease, color .15s ease; }
+  .sk-pills li:hover { border-color: var(--star); color: var(--star); }
+  .sk-grid.one .sk-pills li { font-size: .84rem; padding: 7px 12px; }
+  .sk-card.sk-in { animation: fxIn .4s cubic-bezier(.2,.8,.2,1) both; }
+  @media (prefers-reduced-motion: reduce) { .sk-card, .sk-card.sk-in { animation: none !important; transition: none; } }
 </style>
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
 </head>
@@ -1438,6 +1475,52 @@
       </figure>
     </div>
   </section>
+
+  <!-- SKILLS -->
+  <div class="sk-sec" id="skills" role="region" aria-labelledby="skTitle">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Skills</span>
+        <h2 id="skTitle">What I work with</h2>
+      </div>
+      <div class="ptabs sk-tabs" id="skTabs" role="group" aria-label="Filter skills by category">
+        <button type="button" aria-pressed="true" data-k="all">All<b>41</b></button>
+        <button type="button" aria-pressed="false" data-k="ai">AI &amp; Health Logic<b>6</b></button>
+        <button type="button" aria-pressed="false" data-k="bots">Bots &amp; Community<b>9</b></button>
+        <button type="button" aria-pressed="false" data-k="sec">Security &amp; Moderation<b>10</b></button>
+        <button type="button" aria-pressed="false" data-k="web">Web &amp; Interactive UI<b>6</b></button>
+        <button type="button" aria-pressed="false" data-k="ops">Prototyping &amp; Hosting<b>10</b></button>
+        <span class="ptabs-ink" aria-hidden="true"></span>
+      </div>
+      <div class="sk-grid" id="skGrid">
+        <article class="sk-card" data-k="ai">
+          <header><code>AI</code><h3>AI &amp; Health Logic</h3><span class="sk-n">6</span></header>
+          <p>Health AI that stays safe by design.</p>
+          <ul class="sk-pills"><li>Health AI product design</li><li>Structured wellness workflows</li><li>Clinical safety guardrails</li><li>System prompts &amp; personas</li><li>Prompting with Claude Pro</li><li>AI-assisted prototyping</li></ul>
+        </article>
+        <article class="sk-card" data-k="bots">
+          <header><code>BOT</code><h3>Bots &amp; Community Systems</h3><span class="sk-n">9</span></header>
+          <p>Python bots and the communities they run in.</p>
+          <ul class="sk-pills"><li>Python Discord bots</li><li>Slash commands &amp; cogs</li><li>Button views &amp; verification</li><li>Leveling &amp; XP</li><li>Anti-spam logic</li><li>AFK tracking</li><li>Staff leadership</li><li>Governance &amp; treaties</li><li>Multi-brand network</li></ul>
+        </article>
+        <article class="sk-card" data-k="sec">
+          <header><code>SEC</code><h3>Security &amp; Moderation</h3><span class="sk-n">10</span></header>
+          <p>Keeping servers of up to 90,000 members safe.</p>
+          <ul class="sk-pills"><li>Large-scale moderation</li><li>Anti-nuke &amp; raid defense</li><li>Permission architecture</li><li>Vault Account isolation</li><li>Raid simulation</li><li>Automod tuning</li><li>Case logs &amp; appeals</li><li>Bot testing</li><li>8-bot security layer</li><li>Wick · Dyno · Carl-bot</li></ul>
+        </article>
+        <article class="sk-card" data-k="web">
+          <header><code>WEB</code><h3>Web &amp; Interactive UI</h3><span class="sk-n">6</span></header>
+          <p>Fast, interactive single-page builds.</p>
+          <ul class="sk-pills"><li>UI architecture</li><li>Single-page websites</li><li>Interactive diagrams</li><li>Light, dark &amp; black themes</li><li>Mobile-first layouts</li><li>Apex Sports Hub</li></ul>
+        </article>
+        <article class="sk-card" data-k="ops">
+          <header><code>OPS</code><h3>Prototyping &amp; Hosting</h3><span class="sk-n">10</span></header>
+          <p>From AI-built prototype to monitored live service.</p>
+          <ul class="sk-pills"><li>Bolt.new</li><li>Lovable</li><li>Replit Agent</li><li>Base44</li><li>Manus.space</li><li>Google AI Studio</li><li>Render deployments</li><li>Netlify</li><li>UptimeRobot monitoring</li><li>GitHub</li></ul>
+        </article>
+      </div>
+    </div>
+  </div>
 
   <div class="band" id="discord-work"><div class="wrap"><span class="eyebrow">Part one</span><h2>Discord work</h2><p>Community, security, process and testing: the work most of my time goes into.</p></div></div>
   <!-- COMMUNITY -->
@@ -3720,6 +3803,43 @@
     if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) $("fabKey").textContent = "⌘K";
     if (fab && sb) fab.addEventListener("click", function () { sb.click(); }); else if (fab) fab.hidden = true;
   } catch (e) {}
+})();
+</script>
+<script>
+/* Skills overview: category filter tabs. */
+(function () {
+  "use strict";
+  var tabs = document.getElementById("skTabs"), grid = document.getElementById("skGrid");
+  if (!tabs || !grid) return;
+  var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var btns = tabs.querySelectorAll("button[data-k]"), cards = grid.querySelectorAll(".sk-card"), ink = tabs.querySelector(".ptabs-ink");
+  function moveInk(b) { if (!b) return; ink.style.width = b.offsetWidth + "px"; ink.style.transform = "translateX(" + (b.offsetLeft) + "px)"; }
+  function cur() { return tabs.querySelector('[aria-pressed="true"]'); }
+  function set(k) {
+    var b = tabs.querySelector('[data-k="' + k + '"]'); if (!b) return false;
+    btns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    moveInk(b);
+    if (b.scrollIntoView && tabs.scrollWidth > tabs.clientWidth) b.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reduce ? "auto" : "smooth" });
+    grid.classList.toggle("one", k !== "all");
+    cards.forEach(function (c) {
+      var show = k === "all" || c.getAttribute("data-k") === k;
+      c.hidden = !show;
+      if (show && !reduce) { c.classList.remove("sk-in"); void c.offsetWidth; c.classList.add("sk-in"); }
+    });
+    return true;
+  }
+  btns.forEach(function (b) { b.addEventListener("click", function () { set(b.getAttribute("data-k")); }); });
+  moveInk(cur());
+  window.addEventListener("resize", function () { moveInk(cur()); }, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moveInk(cur()); });
+  window.__skillsFilter = set;
+  var C = window.__cmds = window.__cmds || [];
+  C.push({ t: "Go to Skills", d: "All skills, grouped by category", k: "skills overview abilities", run: function () { document.getElementById("skills").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); set("all"); } });
+  btns.forEach(function (b) {
+    var k = b.getAttribute("data-k"); if (k === "all") return;
+    var name = b.firstChild.textContent;
+    C.push({ t: "Skills: " + name, d: "Show only " + name + " skills", k: "skills filter category", run: function () { document.getElementById("skills").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); set(k); } });
+  });
 })();
 </script>
 </body>
