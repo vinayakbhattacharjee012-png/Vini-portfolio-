@@ -77,10 +77,12 @@
 
   /* ---------- auto-scroll: hands-free, non-stop reading mode ---------- */
   var AS = [["Slow", 45], ["Normal", 90], ["Fast", 160], ["Turbo", 280]], asI = Math.max(0, Math.min(3, +(store("asSpeed") || 1))), asOn = false, asAcc = 0, asHold = 0, asLoopOn = store("asLoop") !== "off";
-  var asBtn = el('<button class="w2-as" id="w2AsBtn" type="button" aria-pressed="false" title="Scroll the page for you (Alt+Shift+S)">▶ Auto-scroll</button>');
-  var asBar = el('<div class="w2-asbar" id="w2As" role="group" aria-label="Auto-scroll controls" hidden><button type="button" data-a="p">⏸ Pause</button><button type="button" data-a="s"></button><button type="button" data-a="l"></button><button type="button" data-a="t" aria-label="Back to top">↑ Top</button></div>');
-  var hw = $(".wrap", hud); if (hw) hw.appendChild(asBtn); document.body.appendChild(asBar);
-  function asPaint() { $("[data-a=s]", asBar).textContent = "Speed: " + AS[asI][0]; $("[data-a=l]", asBar).textContent = "Loop: " + (asLoopOn ? "on" : "off"); asBtn.setAttribute("aria-pressed", asOn); asBtn.textContent = asOn ? "⏸ Auto-scroll" : "▶ Auto-scroll"; asBar.hidden = !asOn; }
+  // Right-hand rail: always visible, vertical, out of the way of the page content.
+  var asBar = el('<div class="w2-asrail" id="w2As" role="group" aria-label="Auto-scroll"><button type="button" id="w2AsBtn" data-a="p" aria-pressed="false" aria-label="Start auto-scroll" title="Auto-scroll (Alt+Shift+S)">▶</button><button type="button" data-a="u" aria-label="Faster" title="Faster">＋</button><span class="w2-asv" aria-live="polite"></span><button type="button" data-a="d" aria-label="Slower" title="Slower">－</button><button type="button" data-a="l" title="Loop at the end">⟳</button><button type="button" data-a="t" aria-label="Back to top" title="Back to top">↑</button></div>'), asBtn = $("#w2AsBtn", asBar);
+
+  document.body.appendChild(asBar);
+  var ASN = ["Slow", "Norm", "Fast", "Max"];
+  function asPaint() { $(".w2-asv", asBar).textContent = ASN[asI]; var l = $("[data-a=l]", asBar); l.setAttribute("aria-pressed", asLoopOn); l.style.opacity = asLoopOn ? 1 : .45; asBtn.setAttribute("aria-pressed", asOn); asBtn.textContent = asOn ? "⏸" : "▶"; asBtn.setAttribute("aria-label", asOn ? "Pause auto-scroll" : "Start auto-scroll"); asBar.classList.toggle("on", asOn); }
   var asLoop = window.Gov ? Gov.loop("autoscroll", function (now, dt) {
     var de = document.documentElement;
     if (asHold) { if (now < asHold) return; asHold = 0; }
@@ -94,11 +96,11 @@
   }
   function asStop(msg) { if (!asOn) return; asOn = false; asPaint(); if (msg) toast(msg); }
   function asToggle() { asOn ? asStop("Auto-scroll paused") : asStart(); }
-  asBtn.addEventListener("click", asToggle);
   asBar.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b) return; var a = b.dataset.a;
-    if (a === "p") asStop("Auto-scroll paused");
-    else if (a === "s") { asI = (asI + 1) % 4; store("asSpeed", asI); asPaint(); }
+    if (a === "p") asToggle();
+    else if (a === "u") { asI = Math.min(3, asI + 1); store("asSpeed", asI); asPaint(); }
+    else if (a === "d") { asI = Math.max(0, asI - 1); store("asSpeed", asI); asPaint(); }
     else if (a === "l") { asLoopOn = !asLoopOn; store("asLoop", asLoopOn ? "on" : "off"); asPaint(); }
     else if (a === "t") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   });
@@ -116,8 +118,10 @@
   /* ---------- 4. SFX button in the navbar ---------- */
   var sfxBtn = el('<button class="w2-sfx" id="w2Sfx" type="button" aria-pressed="false" title="Toggle interface sound effects">[SFX: OFF]</button>');
   var sb = $("#searchBtn"); if (sb && sb.parentNode) sb.parentNode.insertBefore(sfxBtn, sb);
-  function paintSfx() { var on = window.SFX && SFX.on; sfxBtn.textContent = "[SFX: " + (on ? "ON" : "OFF") + "]"; sfxBtn.setAttribute("aria-pressed", !!on); }
-  sfxBtn.addEventListener("click", function () { if (window.SFX) SFX.toggle(); });
+  // On small screens the navbar has no room, so the same toggle lives in the bar underneath instead.
+  var hw = $(".wrap", hud), sfxHud = el('<button class="w2-sfx in-hud" type="button" aria-pressed="false" title="Toggle interface sound effects">[SFX: OFF]</button>'); if (hw) hw.insertBefore(sfxHud, hw.querySelector(".w2-note"));
+  function paintSfx() { var on = window.SFX && SFX.on, t = "[SFX: " + (on ? "ON" : "OFF") + "]"; [sfxBtn, sfxHud].forEach(function (b) { b.textContent = t; b.setAttribute("aria-pressed", !!on); }); }
+  [sfxBtn, sfxHud].forEach(function (b) { b.addEventListener("click", function () { if (window.SFX) SFX.toggle(); }); });
   document.addEventListener("sfx:change", paintSfx); paintSfx();
 
   /* ---------- 3. achievements ---------- */
