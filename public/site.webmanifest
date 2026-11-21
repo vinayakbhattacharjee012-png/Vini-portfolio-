@@ -1,15 +1,15 @@
 {
-  "name": "Vini · AI builder & community founder",
+  "name": "Vini · Builder, Community Founder, Creator",
   "short_name": "Vini",
-  "description": "Health AI with guardrails, Python Discord bots and live sandboxes. Zero API keys.",
+  "description": "AI and software builder, Discord network founder, server security architect and creator.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#06070a",
-  "theme_color": "#06070a",
+  "background_color": "#08080b",
+  "theme_color": "#08080b",
   "icons": [
-    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "logo-vini-256.webp", "sizes": "256x256", "type": "image/webp" },
+    { "src": "logo-vini-512.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
   ]
 }
