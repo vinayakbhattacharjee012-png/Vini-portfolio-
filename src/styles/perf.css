@@ -33,3 +33,11 @@ canvas { max-width: 100%; }
 
 /* 7. Ambient layers: the big drifting gradient blobs and clouds were the single largest paint cost. Same look, no motion. */
 html .bg-fx .blob, html .night .clouds, html .bg-fx .grid-lines { animation: none; will-change: auto; }
+
+/* 8. Marquees keep scrolling non-stop, even in Lite. They only animate transform, so they cost almost nothing.
+   (Lite switches off every other animation. Reduced motion still turns these off, on purpose.) */
+@media (prefers-reduced-motion: no-preference) {
+  html.lite .botroll-track { animation: botRoll 34s linear infinite !important; }
+  html.lite .ticker-track { animation: slide 60s linear infinite !important; }
+  html.lite .botroll-track, html.lite .ticker-track { will-change: transform; }
+}
