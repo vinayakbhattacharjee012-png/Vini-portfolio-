@@ -20,7 +20,10 @@ function readKey() {
 }
 const KEY = readKey();
 const SITE = (process.env.SITE_URL || "https://vini-portfolio.onrender.com/").replace(/\/?$/, "/");
-const ORIGINS = (process.env.ALLOWED_ORIGINS || "https://vini-portfolio.onrender.com").split(",").map((s) => s.trim()).filter(Boolean);
+// Tolerant of typos like "/site.com" or "site.com": every entry becomes a plain https origin without a trailing slash.
+const ORIGINS = (process.env.ALLOWED_ORIGINS || "https://vini-portfolio.onrender.com").split(",")
+  .map((s) => s.trim().replace(/^\/+/, "").replace(/\/+$/, "")).filter(Boolean)
+  .map((s) => (/^https?:\/\//.test(s) ? s : "https://" + s));
 const DAILY_CAP = Number(process.env.DAILY_CAP) || 400;
 const MODELS = (process.env.MODELS || "gemini-3.5-flash-lite,gemini-flash-lite-latest,gemini-3.5-flash").split(",").map((s) => s.trim());
 const API = process.env.GEMINI_API_URL || "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"; // override only in tests
@@ -133,6 +136,7 @@ const server = http.createServer(async (req, res) => {
 });
 if (require.main === module) server.listen(Number(process.env.PORT) || 8787, () => {
   console.log("vega proxy listening, key " + (KEY ? "set (" + KEY.length + " chars)" : "MISSING"));
+  console.log("allowed origins:", ORIGINS.join(", "), "| daily cap", DAILY_CAP, "| site", SITE);
   // one tiny startup check so the logs say whether Google accepts the key (the key itself is never logged)
   if (KEY) gemini([{ role: "user", content: "Reply with the word ok." }]).then((o) => console.log("startup check:", o.answer ? "Gemini accepted the key" : "FAILED (" + o.error + ")")).catch((e) => console.log("startup check error:", e.message));
 });
