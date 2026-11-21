@@ -13,7 +13,7 @@ let fails = 0; const check = (n, ok, x = '') => { if (!ok) fails++; console.log(
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);
     check(`${w}px: no sideways scroll`, sw <= w, 'scrollWidth ' + sw);
     if (w >= 1280) {
-      const nav = await p.evaluate(() => { const r = document.querySelector('nav .wrap').getBoundingClientRect(); const links = [...document.querySelectorAll('#navLinks a')]; const tops = new Set(links.map((a) => Math.round(a.getBoundingClientRect().top))); return { h: Math.round(r.height), rows: tops.size, gaming: links.some((a) => a.textContent === 'Gaming') }; });
+      const nav = await p.evaluate(() => { const r = document.querySelector('nav .wrap').getBoundingClientRect(); const links = [...document.querySelectorAll('#navLinks a')].filter((a) => a.getClientRects().length); const tops = new Set(links.map((a) => Math.round(a.getBoundingClientRect().top))); return { h: Math.round(r.height), rows: tops.size, gaming: links.some((a) => a.textContent === 'Gaming') }; });
       check(`${w}px: nav on one row with Gaming link`, nav.rows === 1 && nav.h <= 64 && nav.gaming, JSON.stringify(nav));
     }
     if (w !== 1440) { check(`${w}px: no JS errors`, errs.length === 0, errs.join(' | ')); await p.close(); continue; }

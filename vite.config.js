@@ -8,6 +8,6 @@ export default defineConfig({
   plugins: [react(), tailwind()],
   build: {
     target: "es2020",
-    rollupOptions: { input: { main: "index.html", "command-center": "command-center.html", features: "features.html" } },
+    rollupOptions: { input: Object.fromEntries(["index", "command-center", "features", "work", "services", "galaxy", "contact"].map((n) => [n === "index" ? "main" : n, `${n}.html`])) },
   },
 });

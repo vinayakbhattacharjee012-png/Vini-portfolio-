@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { featureAreas, featureCount } from "../data/features";
 import { lighthouse } from "../data/portfolioData";
 import report from "../data/test-report.json";
 import { useApp } from "../lib/app";
 import { useCountUp, useInView } from "../lib/hooks";
 import { Search, X } from "../components/ui/Icons";
-import { mountPage } from "./page";
+import { mountPage, useHashScroll } from "./page";
 
 function Counter({ to, label, start }) {
   const { reduced } = useApp();
@@ -54,11 +54,7 @@ function Features() {
     .filter((x) => x.items.length), [k, area]);
   const total = shown.reduce((n, x) => n + x.items.length, 0);
 
-  // The page lives in a shadow root, so #tests has to be scrolled to by hand.
-  useEffect(() => {
-    const id = location.hash.slice(1);
-    if (id) setTimeout(() => root.current?.getRootNode().getElementById(id)?.scrollIntoView(), 50);
-  }, []);
+  useHashScroll(root);
 
   return (
     <div ref={root} className="mx-auto max-w-[1120px] px-4 py-12 sm:py-16">

@@ -27,12 +27,13 @@ try {
     for (const line of out.split("\n")) if (line.startsWith("FAIL") || (r.status !== 0 && /Error/.test(line))) console.log("  " + line);
     suites.push({ name: NAMES[file] || file, passed, failed, ms: Date.now() - t0 });
   }
-  const bench = run("tests/scroll.bench.cjs");
-  const fps = (() => { try { return JSON.parse(bench.stdout.trim().split("\n").pop()).fps; } catch { return null; } })();
+  // One run swings by ~10 fps on a shared machine, so report the median of three.
+  const runs = [1, 2, 3].map(() => { try { return JSON.parse(run("tests/scroll.bench.cjs").stdout.trim().split("\n").pop()).fps; } catch { return null; } }).filter(Boolean).sort((a, b) => a - b);
+  const fps = runs.length ? runs[Math.floor(runs.length / 2)] : null;
   const passed = suites.reduce((n, s) => n + s.passed, 0), failed = suites.reduce((n, s) => n + s.failed, 0);
   let commit = null; try { commit = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim(); } catch {}
   const report = { date: new Date().toISOString(), commit, passed, failed, suites,
-    perf: fps && { fpsBefore: FPS_BEFORE, fpsAfter: Math.round(fps), profile: "Scrolling the whole homepage on a 412 px phone profile with 4× CPU throttling" } };
+    perf: fps && { fpsBefore: FPS_BEFORE, fpsAfter: Math.round(fps), profile: "Scrolling the whole homepage on a 412 px phone profile with 4× CPU throttling (median of 3 runs)" } };
   writeFileSync("src/data/test-report.json", JSON.stringify(report, null, 2) + "\n");
   console.log(`\nTotal: ${passed} passed, ${failed} failed · scrolling ${fps ? Math.round(fps) : "?"} fps (was ${FPS_BEFORE})`);
   process.exitCode = failed ? 1 : 0;

@@ -14,6 +14,12 @@ Extra pages (same look as the homepage, animated page transitions):
 
 - `command-center.html`: all four sandboxes running at once
 - `features.html`: every feature with a link that opens it, plus the latest test results
+- `work.html`: case studies (problem, what was built, where it stands), filterable
+- `services.html`: what you can hire me for, the four-step process and FAQ
+- `galaxy.html`: the Galaxy network, its treaties, roles, security grid and advertising options
+- `contact.html`: Hire me page with direct lines and the brief form (`?type=Discord%20bot` preselects a service)
+
+The client pages' text lives in `src/data/portfolioData.js` (`services`, `process`, `caseStudies`, `galaxy`).
 
 ```bash
 npm install

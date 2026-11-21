@@ -490,6 +490,8 @@
   nav { -webkit-backdrop-filter: saturate(160%) blur(12px); backdrop-filter: saturate(160%) blur(12px); }
   main { counter-reset: sec; }
   main > section .sec-head > .eyebrow::before, main > .sk-sec .sec-head > .eyebrow::before { counter-increment: sec; content: "0" counter(sec) " / "; color: var(--muted); }
+  /* Numbers written in at load (see the content-visibility script): style containment would reset the counter per section. */
+  main > section .sec-head > .eyebrow[data-n]::before, main > .sk-sec .sec-head > .eyebrow[data-n]::before { content: attr(data-n) " / "; }
   .card { position: relative; }
   .card::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
     background: linear-gradient(135deg, var(--star), transparent 40%, transparent 60%, var(--nebula));
@@ -815,7 +817,8 @@
   .search-btn:hover { color: var(--ink); border-color: var(--star); }
   .search-btn svg { width: 16px; height: 16px; flex: none; }
   .search-btn kbd { font: 500 0.7rem var(--font-mono); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; color: var(--star); }
-  @media (max-width: 1440px) { .search-btn .lbl, .search-btn kbd { display: none; } .search-btn { width: 38px; padding: 0; justify-content: center; } }
+  /* Icon-only at every width, so the nav keeps room for the Hire me button; / still opens search. */
+  .search-btn .lbl, .search-btn kbd { display: none; } .search-btn { width: 38px; padding: 0; justify-content: center; }
   .search { position: fixed; inset: 0; z-index: 30; display: grid; justify-items: center; align-items: start;
     padding: calc(10vh + env(safe-area-inset-top, 0px)) 16px 16px; background: rgba(4, 6, 16, .55);
     -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
@@ -1309,6 +1312,24 @@
   .linkish:hover { color: var(--ink); text-decoration-color: var(--star); }
   .linkish kbd { font: 500 .7rem var(--font-mono); color: var(--star); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; margin-left: 4px; text-decoration: none; display: inline-block; }
   .foot-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+  /* Extra pages: Hire me in the nav, the pages at the bottom of the phone menu, and the Explore cards. */
+  .nav-hire { display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 999px; white-space: nowrap; text-decoration: none;
+    font: 600 .88rem var(--font-display); color: var(--on-star); border: 1px solid var(--star);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--star) 92%, #fff), var(--star)); transition: box-shadow .2s ease, transform .2s ease; }
+  .nav-hire:hover { box-shadow: 0 0 18px -6px var(--star); transform: translateY(-1px); }
+  .nav-pages { display: none; }
+  @media (max-width: 1180px) {
+    .nav-pages { display: contents; }
+    .nav-pages b { font: 500 .72rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 20px 4px 4px; }
+  }
+  @media (max-width: 520px) { .nav-hire { display: none; } }
+  .explore { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 980px) { .explore { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .explore { grid-template-columns: minmax(0, 1fr); } }
+  .explore a.card { color: inherit; text-decoration: none; }
+  .explore .go { margin-top: auto; padding-top: 6px; color: var(--star); font: 600 .9rem var(--font-display); }
+  .explore .card.hire { border-color: color-mix(in srgb, var(--star) 55%, var(--line)); }
+  a.linkish { display: inline-block; }
   .id-card .cv-btn { margin-top: -2px; }
 
   /* Drawer head actions (copy link / share) */
@@ -1744,6 +1765,7 @@
       <a href="#gaming">Gaming</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
+      <span class="nav-pages"><b>More pages</b><a href="work.html">Case studies</a><a href="services.html">Services</a><a href="galaxy.html">Galaxy network</a><a href="contact.html">Hire me</a></span>
     </div>
     <button class="search-btn" id="searchBtn" type="button" aria-label="Search the site" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1771,6 +1793,7 @@
         <div class="modes-foot"><span>Your choice is remembered.</span><button class="linkish" type="button" id="modesShare">Share this look</button></div>
       </div>
     </div>
+      <a class="nav-hire" href="contact.html">Hire me</a>
       <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
         <svg class="bars" viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></g></svg>
         <svg class="x" viewBox="0 0 24 24" aria-hidden="true"><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></g></svg>
@@ -2747,6 +2770,22 @@
   <!-- New features: rendered by src/islands.jsx in the page's theme. The page works without them. -->
   <section id="lab" class="vx-host" aria-label="How I build, shown instead of told" data-k="Architecture & workflow lab" data-d="Interactive pieces of my process, running in your browser."></section>
   <section id="impact" class="vx-host" aria-label="What the work adds up to" data-k="Metrics, milestones & impact" data-d="Numbers, the path so far, and what's being built next."></section>
+  <!-- EXPLORE: the extra pages for visitors and clients -->
+  <section id="explore" aria-labelledby="explore-h" data-k="Explore" data-d="Case studies, services, the Galaxy network and a Hire me page.">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow" data-n="12">Explore</span>
+        <h2 id="explore-h">Work with me</h2>
+        <p>Case studies, what you can hire me for, the Galaxy network, and the quickest way to send a brief.</p>
+      </div>
+      <div class="explore">
+        <a class="card reveal" href="work.html"><span class="kicker">Case studies</span><h3>The work, up close</h3><p>Each project: the problem, what I built, and where it stands today.</p><span class="go">See the work &rarr;</span></a>
+        <a class="card reveal" href="services.html"><span class="kicker">Services</span><h3>What you can hire me for</h3><p>Discord bots, server security, moderation, websites, edits and ads.</p><span class="go">See services &rarr;</span></a>
+        <a class="card reveal" href="galaxy.html"><span class="kicker">Community</span><h3>The Galaxy network</h3><p>Five brands and 1.5k&ndash;2k members, plus advertising across them.</p><span class="go">Explore the network &rarr;</span></a>
+        <a class="card reveal hire" href="contact.html"><span class="kicker">Hire me</span><h3>Send a brief</h3><p>Pick a service, describe it, and get a reference number.</p><span class="go">Start a project &rarr;</span></a>
+      </div>
+    </div>
+  </section>
   <section id="build" class="vx-host" aria-label="Got a project? Send a brief" data-k="Start a build" data-d="Pick a project type, describe it and get a reference number."></section>
   <section id="contact">
     <div class="wrap">
@@ -2784,7 +2823,7 @@
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <span class="hint">vini.official.netops@gmail.com</span>
-    <span class="foot-links"><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
+    <span class="foot-links"><a class="linkish" href="work.html">Case studies</a><a class="linkish" href="services.html">Services</a><a class="linkish" href="galaxy.html">Galaxy network</a><a class="linkish" href="contact.html">Hire me</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -3743,6 +3782,9 @@
       entries.forEach(function (en) { en.target.classList.toggle("offscreen", !en.isIntersecting); });
     }, { rootMargin: "300px 0px" });
     document.querySelectorAll("main > section, .sk-sec, .band, footer").forEach(function (el) { el.classList.add("offscreen"); offIO.observe(el); });
+    // content-visibility gives each section style containment, which resets CSS counters, so write the numbers in first.
+    var secN = 0;
+    document.querySelectorAll("main > section .sec-head > .eyebrow, main > .sk-sec .sec-head > .eyebrow").forEach(function (e) { secN = +e.dataset.n || secN + 1; e.dataset.n = String(secN).padStart(2, "0"); });
     var cvReady = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add("cv-ready"); }); }); };
     if (document.readyState === "complete") cvReady(); else addEventListener("load", cvReady);
   } else {

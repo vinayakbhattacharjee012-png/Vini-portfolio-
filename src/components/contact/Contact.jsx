@@ -16,8 +16,8 @@ function validate(f) {
 }
 const mailto = (f, ref) => `mailto:${contact.email}?subject=${encodeURIComponent(`[${f.type || "Build"}] ${f.name} · ${ref}`)}&body=${encodeURIComponent(`${f.message}\n\n— ${f.name} (${f.email})\nRef: ${ref}`)}`;
 
-function InquiryForm() {
-  const [f, setF] = useState({ name: "", email: "", type: "", message: "" });
+export function InquiryForm({ types = projectTypes, initialType = "" }) {
+  const [f, setF] = useState({ name: "", email: "", type: initialType, message: "" });
   const [touched, setTouched] = useState({});
   const [state, setState] = useState({ step: "edit" });
   const errs = validate(f);
@@ -30,7 +30,8 @@ function InquiryForm() {
     const ref = refId();
     setState({ step: "sending", ref });
     let sent = false;
-    try { // Netlify Forms when hosted there; anywhere else this fails and the email fallback takes over.
+    // Only Netlify can receive the form; other static hosts may answer a POST with 200 and drop it, so hand over to email there.
+    if (/netlify\.app$/.test(location.hostname)) try {
       const body = new URLSearchParams({ "form-name": "inquiry", ...f, ref }).toString();
       const r = await fetch(location.pathname, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
       sent = r.ok;
@@ -49,7 +50,7 @@ function InquiryForm() {
         </dl>
         <div className="flex flex-wrap gap-2">
           <a className={state.sent ? "btn" : "btn btn-primary"} href={mailto(f, state.ref)}><Mail size={15} />{state.sent ? "Also open in my email app" : "Send via email"}</a>
-          <button type="button" className="btn" onClick={() => { setF({ name: "", email: "", type: "", message: "" }); setTouched({}); setState({ step: "edit" }); }}>New message</button>
+          <button type="button" className="btn" onClick={() => { setF({ name: "", email: "", type: initialType, message: "" }); setTouched({}); setState({ step: "edit" }); }}>New message</button>
         </div>
       </div>
     );
@@ -62,7 +63,7 @@ function InquiryForm() {
       <fieldset>
         <legend className="mb-2 text-sm text-zinc-300">What are we building?</legend>
         <div className="flex flex-wrap gap-2" role="radiogroup" aria-describedby={show("type") ? "err-type" : undefined}>
-          {projectTypes.map((t) => (
+          {types.map((t) => (
             <button key={t} type="button" role="radio" aria-checked={f.type === t} onClick={() => { setF({ ...f, type: t }); setTouched({ ...touched, type: true }); }}
               className={`rounded-full border px-3.5 py-1.5 text-sm transition active:scale-[.98] ${f.type === t ? "border-c1 bg-c1/10 text-zinc-100" : "border-zinc-600 text-zinc-400 hover:text-zinc-200"}`}>{t}</button>
           ))}
@@ -90,13 +91,13 @@ function InquiryForm() {
       </div>
       <div className="flex flex-wrap items-center gap-3">
         <button type="submit" className="btn btn-primary h-11 px-5" disabled={state.step === "sending"}>{state.step === "sending" ? "Transmitting…" : "Transmit brief"}</button>
-        <span className="text-xs text-zinc-500">No account, no tracking. If the form service is offline it hands over to your email app.</span>
+        <span className="text-xs text-zinc-500">No account, no tracking. Your email app opens with the brief filled in, ready to send.</span>
       </div>
     </form>
   );
 }
 
-function TimezoneOverlap() {
+export function TimezoneOverlap() {
   const [, tick] = useState(0);
   useInterval(() => tick((x) => x + 1), 60000);
   const { start, end, label } = contact.availability;
@@ -122,6 +123,22 @@ function TimezoneOverlap() {
   );
 }
 
+export function Faq({ items = faq }) {
+  return (
+    <div className="grid gap-2">
+      <p className="kicker">FAQ</p>
+      {items.map((x) => (
+        <details key={x.q} className="group card p-4 open:border-c1/40">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-zinc-100 [&::-webkit-details-marker]:hidden">
+            {x.q}<span className="text-c1 transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
+          </summary>
+          <p className="mt-2 text-sm text-zinc-400">{x.a}</p>
+        </details>
+      ))}
+    </div>
+  );
+}
+
 export function StartBuild() {
   return (
     <Section id="build" kicker="Start a build" title="Got a project? Send a brief" intro="Pick a type, describe it, and you get a reference number. Or check when I'm usually around.">
@@ -129,17 +146,7 @@ export function StartBuild() {
         <InquiryForm />
         <div className="grid content-start gap-5">
           <TimezoneOverlap />
-          <div className="grid gap-2">
-            <p className="kicker">FAQ</p>
-            {faq.map((x) => (
-              <details key={x.q} className="group card p-4 open:border-c1/40">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-zinc-100 [&::-webkit-details-marker]:hidden">
-                  {x.q}<span className="text-c1 transition-transform duration-200 group-open:rotate-45" aria-hidden="true">+</span>
-                </summary>
-                <p className="mt-2 text-sm text-zinc-400">{x.a}</p>
-              </details>
-            ))}
-          </div>
+          <Faq />
         </div>
       </div>
     </Section>

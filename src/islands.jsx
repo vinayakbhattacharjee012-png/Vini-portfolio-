@@ -25,6 +25,8 @@ function Overlays() {
   return null;
 }
 
+const page = (href) => () => { location.href = href; };
+
 // Adds the new features to the page's command palette, terminal, nav and footer (once).
 function register(a, center, go) {
   (window.__cmds = window.__cmds || []).push(
@@ -37,15 +39,19 @@ function register(a, center, go) {
     { t: "Go to Impact", d: "Stats, timeline, roadmap and lessons", k: "impact metrics milestones timeline roadmap lessons heatmap", run: go("impact") },
     { t: "Start a build", d: "Send a project brief", k: "hire inquiry brief collaborate form faq availability", run: go("build") },
     { t: "QR code", d: "Scan to open this site on your phone", k: "qr phone mobile scan", run: () => a().open("qr") },
-    { t: "Command Center page", d: "Full screen: all four sandboxes at once", k: "command center page full screen dashboard all sims", run: () => { location.href = "command-center.html"; } },
-    { t: "All features", d: "Every feature with a link, plus the test results", k: "features list everything catalogue tests summary", run: () => { location.href = "features.html"; } },
+    { t: "Command Center page", d: "Full screen: all four sandboxes at once", k: "command center page full screen dashboard all sims", run: page("command-center.html") },
+    { t: "All features", d: "Every feature with a link, plus the test results", k: "features list everything catalogue tests summary", run: page("features.html") },
+    { t: "Case studies", d: "Each project: the problem, the build, where it stands", k: "work case studies projects results portfolio", run: page("work.html") },
+    { t: "Services", d: "What you can hire me for", k: "services hire offer bots security moderation website edits ads", run: page("services.html") },
+    { t: "Galaxy network", d: "Five brands, treaties and advertising", k: "galaxy network community brands treaty charter advertise ads", run: page("galaxy.html") },
+    { t: "Hire me", d: "Send a brief, or reach me by email or Discord", k: "hire contact brief email discord work together project", run: page("contact.html") },
   );
 
   const f = window.__fx || {};
   if (f.cmds && f.print) {
     const help = f.cmds.help, sudo = f.cmds.sudo;
     const leave = () => f.closeTerminal?.(false);
-    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone\n  features         every feature on this site"); };
+    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone\n  features         every feature on this site\n  work · services · network · hire   open a page"); };
     f.cmds.center = () => { leave(); center()(); };
     f.cmds.run = (x) => {
       const tab = { "apex-sim": "apex", apex: "apex", polo: "polo", raid: "shield", trade: "trade" }[x];
@@ -53,7 +59,8 @@ function register(a, center, go) {
       leave(); center(tab)();
     };
     f.cmds.qr = () => { leave(); a().open("qr"); };
-    f.cmds.features = () => { location.href = "features.html"; };
+    f.cmds.features = page("features.html");
+    for (const [cmd, href] of [["work", "work.html"], ["services", "services.html"], ["network", "galaxy.html"], ["hire", "contact.html"]]) if (!f.cmds[cmd]) f.cmds[cmd] = page(href);
     f.cmds.sudo = (x) => {
       if (x !== "hack") return sudo?.(x);
       a().setSweep((n) => n + 1);
@@ -72,7 +79,7 @@ function register(a, center, go) {
   }
   // Footer links.
   const foot = document.querySelector(".foot-links");
-  for (const [label, run] of [["Command Center", center()], ["QR code", () => a().open("qr")], ["All features", () => { location.href = "features.html"; }]]) {
+  for (const [label, run] of [["Command Center", center()], ["QR code", () => a().open("qr")], ["All features", page("features.html")]]) {
     const b = document.createElement("button");
     Object.assign(b, { type: "button", className: "linkish", textContent: label });
     b.addEventListener("click", run);
