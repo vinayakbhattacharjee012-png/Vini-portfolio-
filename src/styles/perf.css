@@ -1,0 +1,48 @@
+/* Performance layer. Loaded last so it wins. GPU-only animation, capped blur, paint containment. */
+
+/* 1. Layout-animating keyframes (height) replaced with transform */
+html .eq i { height: 100%; transform-origin: 50% 100%; transform: scaleY(.4); animation-name: eqY; }
+@keyframes eqY { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+html .holo-wave i { height: 100%; transform: scaleY(.18); transform-origin: 50% 50%; }
+html .holo[data-state="listening"] .holo-wave i, html .holo[data-state="speaking"] .holo-wave i { animation-name: holoWaveY; }
+@keyframes holoWaveY { 0%, 100% { transform: scaleY(.18); } 50% { transform: scaleY(1); } }
+
+/* 2. Infinite box-shadow animations (repaint every frame) replaced with opacity / transform pulses */
+@keyframes beacon { 0%, 100% { opacity: .55; transform: scale(.9); } 50% { opacity: 1; transform: scale(1.2); } }
+.brand i { box-shadow: 0 0 10px var(--star); }
+@keyframes breathe { 50% { transform: scale(1.04); opacity: .8; } }
+@keyframes ctaGlow { 50% { transform: scale(1.015); } }
+.cta.primary { box-shadow: 0 0 18px var(--star-soft); }
+@keyframes ping { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes availPing { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.status i, .avail i { box-shadow: none; }
+
+/* 3. Cap persistent backdrop blur: only the sticky nav keeps it; floating pills use a solid tint */
+.tele, .fab, .holo-fab, .search-btn { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.tele, .fab { background-color: color-mix(in srgb, var(--surface) 92%, transparent); }
+
+/* 4. Off-screen sections pause their animations (class toggled by wave2.js). content-visibility was tried and rejected: its size estimates broke #anchor jumps. */
+
+/* 5. Isolate repaint regions: independent cards, telemetry panels, simulation stages */
+.card, .sk-card, .tcard, .tile, .panel { contain: layout style; }
+.ec-stage, .ec-card, .w2-cmp, .w2-rag, .fm-run, .fm-list, .sim-bars { contain: layout style paint; }
+canvas { max-width: 100%; }
+
+/* 6. Animations stay paused for off-screen svg/loops (class set by wave2.js) and for hidden tabs */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; } }
+
+/* 7. Ambient layers: the big drifting gradient blobs and clouds were the single largest paint cost. Same look, no motion. */
+html .bg-fx .blob, html .night .clouds, html .bg-fx .grid-lines { animation: none; will-change: auto; }
+
+/* 8. Marquees keep scrolling non-stop, even in Lite. They only animate transform, so they cost almost nothing.
+   (Lite switches off every other animation. Reduced motion still turns these off, on purpose.) */
+@media (prefers-reduced-motion: no-preference) {
+  html.lite .botroll-track { animation: botRoll 34s linear infinite !important; }
+  html.lite .ticker-track { animation: slide 60s linear infinite !important; }
+  html.lite .botroll-track, html.lite .ticker-track { will-change: transform; }
+}
+
+/* 9. Lite keeps the look, just still: the starfield and ambient glow are drawn once and never animate. */
+
+/* 10. Minimal background: the page colour plus one soft, static glow behind the top of the page. No canvases, no animation. */
+body { background: radial-gradient(1100px 520px at 50% -160px, color-mix(in srgb, var(--star) 10%, transparent), transparent 72%) no-repeat, var(--bg); }
