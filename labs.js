@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   var root = document.documentElement, body = document.body;
-  var ROUTES = { lab: "Lab", arena: "Arena", vault: "Vault", logs: "Engineering log", dossier: "Dossier" };
+  var ROUTES = { lab: "Lab", arena: "Arena", vault: "Vault", logs: "Engineering log", dossier: "Dossier", about: "About", services: "Services", contact: "Contact", now: "Now", uses: "Uses", explore: "All pages" };
   var views = {};
   document.querySelectorAll(".view[data-view]").forEach(function (v) { views[v.getAttribute("data-view")] = v; });
   var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -26,6 +26,7 @@
   var current = null;
   function routeName(h) { var m = /^#\/([a-z]+)$/.exec(h || ""); return m && views[m[1]] ? m[1] : null; }
   function show(name) {
+    document.querySelectorAll("dialog[open]").forEach(function (d) { d.close(); });
     current = name;
     body.classList.add("route-view");
     Object.keys(views).forEach(function (k) { views[k].classList.toggle("on", k === name); views[k].hidden = k !== name; });
@@ -315,6 +316,7 @@
   (function () {
     var list = $("logs-list"); if (!list) return;
     var E = [
+      ["2026-11-21", "shipped", "Six more pages and a clearer loading duel", "About, Services, Contact, Now, Uses and an All pages hub, plus a duel with bigger fighters, name tags and a caption for every move."],
       ["2026-11-21", "shipped", "1000 generated colour themes", "A seeded generator builds 1000 palettes across ten families. Each palette is checked for readable contrast, and a picker applies the choice before the page paints."],
       ["2026-11-21", "shipped", "Case-study pages for the flagship projects", "Polo, Nova 3.0, Eclipse and Apex each have a page: what it does, how it is built, and an at-a-glance summary."],
       ["2026-11-20", "shipped", "VEGA holographic assistant", "A 3D portfolio map with a voice assistant that answers from the page and can open sections, simulations and the résumé."],
@@ -366,20 +368,45 @@
     $("dos-copy").addEventListener("click", function () { var m = $("mailText"); copy(m ? m.textContent : "", "Email"); });
   })();
 
+  // ---------- Contact, copy buttons, Explore hub ----------
+  (function () {
+    var f = $("ct-form");
+    if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); if (!f.reportValidity()) return;
+      var d = new FormData(f), mail = $("ct-mail") ? $("ct-mail").textContent : "vini.official.netops@gmail.com";
+      var body = ["Name: " + d.get("name"), "Email: " + d.get("email"), "Topic: " + d.get("topic"), "", d.get("message")].join("\n");
+      $("ct-status").textContent = "Opening your email app with the details filled in. Just press send there.";
+      location.href = "mailto:" + mail + "?subject=" + encodeURIComponent("Enquiry: " + d.get("topic") + " from " + d.get("name")) + "&body=" + encodeURIComponent(body);
+    });
+    var cm = $("ct-copy-mail"), cd = $("ct-copy-discord");
+    if (cm) cm.addEventListener("click", function () { copy($("ct-mail").textContent, "Email"); });
+    if (cd) cd.addEventListener("click", function () { copy($("ct-discord").textContent, "Discord handle"); });
+    var grid = $("explore-grid"); if (!grid) return;
+    var pages = [["about", "About", "Who I am and what I do"], ["services", "Services", "Bots, moderation, edits and ads"], ["contact", "Contact", "Email, Discord and the enquiry form"],
+      ["now", "Now", "What I'm working on right now"], ["uses", "Uses", "The tools behind my projects"], ["lab", "Lab", "Heart-rate simulator, triage flow and guardrail inspector"],
+      ["arena", "Arena", "Bot raid simulation and a trade calculator"], ["vault", "Vault", "Layer maps, starter code and a bloated vs lean comparison"],
+      ["logs", "Engineering log", "Shipped work with real dates"], ["dossier", "Dossier", "Project summary with print and copy"]];
+    grid.innerHTML = pages.map(function (x) { return '<a class="tile" href="#/' + x[0] + '"><span class="kick">Page</span><h2 style="font-size:1rem">' + esc(x[1]) + "</h2><p>" + esc(x[2]) + "</p></a>"; }).join("");
+    var cases = [["polo", "Polo", "Health AI app"], ["nova", "Nova 3.0 Ultimate", "Discord bot"], ["eclipse", "Eclipse", "discord.py bot"], ["apex", "Apex", "AI co-pilot"]];
+    $("explore-cases").innerHTML = cases.map(function (x) { return '<a class="tile" href="projects/' + x[0] + '.html"><span class="kick">' + esc(x[2]) + "</span><h3>" + esc(x[1]) + "</h3><p>Case study →</p></a>"; }).join("");
+  })();
+
   // ---------- palette and terminal entry points ----------
   var CM = window.__cmds = window.__cmds || [];
   [["lab", "Lab", "Apex-Fit simulator, Polo triage, guardrail inspector"], ["arena", "Arena", "Bot raid and nuke simulation, trade calculator"],
    ["vault", "Vault", "Architecture maps, starter snippets, bloated vs lean"], ["logs", "Engineering log", "Shipped work, architecture and community operations"],
-   ["dossier", "Dossier", "Project summary, print and copy"]].forEach(function (r) {
+   ["dossier", "Dossier", "Project summary, print and copy"], ["about", "About", "Who I am and what I do"], ["services", "Services", "Bots, moderation, edits and ads"],
+   ["contact", "Contact", "Email, Discord and the enquiry form"], ["now", "Now", "What I'm working on right now"], ["uses", "Uses", "The tools behind my projects"],
+   ["explore", "All pages", "Every page on this site"]].forEach(function (r) {
     CM.push({ t: "Go to " + r[1], d: r[2], k: r[0] + " " + r[1].toLowerCase() + " page view route", run: function () { location.hash = "#/" + r[0]; } });
   });
   CM.push({ t: "Replay intro duel", d: "Play the loading duel again", k: "intro duel replay loader arena", run: function () { if (window.__arenaReplay) window.__arenaReplay(); } });
   var fx = window.__fx;
   if (fx && fx.cmds && fx.print) {
-    ["lab", "arena", "vault", "logs", "dossier"].forEach(function (n) { fx.cmds[n] = function () { location.hash = "#/" + n; fx.print("g", "→ " + n); }; });
+    ["lab", "arena", "vault", "logs", "dossier", "about", "services", "contact", "now", "uses", "pages"].forEach(function (n) { fx.cmds[n] = function () { location.hash = "#/" + (n === "pages" ? "explore" : n); fx.print("g", "→ " + n); }; });
     fx.cmds.intro = function () { if (window.__arenaReplay) window.__arenaReplay(); fx.print("g", "replaying intro"); };
     var oh = fx.cmds.help;
-    fx.cmds.help = function (a) { oh(a); fx.print("o", "  lab · arena · vault · logs · dossier   open a page\n  intro              replay the loading duel"); };
+    fx.cmds.help = function (a) { oh(a); fx.print("o", "  lab · arena · vault · logs · dossier   open a page\n  about · services · contact · now · uses · pages\n  intro              replay the loading duel"); };
   }
   document.querySelectorAll("[data-route-link]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); location.hash = a.getAttribute("data-route-link"); }); });
 })();

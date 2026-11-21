@@ -86,7 +86,7 @@
 
   // A fighter is a skeleton of joints; `o` carries this frame's pose adjustments.
   function pose(x, dir, o) {
-    var s = Math.min(W, H) * 0.22, fy = floorY();
+    var s = Math.min(W, H) * 0.23, fy = floorY();
     var hipY = fy - s * 0.9 + (o.lift || 0), top = hipY - s * 0.85, headR = s * 0.13;
     var lean = (o.lean || 0) * dir;
     var hip = [x, hipY], shoulder = [x + lean * s * 0.15, top + s * 0.12];
@@ -96,17 +96,48 @@
       hand: o.hand || [x + dir * s * 0.45, shoulder[1] + s * 0.1], s: s, dir: dir, angle: o.angle || 0
     };
   }
-  function drawFighter(p, col, weapon) {
-    ctx.save(); ctx.globalCompositeOperation = "lighter"; ctx.lineCap = "round"; ctx.lineJoin = "round";
-    var glow = "rgba(" + rgb(col) + ",.35)";
+  function drawFighter(p, col, weapon, name) {
+    ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+    var c = rgb(col), glow = "rgba(" + c + ",.32)", w = p.s * 0.11;
+    ctx.globalCompositeOperation = "lighter";
+    ctx.beginPath();                                   // torso fill so the figure reads as a body
+    ctx.moveTo(p.shoulder[0] - w, p.shoulder[1]); ctx.lineTo(p.shoulder[0] + w, p.shoulder[1]);
+    ctx.lineTo(p.hip[0] + w * 0.7, p.hip[1]); ctx.lineTo(p.hip[0] - w * 0.7, p.hip[1]); ctx.closePath();
+    ctx.fillStyle = "rgba(" + c + ",.17)"; ctx.fill();
     [[p.hip, p.legA], [p.hip, p.legB], [p.hip, p.shoulder], [p.shoulder, p.hand]].forEach(function (l) {
-      line(l[0], l[1], 4, glow); line(l[0], l[1], 1.6, col);
+      line(l[0], l[1], 8, glow); line(l[0], l[1], 2.8, col);
     });
-    ctx.beginPath(); ctx.arc(p.head[0], p.head[1], p.headR, 0, Math.PI * 2); ctx.lineWidth = 1.6; ctx.strokeStyle = col; ctx.stroke();
-    var len = p.s * (weapon === "katana" ? 0.9 : 0.35), ang = p.angle + (p.dir > 0 ? 0 : Math.PI);
-    var tip = [p.hand[0] + Math.cos(ang) * len, p.hand[1] + Math.sin(ang) * len];
-    line(p.hand, tip, 6, "rgba(" + rgb(col) + ",.25)"); line(p.hand, tip, 1.8, "#eafcff");
+    ctx.beginPath(); ctx.arc(p.head[0], p.head[1], p.headR, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(" + c + ",.2)"; ctx.fill(); ctx.lineWidth = 2.4; ctx.strokeStyle = col; ctx.stroke();
+    var ang = p.angle + (p.dir > 0 ? 0 : Math.PI), ca = Math.cos(ang), sa = Math.sin(ang);
+    function blade(bx, by, len, width) {
+      var tx = bx + ca * len, ty = by + sa * len, nx = -sa * width, ny = ca * width;
+      ctx.beginPath(); ctx.moveTo(bx + nx, by + ny); ctx.lineTo(tx, ty); ctx.lineTo(bx - nx, by - ny); ctx.closePath();
+      ctx.fillStyle = "rgba(" + c + ",.35)"; ctx.fill(); line([bx, by], [tx, ty], 2.4, "#f2fdff");
+    }
+    if (weapon === "katana") {
+      line([p.hand[0] - ca * p.s * 0.14, p.hand[1] - sa * p.s * 0.14], p.hand, 5, "#9fb4c4");          // handle
+      line([p.hand[0] + sa * 9, p.hand[1] - ca * 9], [p.hand[0] - sa * 9, p.hand[1] + ca * 9], 3.2, col); // guard
+      blade(p.hand[0], p.hand[1], p.s * 1.0, 4.5);
+    } else {
+      blade(p.hand[0], p.hand[1], p.s * 0.36, 3);                                                         // dagger one
+      var h2 = [p.hand[0] + sa * 12, p.hand[1] - ca * 12];
+      ctx.save(); ca = Math.cos(ang + 0.55); sa = Math.sin(ang + 0.55); blade(h2[0], h2[1], p.s * 0.3, 2.6); ctx.restore();  // dagger two
+    }
+    ctx.globalCompositeOperation = "source-over";
+    ctx.font = "700 11px 'JetBrains Mono', ui-monospace, monospace"; ctx.textAlign = "center";
+    ctx.fillStyle = col; ctx.fillText(name, p.head[0], p.head[1] - p.headR - 12);
     ctx.restore();
+  }
+  var CAPS = [[0, .35, "DASH", CYAN], [.35, .42, "CLASH", "#eafcff"], [.42, .52, "LOW SWEEP", CYAN], [.52, .64, "AERIAL FLIP", CYAN],
+    [.64, .72, "PARRY", VIOLET], [.72, .84, "CHARGING", CYAN], [.84, 1.01, "FINISHER", "#eafcff"]];
+  function caption(p) {
+    for (var i = 0; i < CAPS.length; i++) {
+      var c = CAPS[i]; if (p < c[0] || p >= c[1]) continue;
+      var a = Math.min(1, (p - c[0]) / 0.03 + 0.15), size = Math.max(26, Math.round(Math.min(W, H) * 0.075));
+      ctx.save(); ctx.globalAlpha = a; ctx.textAlign = "center"; ctx.font = "800 " + size + "px 'Space Grotesk', system-ui, sans-serif";
+      ctx.shadowColor = c[3]; ctx.shadowBlur = 24; ctx.fillStyle = c[3]; ctx.fillText(c[2], W / 2, H * 0.17); ctx.restore(); return;
+    }
   }
   function spark(x, y, col, n) {
     for (var i = 0; i < n && parts.length < 160; i++) {
@@ -143,8 +174,8 @@
     pct.textContent = String(Math.round(p * 100));
     ctx.clearRect(0, 0, W, H);
 
-    var ax = W * (0.05 + 0.40 * seg(p, 0, 0.35)), bx = W * (0.95 - 0.40 * seg(p, 0, 0.35));
-    if (p >= 0.35) { ax = W * 0.45; bx = W * 0.55; }
+    var ax = W * (0.05 + 0.35 * seg(p, 0, 0.35)), bx = W * (0.95 - 0.35 * seg(p, 0, 0.35));
+    if (p >= 0.35) { ax = W * 0.40; bx = W * 0.60; }
     var a = { angle: -0.6 }, b = { angle: 0.6 };
 
     if (p >= 0.35 && p < 0.70) {                     // 3-hit exchange
@@ -179,8 +210,9 @@
     if (!ev.h3 && p >= 0.66) { ev.h3 = 1; hits.a++; spark(ax, floorY() - H * 0.25, VIOLET, 28); whoosh(); shake = { t: now, amp: 4 }; }
     if (!ev.fin && p >= 0.82) { ev.fin = 1; spark(W * 0.6, floorY() - H * 0.3, CYAN, 80); clash(); shake = { t: now, amp: 3 }; }
 
-    drawFighter(fb, VIOLET, "daggers");
-    drawFighter(fa, CYAN, "katana");
+    drawFighter(fb, VIOLET, "daggers", "PHANTOM");
+    drawFighter(fa, CYAN, "katana", "VANGUARD");
+    caption(p);
 
     if (p >= 0.80 && p < 0.9) {                      // horizontal light-slash
       var s = seg(p, 0.80, 0.86);
