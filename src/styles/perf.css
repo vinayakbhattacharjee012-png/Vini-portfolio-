@@ -30,3 +30,6 @@ canvas { max-width: 100%; }
 
 /* 6. Animations stay paused for off-screen svg/loops (class set by wave2.js) and for hidden tabs */
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; } }
+
+/* 7. Ambient layers: the big drifting gradient blobs and clouds were the single largest paint cost. Same look, no motion. */
+html .bg-fx .blob, html .night .clouds, html .bg-fx .grid-lines { animation: none; will-change: auto; }

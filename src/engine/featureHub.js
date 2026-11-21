@@ -31,7 +31,7 @@
   // Warm the registries when idle (skipped on Lite/save-data) and whenever the terminal is first used.
   function warm() { hub.core().catch(function () {}); }
   var weak = root.classList.contains("lite") || (navigator.connection && navigator.connection.saveData);
-  if (!weak) (window.requestIdleCallback || function (f) { setTimeout(f, 2500); })(warm, { timeout: 6000 });
+  // No idle preload: the registries build only when you open the explorer or the terminal (keeps load free of long tasks).
   var t = document.getElementById("tele"); if (t) t.addEventListener("click", warm, { once: true });
   window.addEventListener("keydown", function (e) { if (e.key === "`") warm(); }, { once: true });
 })();
