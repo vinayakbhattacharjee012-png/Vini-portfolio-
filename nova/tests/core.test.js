@@ -62,3 +62,22 @@ test('ask() drops unknown effects from providers', async () => {
   assert.deepEqual(r.effects, [{ type: 'open', app: 'notes' }]);
   assert.deepEqual(r.actions, []);
 });
+
+test('hybridProvider: commands stay local, the rest go to the server', async () => {
+  const { hybridProvider } = await import('../js/assistant.js');
+  const calls = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => { calls.push(JSON.parse(init.body)); return { ok: true, json: async () => ({ text: 'model says hi' }) }; };
+  try {
+    const p = hybridProvider('api/nexus');
+    const hctx = { ...ctx, history: [{ role: 'user', text: 'earlier', actions: [] }] };
+    assert.deepEqual((await ask('open notes', hctx, p)).effects, [{ type: 'open', app: 'notes' }]);
+    assert.equal(calls.length, 0);
+    assert.equal((await ask('write me a haiku', hctx, p)).text, 'model says hi');
+    assert.deepEqual(calls[0], { input: 'write me a haiku', history: [{ role: 'user', text: 'earlier' }] });
+    globalThis.fetch = async () => ({ ok: false, status: 429, json: async () => ({ error: 'Too many requests' }) });
+    assert.match((await ask('another question', hctx, p)).text, /unavailable right now \(Too many requests\)/);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});

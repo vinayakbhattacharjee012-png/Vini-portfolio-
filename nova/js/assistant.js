@@ -110,6 +110,7 @@ export async function localProvider(raw, ctx) {
 
   return reply(`I'm a local demo assistant, so I only understand a fixed set of commands. "${input}" isn't one of them yet — try "help".`, {
     actions: [{ label: 'help', effect: { type: 'ask', text: 'help' } }],
+    fallback: true, // nothing matched: hybridProvider hands this to the AI model
   });
 }
 
@@ -129,18 +130,29 @@ export function searchNotes(notes, term) {
 }
 
 /**
- * Real-model provider. Point it at YOUR server endpoint, which holds the API key and
- * calls the model; never ship provider keys to the browser. The server should return
- * the same { text, effects, actions } shape (validate effects there and here).
+ * Real-model provider: POSTs to YOUR server (server.js), which holds the API key and calls
+ * the model. Never ship provider keys to the browser. Returns { text }.
  */
 export const remoteProvider = (endpoint) => async (input, ctx) => {
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ input, context: { apps: APPS.map((a) => a.id), noteTitles: ctx.notes.map((n) => n.title) } }),
+    body: JSON.stringify({ input, history: (ctx.history ?? []).map(({ role, text }) => ({ role, text })) }),
   });
-  if (!res.ok) throw new Error(`NEXUS server responded ${res.status}`);
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `NEXUS server responded ${res.status}`);
+  return { text: data.text };
+};
+
+/** Built-in commands first (instant, offline); anything they don't understand goes to the model. */
+export const hybridProvider = (endpoint) => async (input, ctx) => {
+  const local = await localProvider(input, ctx);
+  if (!local.fallback) return local;
+  try {
+    return await remoteProvider(endpoint)(input, ctx);
+  } catch (e) {
+    return reply(`The AI model is unavailable right now (${e.message}). Built-in commands still work — try "help".`);
+  }
 };
 
 const EFFECTS = new Set(['open', 'close', 'createNote', 'clearChat', 'ask']);

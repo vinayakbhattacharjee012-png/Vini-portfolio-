@@ -223,6 +223,9 @@ h2, h3 { margin: 0; font-family: var(--display); font-weight: 600; letter-spacin
 .app-nexus { display: grid; grid-template-columns: 1fr; height: 100%; }
 .nx-main { display: flex; flex-direction: column; min-height: 0; padding: 12px 14px 14px; gap: 10px; }
 .nx-status { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); padding: 7px 10px; border-radius: 10px; background: var(--surface-3); border: 1px solid var(--border); }
+.nx-status.ai .dot { background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+.msg.pending .bubble { color: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.5; } }
 .dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 8px #34d399; flex: none; }
 .nx-log { flex: 1; min-height: 80px; overflow: auto; list-style: none; margin: 0; padding: 4px 2px; display: flex; flex-direction: column; gap: 10px; }
 .msg { display: flex; flex-direction: column; gap: 6px; max-width: 88%; }

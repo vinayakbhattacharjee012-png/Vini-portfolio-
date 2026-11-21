@@ -1,6 +1,6 @@
 // NOVA OS shell: wires the window manager, dock, launcher, palette, notifications, widgets and NEXUS.
 import { APPS, ICONS, appById } from './registry.js';
-import { ask, SUGGESTIONS, searchNotes } from './assistant.js';
+import { ask, SUGGESTIONS, searchNotes, localProvider, hybridProvider } from './assistant.js';
 import { state, commit, on, uid, storageBytes, logActivity, wipe } from './store.js';
 import { createWM } from './wm.js';
 import { RENDERERS, esc, ago, fmtBytes, accentColors } from './apps.js';
@@ -56,6 +56,7 @@ const os = {
   log: logActivity,
   system,
   fpsHistory: () => fps,
+  nexusMode: () => nexusMode,
   wipe: () => { wipe(); location.reload(); },
 };
 let lastOpened = null;
@@ -78,6 +79,20 @@ const wm = createWM({
   },
 });
 
+/* ───────── NEXUS provider: AI via server.js when it reports a key, else local demo ───────── */
+const NEXUS_API = 'api/nexus'; // relative: works wherever server.js serves the app
+let provider = localProvider;
+let nexusMode = { ai: false, label: 'Local demo assistant · deterministic commands, no AI model connected' };
+fetch(`${NEXUS_API}/status`)
+  .then((r) => (r.ok ? r.json() : null))
+  .then((s) => {
+    if (!s?.ai) return;
+    provider = hybridProvider(NEXUS_API);
+    nexusMode = { ai: true, label: `${s.provider} connected (${s.model}) · built-in commands run locally` };
+    commit('nexusMode');
+  })
+  .catch(() => {}); // static hosting or file:// — stay in local mode
+
 /* ───────── NEXUS effects ───────── */
 function createNote(title, body) {
   const n = { id: uid('n'), title, body, updated: Date.now() };
@@ -98,16 +113,21 @@ function applyEffect(e) {
 async function runNexus(text, { openPanel = true } = {}) {
   if (openPanel && !wm.isVisible('nexus')) wm.open('nexus');
   else if (openPanel) wm.focus('nexus');
+  const history = state.chat.filter((m) => !m.pending).slice(-10);
   state.chat.push({ role: 'user', text });
+  const pending = { role: 'bot', text: 'Thinking…', pending: true };
+  state.chat.push(pending);
   commit('chat');
   let r;
   try {
-    r = await ask(text, { notes: state.notes, system: system() });
+    r = await ask(text, { notes: state.notes, system: system(), history }, provider);
   } catch (err) {
     r = { text: `NEXUS error: ${err.message}`, effects: [], actions: [] };
   }
+  state.chat = state.chat.filter((m) => m !== pending);
   const isClear = r.effects.some((e) => e.type === 'clearChat');
-  if (!isClear) {
+  if (isClear) commit('chat');
+  else {
     state.chat.push({ role: 'bot', text: r.text, actions: r.actions });
     state.chat = state.chat.slice(-60);
     commit('chat');

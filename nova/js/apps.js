@@ -20,7 +20,7 @@ function nexus(root, os) {
   root.classList.add('app-nexus');
   root.innerHTML = `
     <div class="nx-main">
-      <div class="nx-status"><span class="dot"></span>Local demo assistant · deterministic commands, no AI model connected</div>
+      <div class="nx-status"><span class="dot"></span><span class="nx-mode"></span></div>
       <ol class="nx-log" aria-live="polite" aria-label="Conversation"></ol>
       <div class="chips nx-chips">${SUGGESTIONS.map((s) => `<button class="chip" data-ask="${esc(s)}">${esc(s)}</button>`).join('')}</div>
       <form class="nx-form"><input placeholder="Command NEXUS…" aria-label="Command NEXUS" autocomplete="off" /><button class="btn primary" aria-label="Send">${ICONS.send}</button></form>
@@ -41,7 +41,7 @@ function nexus(root, os) {
   const act = root.querySelector('.nx-activity');
 
   const renderMsg = (m) => {
-    const li = h(`<li class="msg ${m.role}"><div class="bubble"></div></li>`);
+    const li = h(`<li class="msg ${m.role}${m.pending ? ' pending' : ''}"><div class="bubble"></div></li>`);
     li.firstChild.textContent = m.text;
     if (m.actions?.length) {
       const row = h('<div class="msg-actions"></div>');
@@ -57,7 +57,7 @@ function nexus(root, os) {
   };
   const renderLog = () => {
     log.innerHTML = '';
-    if (!state.chat.length) renderMsg({ role: 'bot', text: 'NEXUS online. I run locally in demo mode and understand a fixed set of commands — type "help" or pick a suggestion.' });
+    if (!state.chat.length) renderMsg({ role: 'bot', text: os.nexusMode().ai ? 'NEXUS online with Gemini. Built-in commands like "open notes" run instantly; anything else goes to the model.' : 'NEXUS online. I run locally in demo mode and understand a fixed set of commands — type "help" or pick a suggestion.' });
     state.chat.forEach(renderMsg);
     log.scrollTop = log.scrollHeight;
   };
@@ -79,9 +79,15 @@ function nexus(root, os) {
     else os.open(b.dataset.open);
   });
 
+  const renderMode = () => {
+    const m = os.nexusMode();
+    root.querySelector('.nx-mode').textContent = m.label;
+    root.querySelector('.nx-status').classList.toggle('ai', m.ai);
+  };
   renderLog();
   renderAct();
-  const offs = [on('chat', renderLog), on('activity', renderAct)];
+  renderMode();
+  const offs = [on('chat', renderLog), on('activity', renderAct), on('nexusMode', renderMode)];
   setTimeout(() => input.focus(), 50);
   return { onPayload: () => input.focus(), destroy: () => offs.forEach((f) => f()) };
 }

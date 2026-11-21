@@ -21,7 +21,7 @@ function load() {
     if (!raw) return fresh();
     const data = JSON.parse(raw);
     const base = fresh();
-    return { ...base, ...data, prefs: { ...base.prefs, ...data.prefs } };
+    return { ...base, ...data, prefs: { ...base.prefs, ...data.prefs }, chat: (data.chat ?? []).filter((m) => !m.pending) };
   } catch {
     return fresh();
   }
