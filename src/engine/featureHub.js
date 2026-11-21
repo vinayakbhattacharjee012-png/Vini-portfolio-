@@ -23,6 +23,9 @@
   var cm = window.__cmds = window.__cmds || [];
   cm.push({ t: "Feature Matrix Explorer", d: "Search and launch all 2,000 features (Ctrl+Shift+F)", k: "feature matrix explorer registry search launch all features", run: function () { hub.open(); } });
   cm.push({ t: "Go to Earth core", d: "Cutaway Earth, drill probe, seismic waves", k: "earth core crust mantle seismic planet", run: function () { location.hash = "#/earth-core"; } });
+  var JN = window.JOURNEY_NAMES = ["Creator", "Moderation", "Bots", "Security", "Testing", "Leadership", "Now"];
+  window.openJourney = function (i) { try { sessionStorage.setItem("ecStage", i); } catch (e) {} if (location.hash === "#/earth-core") window.dispatchEvent(new HashChangeEvent("hashchange")); else location.hash = "#/earth-core"; };
+  JN.forEach(function (n, i) { cm.push({ t: "Journey stage " + (i + 1) + ": " + n, d: "Drill to this stage of my journey", k: "journey earth core stage drill " + n.toLowerCase(), run: function () { window.openJourney(i); } }); });
   cm.push({ t: "Go to Cosmos", d: "Magnetosphere, solar wind, satellite orbits", k: "cosmos orbit satellite magnetosphere solar wind space", run: function () { location.hash = "#/cosmos"; } });
   document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest("[data-fm-open]"); if (b) { e.preventDefault(); hub.open(); } });
   // Warm the registries when idle (skipped on Lite/save-data) and whenever the terminal is first used.

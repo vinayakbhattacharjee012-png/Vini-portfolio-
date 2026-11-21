@@ -222,6 +222,10 @@
     '</div><p class="w2-foot">Bytes shipped are the same on both sides. Lite changes runtime work, not payload size. Latency here means main-thread long tasks, not network time.</p></div></section>');
   function metrics(a) { var h = ""; for (var i = 0; i < 4; i++) h += '<div class="w2-m"><b>' + a[i] + "</b><span>" + a[i + 4] + "</span></div>"; return '<div class="w2-ms">' + h + "</div>"; }
   var anchor = $("#creative"); if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(eng, anchor);
+  // home teaser: seven stages that deep-link into the Earth core journey
+  var JN = ["Creator", "Moderation", "Bots", "Security", "Testing", "Leadership", "Now"], jr = el('<section id="journey"><div class="wrap"><div class="sec-head reveal"><span class="eyebrow">My journey</span><h2>From the surface to the core</h2><p>Seven layers of the work I do, drilled through a cutaway Earth. Pick a stage to start there.</p></div><div class="w2-jn" role="group" aria-label="Journey stages"></div></div></section>');
+  JN.forEach(function (n, i) { var b = el('<button type="button"><i>' + (i + 1) + "</i>" + n + "</button>"); b.addEventListener("click", function () { if (window.openJourney) openJourney(i); else { try { sessionStorage.setItem("ecStage", i); } catch (e) {} location.hash = "#/earth-core"; } }); $(".w2-jn", jr).appendChild(b); });
+  if (eng.parentNode) eng.parentNode.insertBefore(jr, eng);
   var rng = $("#w2Rng"), cmp = $("#w2Cmp");
   if (rng) rng.addEventListener("input", function () { cmp.style.setProperty("--pos", rng.value + "%"); });
 })();

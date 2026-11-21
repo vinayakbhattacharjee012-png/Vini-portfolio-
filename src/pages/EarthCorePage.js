@@ -14,7 +14,7 @@
     '<div class="ec-side">' +
     '<div class="ec-card ec-journey" id="ecJ"><h2>My journey, drilled</h2><p class="ec-note" style="margin-top:0">Each depth is a layer of the work on this site. Order follows how the stack builds on itself, not dates.</p>' +
     '<ol class="ec-steps" id="ecJs" aria-label="Journey stages"></ol><div id="ecJb" aria-live="polite"></div>' +
-    '<div class="ec-row"><button type="button" class="w2-go alt" id="ecJp">← Back</button><button type="button" class="w2-go" id="ecJn">Drill deeper →</button><button type="button" class="w2-go alt" id="ecJa">Play</button></div></div>' +
+    '<div class="ec-row"><button type="button" class="w2-go alt" id="ecJp">← Back</button><button type="button" class="w2-go" id="ecJn">Drill deeper →</button><button type="button" class="w2-go alt" id="ecJa">Play</button><button type="button" class="w2-go alt" id="ecJc">Save card</button></div></div>' +
     '<div class="ec-card"><h2>Exploded view</h2><input type="range" id="ecEx" min="0" max="100" value="0" aria-label="Exploded view percent"/><output id="ecExV">0%</output>' +
     '<div class="ec-row"><button type="button" class="w2-go alt" id="ecScale" aria-pressed="false">Scale: visual</button><button type="button" class="w2-go alt" id="ecReset">Reset</button></div></div>' +
     '<div class="ec-card"><h2>Deep-core drill probe</h2><input type="range" id="ecDr" min="0" max="6371" value="0" aria-label="Drill depth in kilometres"/>' +
@@ -229,6 +229,28 @@
   $("ecJa").addEventListener("click", function () { if (jTimer) { stopPlay(); return; } if (st.stage >= JOURNEY.length - 1) stage(0); $("ecJa").textContent = "Pause"; jTimer = setInterval(function () { if (st.stage >= JOURNEY.length - 1 || document.hidden || !onRoute) { stopPlay(); return; } stage(st.stage + 1); }, 5200); });
   window.addEventListener("hashchange", function () { if (location.hash !== "#/earth-core") stopPlay(); });
   stage(0, true);
+  // deep links from the home page and the palette pass the stage through sessionStorage
+  function stored() { try { var v = sessionStorage.getItem("ecStage"); if (v != null) { sessionStorage.removeItem("ecStage"); stopPlay(); stage(+v); } } catch (e) {} }
+  stored(); window.addEventListener("hashchange", function () { if (location.hash === "#/earth-core") stored(); });
+  $("ecJ").addEventListener("keydown", function (e) {
+    var k = e.key; if (k !== "ArrowRight" && k !== "ArrowLeft" && k !== "ArrowDown" && k !== "ArrowUp") return;
+    if (e.target.tagName === "INPUT") return; e.preventDefault(); stopPlay(); stage(st.stage + (k === "ArrowRight" || k === "ArrowDown" ? 1 : -1));
+    var cur = $("ecJs").querySelector("[aria-current=step]"); if (cur) cur.focus();
+  });
+  // shareable PNG of the whole journey (canvas, no network)
+  $("ecJc").addEventListener("click", function () {
+    var cc = document.createElement("canvas"); cc.width = 1000; cc.height = 640; var x = cc.getContext("2d"), g = x.createLinearGradient(0, 0, 1000, 640);
+    x.fillStyle = "#06070a"; x.fillRect(0, 0, 1000, 640); g.addColorStop(0, "rgba(6,182,212,.35)"); g.addColorStop(1, "rgba(139,92,246,.35)"); x.fillStyle = g; x.fillRect(0, 0, 1000, 640);
+    x.fillStyle = "#e8f7fb"; x.font = '700 40px "Space Grotesk", system-ui, sans-serif'; x.fillText("Vini: surface to core", 50, 80);
+    x.fillStyle = "#9aa7b8"; x.font = '500 16px ui-monospace, Menlo, monospace'; x.fillText("A journey drilled through seven layers · simplified PREM-style model", 50, 112);
+    JOURNEY.forEach(function (j, i) {
+      var y = 160 + i * 62, a = M.at(j.d), L = a.layer;
+      x.fillStyle = L.col; x.fillRect(50, y - 22, 6, 44); x.fillStyle = "#e8f7fb"; x.font = '700 24px system-ui, sans-serif'; x.fillText((i + 1) + ". " + j.t, 76, y - 2);
+      x.fillStyle = "#9aa7b8"; x.font = '500 15px ui-monospace, Menlo, monospace'; x.fillText(j.w + " · " + f(j.d) + " km · " + f(a.T) + " °C · " + f(a.P, 1) + " GPa", 76, y + 20);
+    });
+    x.fillStyle = "#4b5567"; x.font = '500 13px ui-monospace, Menlo, monospace'; x.fillText("vini-portfolio.onrender.com/#/earth-core", 50, 618);
+    cc.toBlob(function (b) { if (!b) return; var a = document.createElement("a"), u = URL.createObjectURL(b); a.href = u; a.download = "vini-journey-card.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 3000); ev("journey-card"); }, "image/png");
+  });
   paintProbe(); inspect(0, true);
 
   window.__earth = {
