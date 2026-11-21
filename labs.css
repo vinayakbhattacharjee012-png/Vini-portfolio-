@@ -40,10 +40,11 @@ body.route-view nav { background: rgba(6, 7, 10, .92); border-bottom-color: var(
 .view h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; }
 .view h2 { font-size: 1.25rem; }
 .view h3 { font-size: 1rem; }
-.view .kick { font: 600 .72rem "JetBrains Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--cy); }
+.view .kick { display: block; margin-top: 4px; font: 600 .72rem "JetBrains Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--cy); }
 .view .lede { color: var(--tx-2); max-width: 64ch; margin: 12px 0 0; }
 .view .head { padding: 42px 0 22px; border-bottom: 1px solid var(--ob-line); margin-bottom: 22px; }
-.view .back { font: 600 .8rem "JetBrains Mono", ui-monospace, monospace; color: var(--tx-2); text-decoration: none; display: inline-block; margin-bottom: 14px; }
+.view .back { font: 600 .8rem "JetBrains Mono", ui-monospace, monospace; color: var(--tx-2); text-decoration: none; display: block; margin-bottom: 18px; }
+.view h1:focus { outline: none; }
 .view .back:hover { color: var(--cy); }
 .view .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .view .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
