@@ -1,7 +1,7 @@
 // Mounts the new features into the existing page. Each one renders inside its own shadow root,
 // so the page's CSS and these components can't break each other, while the page's theme tokens
 // still flow in. If this script fails to load, the original page works exactly as before.
-import { StrictMode, Suspense, lazy, useEffect, useRef } from "react";
+import { StrictMode, Suspense, lazy, startTransition, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom";
 import { AppProvider, useApp } from "./lib/app";
@@ -44,6 +44,7 @@ function register(a, center, go) {
     { t: "Case studies", d: "Each project: the problem, the build, where it stands", k: "work case studies projects results portfolio", run: page("work.html") },
     { t: "Services", d: "What you can hire me for", k: "services hire offer bots security moderation website edits ads", run: page("services.html") },
     { t: "Galaxy network", d: "Five brands, treaties and advertising", k: "galaxy network community brands treaty charter advertise ads", run: page("galaxy.html") },
+    { t: "Brand kit", d: "Logo, colours, fonts and bio", k: "brand kit logo colours colors fonts press bio", run: page("brand.html") },
     { t: "Hire me", d: "Send a brief, or reach me by email or Discord", k: "hire contact brief email discord work together project", run: page("contact.html") },
   );
 
@@ -51,7 +52,7 @@ function register(a, center, go) {
   if (f.cmds && f.print) {
     const help = f.cmds.help, sudo = f.cmds.sudo;
     const leave = () => f.closeTerminal?.(false);
-    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone\n  features         every feature on this site\n  work · services · network · hire   open a page"); };
+    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone\n  features         every feature on this site\n  work · services · network · brand · hire   open a page"); };
     f.cmds.center = () => { leave(); center()(); };
     f.cmds.run = (x) => {
       const tab = { "apex-sim": "apex", apex: "apex", polo: "polo", raid: "shield", trade: "trade" }[x];
@@ -60,7 +61,7 @@ function register(a, center, go) {
     };
     f.cmds.qr = () => { leave(); a().open("qr"); };
     f.cmds.features = page("features.html");
-    for (const [cmd, href] of [["work", "work.html"], ["services", "services.html"], ["network", "galaxy.html"], ["hire", "contact.html"]]) if (!f.cmds[cmd]) f.cmds[cmd] = page(href);
+    for (const [cmd, href] of [["work", "work.html"], ["services", "services.html"], ["network", "galaxy.html"], ["brand", "brand.html"], ["hire", "contact.html"]]) if (!f.cmds[cmd]) f.cmds[cmd] = page(href);
     f.cmds.sudo = (x) => {
       if (x !== "hack") return sudo?.(x);
       a().setSweep((n) => n + 1);
@@ -129,11 +130,18 @@ function Islands({ boxes }) {
 }
 
 const hosts = ["lab", "impact", "build"].map((id) => document.getElementById(id));
-if (hosts.every(Boolean)) {
+function mount() {
   const layer = document.createElement("div");
   layer.className = "vx-host";
   document.body.append(layer);
   const boxes = Object.fromEntries(hosts.map((h) => [h.id, attach(h)]));
   syncCalm([...hosts, layer]);
-  createRoot(attach(layer)).render(<StrictMode><Islands boxes={boxes} /></StrictMode>);
+  const root = createRoot(attach(layer));
+  // A transition lets React render in small slices instead of one long task.
+  startTransition(() => root.render(<StrictMode><Islands boxes={boxes} /></StrictMode>));
+}
+// Mount after the page has loaded, so the loading screen and hero never wait on React.
+if (hosts.every(Boolean)) {
+  const idle = () => (window.requestIdleCallback ? requestIdleCallback(mount, { timeout: 500 }) : setTimeout(mount, 50));
+  if (document.readyState === "complete") idle(); else addEventListener("load", idle, { once: true });
 }

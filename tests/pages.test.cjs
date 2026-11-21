@@ -5,7 +5,7 @@ const BASE = process.env.BASE_URL || 'http://localhost:4173/';
 let fails = 0;
 const check = (n, ok, x = '') => { if (!ok) fails++; console.log((ok ? 'PASS ' : 'FAIL ') + n + (x ? '  ' + x : '')); };
 const quiet = (m) => /Failed to load resource|fonts\.g|ERR_/.test(m);
-const PAGES = ['command-center.html', 'features.html', 'work.html', 'services.html', 'galaxy.html', 'contact.html'];
+const PAGES = ['command-center.html', 'features.html', 'work.html', 'services.html', 'galaxy.html', 'contact.html', 'brand.html'];
 
 async function open(b, path, { vp = { width: 1280, height: 860 }, theme } = {}) {
   const ctx = await b.newContext({ viewport: vp, acceptDownloads: true });
@@ -155,10 +155,32 @@ const topOf = (p, id) => p.evaluate((id) => Math.round(document.getElementById('
   check('no form POST off Netlify (it would be lost)', p.posts.length === 0, p.posts.join(' '));
   await p.context().close();
 
+  // Brand kit
+  p = await open(b, 'brand.html');
+  check('Brand page loads without errors', p.errs.length === 0, p.errs.join(' | '));
+  await p.click('button[aria-label^="Copy Crimson"]'); await p.waitForTimeout(300);
+  check('colour swatch copies its hex', /Crimson/.test(await p.locator('#toast').textContent()));
+  const [svg] = await Promise.all([p.waitForEvent('download'), p.click('button:has-text("Download the mark")')]);
+  check('mark downloads as SVG', /<svg/.test(require('fs').readFileSync(await svg.path(), 'utf8')));
+  for (const f of ['logo-vini.png', 'logo-vini-512.webp']) check(`${f} is served`, (await p.request.get(BASE + f)).ok());
+  await p.context().close();
+
+  // Phone: touch swipes must scroll the whole homepage (the About grid used to block touch scrolling)
+  p = await open(b, '', { vp: { width: 412, height: 915 } });
+  { const cdp = await p.context().newCDPSession(p); let y = -1;
+    for (let i = 0; i < 6; i++) {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 200, y: 650 }] });
+      for (let k = 1; k <= 10; k++) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: 650 - k * 50 }] });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(250);
+    }
+    y = await p.evaluate(() => scrollY);
+    check('phone: swiping scrolls past the About section', y > 2000, 'scrollY ' + y); }
+  await p.context().close();
+
   // Homepage knows about the pages
   p = await open(b, '');
   check('footer links to All features', (await p.locator('.foot-links button:has-text("All features")').count()) === 1);
-  check('footer links to all four client pages', (await p.locator('.foot-links a[href$=".html"]').count()) === 4);
+  check('footer links to all five client pages', (await p.locator('.foot-links a[href$=".html"]').count()) === 5);
   check('Hire me button in the nav', (await p.locator('nav .nav-hire').getAttribute('href')) === 'contact.html' && await p.locator('nav .nav-hire').isVisible());
   check('Explore section links each page', (await p.$$eval('#explore a.card', (as) => as.map((a) => a.getAttribute('href')).join())) === 'work.html,services.html,galaxy.html,contact.html');
   check('section numbers survive off-screen skipping', (await p.evaluate(() => ['advertise', 'explore'].map((id) => document.querySelector(`#${id} .sec-head > .eyebrow`).dataset.n).join())) === '09,12');

@@ -29,7 +29,8 @@
 <meta name="description" content="Vini: AI and software builder, Discord network founder, server security architect, video editor and gaming operations veteran." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" /></noscript>
 <link rel="stylesheet" href="/src/theme.css" />
 <style>
   /* Layout: deep-space night sky. Starfield hero, then sections of cards and hand-drawn mechanism diagrams. */
@@ -235,6 +236,7 @@
   @keyframes eq { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
 
   /* Scroll reveal: content is visible at rest; it only animates when it enters view. */
+  /* Reveal animations fill backwards only: their last frame is the resting style, and a held last frame keeps a GPU layer alive for good. */
   /* ---- Night sky: meteors + lightning (from the reference video) ---- */
   .night { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
     background: linear-gradient(180deg, #060608 0%, #120a0e 55%, #0d0b0f 100%); }
@@ -248,7 +250,7 @@
   @keyframes flashPulse { 0% { opacity: 0; } 10% { opacity: 1; } 22% { opacity: .2; } 34% { opacity: .9; } 100% { opacity: 0; } }
   .hero .wrap { z-index: 1; }
   .hero #sky { z-index: 0; opacity: .5; }
-  .reveal.in { animation: riseIn .8s cubic-bezier(.2,.7,.2,1) both; }
+  .reveal.in { animation: riseIn .8s cubic-bezier(.2,.7,.2,1) backwards; }
   @keyframes riseIn { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
   .grid > .reveal.in:nth-child(2) { animation-delay: .08s; } .grid > .reveal.in:nth-child(3) { animation-delay: .16s; }
   .grid > .reveal.in:nth-child(4) { animation-delay: .24s; } .grid > .reveal.in:nth-child(5) { animation-delay: .32s; }
@@ -264,7 +266,7 @@
   .brand i { animation: beacon 2.4s ease-in-out infinite; }
   @keyframes beacon { 0%, 100% { box-shadow: 0 0 4px var(--star); } 50% { box-shadow: 0 0 16px var(--star); } }
 
-  .hero .eyebrow, .hero h1, .hero .lede, .hero .stat { animation: enter .7s cubic-bezier(.2,.7,.2,1) both; }
+  .hero .eyebrow, .hero h1, .hero .lede, .hero .stat { animation: enter .7s cubic-bezier(.2,.7,.2,1) backwards; }
   .hero h1 { animation-delay: .08s; } .hero .lede { animation-delay: .18s; }
   .hero .stat:nth-child(1) { animation-delay: .26s; } .hero .stat:nth-child(2) { animation-delay: .32s; }
   .hero .stat:nth-child(3) { animation-delay: .38s; } .hero .stat:nth-child(4) { animation-delay: .44s; }
@@ -277,21 +279,21 @@
 
   .stat { position: relative; overflow: hidden; }
   .stat::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, var(--star-soft) 50%, transparent 70%);
-    transform: translateX(-100%); animation: sweep 1.2s ease .9s 1 both; pointer-events: none; }
+    transform: translateX(-100%); animation: sweep 1.2s ease .9s 1 backwards; pointer-events: none; }
   @keyframes sweep { to { transform: translateX(100%); } }
 
   .sec-head h2 { position: relative; padding-bottom: 10px; }
   .sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 56px;
     background: linear-gradient(90deg, var(--star), var(--nebula)); transform-origin: 0 50%; }
-  .sec-head.in h2::after { animation: grow .8s cubic-bezier(.2,.7,.2,1) .15s both; }
+  .sec-head.in h2::after { animation: grow .8s cubic-bezier(.2,.7,.2,1) .15s backwards; }
   @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-  .skill-group.in li { animation: rise .45s ease both; }
+  .skill-group.in li { animation: rise .45s ease backwards; }
   .skill-group.in li:nth-child(2) { animation-delay: .05s; } .skill-group.in li:nth-child(3) { animation-delay: .1s; }
   .skill-group.in li:nth-child(4) { animation-delay: .15s; } .skill-group.in li:nth-child(5) { animation-delay: .2s; }
   .skill-group.in li:nth-child(6) { animation-delay: .25s; } .skill-group.in li:nth-child(7) { animation-delay: .3s; }
 
-  .diagram.in svg .node, .diagram.in svg .hub, .diagram.in svg .core, .diagram.in svg .ring { animation: pop .55s cubic-bezier(.2,.8,.3,1.2) both; transform-box: fill-box; transform-origin: center; }
+  .diagram.in svg .node, .diagram.in svg .hub, .diagram.in svg .core, .diagram.in svg .ring { animation: pop .55s cubic-bezier(.2,.8,.3,1.2) backwards; transform-box: fill-box; transform-origin: center; }
   .diagram.in svg .ring2 { animation-delay: .08s; } .diagram.in svg .ring3 { animation-delay: .16s; } .diagram.in svg .core { animation-delay: .24s; }
   @keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
   .diagram svg .node:hover { stroke: var(--star); }
@@ -438,7 +440,7 @@
     color: var(--star); background: var(--star-soft); }
   .tile.alt code { color: var(--nebula); background: var(--surface-2); }
   .tile span { min-width: 0; overflow-wrap: anywhere; }
-  .tile.pop { animation: tilepop .42s cubic-bezier(.2,.8,.3,1.2) both; }
+  .tile.pop { animation: tilepop .42s cubic-bezier(.2,.8,.3,1.2) backwards; }
   @keyframes tilepop { from { opacity: 0; transform: scale(.9) translateY(8px); } to { opacity: 1; transform: none; } }
   .skill-count { margin: 12px 0 0; font: 500 0.8rem var(--font-mono); color: var(--muted); }
 
@@ -716,12 +718,12 @@
   /* ---- Scroll-driven animation ---- */
   @supports (animation-timeline: view()) {
     .card, .tcard, .skb, .dcol, .fact, .stat, .role, .xp li, .fact, .need li {
-      animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 2% cover 32%;
+      animation: scrollRise linear backwards; animation-timeline: view(); animation-range: entry 2% cover 32%;
     }
-    .reveal.in.card, .reveal.in.tcard, .reveal.in.xp li, .reveal.in.skb { animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 2% cover 32%; }
-    .sec-head { animation: headSlide linear both; animation-timeline: view(); animation-range: entry 0% cover 28%; }
-    .diagram { animation: diagFade linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
-    .skillrow, .test-grid, .xp-wrap { animation: scrollRise linear both; animation-timeline: view(); animation-range: entry 0% cover 25%; }
+    .reveal.in.card, .reveal.in.tcard, .reveal.in.xp li, .reveal.in.skb { animation: scrollRise linear backwards; animation-timeline: view(); animation-range: entry 2% cover 32%; }
+    .sec-head { animation: headSlide linear backwards; animation-timeline: view(); animation-range: entry 0% cover 28%; }
+    .diagram { animation: diagFade linear backwards; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+    .skillrow, .test-grid, .xp-wrap { animation: scrollRise linear backwards; animation-timeline: view(); animation-range: entry 0% cover 25%; }
   }
   @keyframes scrollRise { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
   @keyframes headSlide { from { opacity: 0; transform: translateX(-36px); } to { opacity: 1; transform: none; } }
@@ -1085,7 +1087,7 @@
   @keyframes fxIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
 
   /* 4. Holographic cards: 3D tilt via the rotate property (scroll animations own transform) */
-  .holo-stage { perspective: 1100px; }
+  .holo-persp { perspective: 1100px; }
   .holo { isolation: isolate; transform-style: flat; --hx: .5; --hy: .5;
     transition: border-color .2s ease, box-shadow .25s ease, rotate .35s cubic-bezier(.2,.8,.2,1), translate .35s cubic-bezier(.2,.8,.2,1); }
   .holo.tilting { transition: border-color .2s ease, box-shadow .25s ease, rotate .08s linear, translate .2s ease-out; }
@@ -1286,7 +1288,7 @@
     background: var(--surface-2); border: 1px solid var(--line); transition: border-color .15s ease, color .15s ease; }
   .sk-pills li:hover { border-color: var(--star); color: var(--star); }
   .sk-grid.one .sk-pills li { font-size: .84rem; padding: 7px 12px; }
-  .sk-card.sk-in { animation: fxIn .4s cubic-bezier(.2,.8,.2,1) both; }
+  .sk-card.sk-in { animation: fxIn .4s cubic-bezier(.2,.8,.2,1) backwards; }
   @media (prefers-reduced-motion: reduce) { .sk-card, .sk-card.sk-in { animation: none !important; transition: none; } }
 
   /* ================================================================
@@ -1765,7 +1767,7 @@
       <a href="#gaming">Gaming</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
-      <span class="nav-pages"><b>More pages</b><a href="work.html">Case studies</a><a href="services.html">Services</a><a href="galaxy.html">Galaxy network</a><a href="contact.html">Hire me</a></span>
+      <span class="nav-pages"><b>More pages</b><a href="work.html">Case studies</a><a href="services.html">Services</a><a href="galaxy.html">Galaxy network</a><a href="brand.html">Brand</a><a href="contact.html">Hire me</a></span>
     </div>
     <button class="search-btn" id="searchBtn" type="button" aria-label="Search the site" aria-haspopup="dialog">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -2823,7 +2825,7 @@
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <span class="hint">vini.official.netops@gmail.com</span>
-    <span class="foot-links"><a class="linkish" href="work.html">Case studies</a><a class="linkish" href="services.html">Services</a><a class="linkish" href="galaxy.html">Galaxy network</a><a class="linkish" href="contact.html">Hire me</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
+    <span class="foot-links"><a class="linkish" href="work.html">Case studies</a><a class="linkish" href="services.html">Services</a><a class="linkish" href="galaxy.html">Galaxy network</a><a class="linkish" href="brand.html">Brand</a><a class="linkish" href="contact.html">Hire me</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -4059,7 +4061,7 @@
   if (FEATURES.holo) try {
     document.querySelectorAll(".id-card, #ai .card[data-sim]").forEach(function (c) {
       c.classList.add("holo");
-      if (c.parentNode) c.parentNode.classList.add("holo-stage");
+      if (c.parentNode) c.parentNode.classList.add("holo-persp"); // not "holo-stage": that is VEGA's drag stage and blocks touch scrolling
       var foil = document.createElement("span"); foil.className = "holo-foil"; foil.setAttribute("aria-hidden", "true");
       c.insertBefore(foil, c.firstChild);
       if (reduce || !fine) return;

@@ -36,7 +36,7 @@ function Shell({ current, children }) {
             <p className="max-w-[42ch]">Discord moderation and security, Python bots, websites and AI prototypes, and football edits.</p>
             <a className="num text-xs hover:text-c1" href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
-          {[["Pages", [...NAV, ["contact.html", "Hire me"]]], ["More", MORE]].map(([label, links]) => (
+          {[["Pages", [...NAV, ["brand.html", "Brand"], ["contact.html", "Hire me"]]], ["More", MORE]].map(([label, links]) => (
             <nav key={label} aria-label={label} className="grid content-start gap-2">
               <p className="kicker">{label}</p>
               {links.map(([href, text]) => <a key={href} href={href} {...ext(href)} className="w-fit hover:text-c1">{text}</a>)}
@@ -66,9 +66,9 @@ export function Hero({ eyebrow, title, intro, children }) {
   );
 }
 
-export function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...rest }) {
+export function Reveal({ as: Tag = "div", className = "", delay = 0, style, children, ...rest }) {
   const [ref, seen] = useInView();
-  return <Tag ref={ref} className={`reveal ${seen ? "in" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }} {...rest}>{children}</Tag>;
+  return <Tag ref={ref} className={`reveal ${seen ? "in" : ""} ${className}`} style={{ ...style, transitionDelay: `${delay}ms` }} {...rest}>{children}</Tag>;
 }
 
 export function Stats({ items }) {
