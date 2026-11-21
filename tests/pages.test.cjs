@@ -201,6 +201,15 @@ const topOf = (p, id) => p.evaluate((id) => Math.round(document.getElementById('
     check(`${path} at 375px: no errors`, p.errs.length === 0, p.errs.join(' | '));
     await p.context().close();
   }
+  // Loading scene: the fight plays on a first visit, and is removed for reduced motion
+  { const c1 = await b.newContext({ viewport: { width: 1280, height: 860 }, reducedMotion: 'no-preference' }); const q = await c1.newPage();
+    await q.goto(BASE); await q.waitForTimeout(600);
+    check('loader fight scene is drawn on a first visit', await q.evaluate(() => { const c = document.getElementById('fight'); return !!c && c.width > 0; }));
+    await c1.close();
+    const c2 = await b.newContext({ viewport: { width: 1280, height: 860 }, reducedMotion: 'reduce' }); const r = await c2.newPage();
+    await r.goto(BASE); await r.waitForTimeout(600);
+    check('reduced motion: no fight scene, logo still shows', await r.evaluate(() => !document.getElementById('fight') && !!document.querySelector('#loader .logo')));
+    await c2.close(); }
   await b.close();
   console.log(fails ? `\n${fails} FAILED` : '\nALL PASSED');
   process.exit(fails ? 1 : 0);
