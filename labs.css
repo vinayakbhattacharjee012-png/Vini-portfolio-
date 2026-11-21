@@ -165,7 +165,7 @@ html.lite .botroll-track { animation: none !important; flex-wrap: wrap; width: a
 .w2-sfx[aria-pressed="true"] { color: var(--cy); border-color: var(--cy); }
 .sk-card.w2-hl { box-shadow: 0 0 0 1.5px var(--cy), 0 0 22px rgba(6, 182, 212, .28); border-color: var(--cy); }
 @media (max-width: 560px) { .w2-note { display: none; } .w2-sfx { padding: 0 8px; font-size: .64rem; } }
-@media (max-width: 420px) { .w2-sfx { display: none; } }
+
 
 .w2-badge { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(68px + env(safe-area-inset-bottom, 0px)); z-index: 40; display: inline-flex; align-items: center; gap: 6px;
   font: 600 .72rem "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; color: var(--tx); background: var(--ob-2); border: 1px solid var(--ob-line); border-radius: 999px; padding: 7px 12px; cursor: pointer; }

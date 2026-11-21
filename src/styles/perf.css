@@ -41,3 +41,7 @@ html .bg-fx .blob, html .night .clouds, html .bg-fx .grid-lines { animation: non
   html.lite .ticker-track { animation: slide 60s linear infinite !important; }
   html.lite .botroll-track, html.lite .ticker-track { will-change: transform; }
 }
+
+/* 9. Lite keeps the look, just still: the starfield and ambient glow are drawn once and never animate. */
+html.lite .bg-fx, html.lite #sky { display: block !important; }
+html.lite .bg-fx .blob { opacity: .35; }
