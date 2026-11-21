@@ -212,7 +212,6 @@
       st = { joins: [], traffic: null, msgs: {}, muted: {}, raid: false, blocked: 0, locked: false, actorTries: 0, latency: null, raidStart: 0 };
       logEl.innerHTML = ""; log("info", "server reset"); stats();
     });
-    $("arena-intro").addEventListener("click", function () { if (window.__arenaReplay) window.__arenaReplay(); });
     log("info", "simulated server online. Press a button to start.");
     stats();
 
@@ -403,13 +402,11 @@
    ["explore", "All pages", "Every page on this site"], ["earth-core", "Earth core", "Cutaway Earth, drill probe, seismic waves"], ["cosmos", "Cosmos", "Magnetosphere, solar wind, LEO/MEO/GEO orbits"]].forEach(function (r) {
     CM.push({ t: "Go to " + r[1], d: r[2], k: r[0] + " " + r[1].toLowerCase() + " page view route", run: function () { location.hash = "#/" + r[0]; } });
   });
-  CM.push({ t: "Replay intro duel", d: "Play the loading duel again", k: "intro duel replay loader arena", run: function () { if (window.__arenaReplay) window.__arenaReplay(); } });
   var fx = window.__fx;
   if (fx && fx.cmds && fx.print) {
     ["lab", "arena", "vault", "logs", "dossier", "about", "services", "contact", "now", "uses", "pages"].forEach(function (n) { fx.cmds[n] = function () { location.hash = "#/" + (n === "pages" ? "explore" : n); fx.print("g", "→ " + n); }; });
-    fx.cmds.intro = function () { if (window.__arenaReplay) window.__arenaReplay(); fx.print("g", "replaying intro"); };
     var oh = fx.cmds.help;
-    fx.cmds.help = function (a) { oh(a); fx.print("o", "  lab · arena · vault · logs · dossier   open a page\n  about · services · contact · now · uses · pages\n  intro              replay the loading duel"); };
+    fx.cmds.help = function (a) { oh(a); fx.print("o", "  lab · arena · vault · logs · dossier   open a page\n  about · services · contact · now · uses · pages"); };
   }
   document.querySelectorAll("[data-route-link]").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); location.hash = a.getAttribute("data-route-link"); }); });
 })();

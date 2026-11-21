@@ -139,7 +139,7 @@
   var ACH = [
     ["pal", "Command Palette", "Open the search / command palette (Ctrl+K)"],
     ["stress", "Stress Tester", "Run a telemetry burst test in a simulation"],
-    ["duel", "Duel Finisher", "Watch the Cyber-Duel intro to the end"],
+    ["journey", "Deep Driller", "Open the Earth core journey"],
     ["term", "Terminal Native", "Run a command in the dev terminal"],
     ["vault", "Vault Inspector", "Open the Architecture Vault"]
   ];
@@ -157,7 +157,7 @@
   var obs = $("#search"); if (obs && window.MutationObserver) new MutationObserver(function () { if (!obs.hidden) unlock("pal"); }).observe(obs, { attributes: true, attributeFilter: ["hidden"] });
   document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest("#simPresets button"); if (b && /burst/i.test(b.textContent)) unlock("stress"); });
   var vt = $("#vtIn"); if (vt) vt.addEventListener("keydown", function (e) { if (e.key === "Enter" && vt.value.trim()) unlock("term"); }, true);
-  window.addEventListener("arena:done", function () { unlock("duel"); });
+  window.addEventListener("hashchange", function () { if (location.hash === "#/earth-core") unlock("journey"); }); if (location.hash === "#/earth-core") setTimeout(function () { unlock("journey"); }, 0);
   function chkVault() { if (location.hash === "#/vault") unlock("vault"); }
   window.addEventListener("hashchange", chkVault); chkVault();
 
@@ -280,7 +280,7 @@
   var eng = el('<section id="engineering"><div class="wrap"><div class="sec-head reveal"><span class="eyebrow">Engineering</span><h2>Before and after I tuned it</h2>' +
     '<p>Drag the handle. Left is this site before I tuned it: every effect on, all the time. Right is after: separate files and a Lite mode. I measured it with Playwright, headless, with the CPU slowed to phone speed.</p></div>' +
     '<div class="w2-cmp" id="w2Cmp" style="--pos:50%">' +
-    '<div class="w2-side after"><h3>After: split files, Lite mode</h3><p class="w2-tag">arena.js, labs.js, themes.js, perf.js, wave2.js and soundEngine.js as separate cached files, with Lite mode on weak devices</p>' + metrics(["60 fps", "60 fps", "2", "2", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
+    '<div class="w2-side after"><h3>After: split files, Lite mode</h3><p class="w2-tag">labs.js, themes.js, perf.js, wave2.js and soundEngine.js as separate cached files, with Lite mode on weak devices</p>' + metrics(["60 fps", "60 fps", "2", "2", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
     '<div class="w2-side before"><h3>Before: one big page</h3><p class="w2-tag">One 400 KB page, every effect running, nothing paused off screen, blur everywhere</p>' + metrics(["27 fps", "36 fps", "225", "22", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
     '<div class="w2-hnd" aria-hidden="true"><span>⇆</span></div>' +
     '<input type="range" min="4" max="96" value="50" id="w2Rng" aria-label="Compare before and after: drag to reveal" />' +

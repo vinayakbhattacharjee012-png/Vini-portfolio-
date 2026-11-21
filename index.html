@@ -1650,9 +1650,6 @@
   .fab:focus-visible, .tele:focus-visible { border-radius: 999px; }
   footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 </style>
-<script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");
-// failsafe: whatever stalls (slow resource, blocked script), the page is usable after 7 s
-setTimeout(function () { document.documentElement.classList.remove("loading"); var l = document.getElementById("loader"); if (l) l.className = "loader arena done"; }, 7000);</script>
 <script>(function () { var r = document.documentElement, m = "auto";
   // Safe mode: open the site with ?safe to skip the intro and force the lightest mode (remembered for next time).
   // ?full and ?auto undo safe mode.
@@ -1666,21 +1663,6 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
 <link rel="stylesheet" href="src/styles/perf.css" />
 </head>
 <body>
-<div class="loader arena" id="loader" role="status" aria-label="Loading Vini's portfolio">
-  <canvas id="arenaCanvas" aria-hidden="true"></canvas>
-  <div class="arena-slice top" aria-hidden="true"></div>
-  <div class="arena-slice bot" aria-hidden="true"></div>
-  <div class="arena-hud" aria-hidden="true">
-    <div class="arena-bar"><i id="arenaBar"></i></div>
-    <div class="row"><span>VANGUARD · CYAN</span><span><b id="arenaPct">0</b>%</span><span>PHANTOM · VIOLET</span></div>
-  </div>
-  <div class="arena-ctrl">
-    <button type="button" class="arena-btn" id="arenaSound" aria-pressed="false">[SOUND: OFF]</button>
-    <button type="button" class="arena-btn" id="arenaSkip">Skip Intro [ESC]</button>
-  </div>
-</div>
-<script src="arena.js" defer></script>
-<div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grid-lines"></div><canvas id="bgStars"></canvas></div>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <nav>
@@ -1720,8 +1702,6 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
 </nav>
 
 <header class="hero" id="top">
-  <canvas id="sky" aria-hidden="true"></canvas>
-  <div class="night" aria-hidden="true"><canvas id="meteorSky"></canvas><div class="clouds c1"></div><div class="clouds c2"></div><div class="flash" id="flash"></div></div>
   <div class="wrap">
    <div class="hero-grid">
     <div class="hero-copy">
@@ -2668,7 +2648,6 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
         <button type="button" class="btn" id="arena-traffic" aria-pressed="false">Start traffic</button>
         <button type="button" class="btn hot" id="arena-raid">Test raid spike</button>
         <button type="button" class="btn" id="arena-reset">Reset</button>
-        <button type="button" class="btn" id="arena-intro">Replay Duel</button>
       </div>
     </header>
 
