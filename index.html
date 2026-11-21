@@ -5094,13 +5094,13 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     if (pending && /^(yes|yeah|yep|sure|ok|okay|do it|go ahead|please|run it|show me|open it|let's go|go|yes please)\b/.test(q)) {
       var a = pending; pending = null; return { text: "On it.", run: a.run };
     }
-    if (pending && /^(no|nope|nah|not now|cancel|no thanks)\b/.test(q)) { pending = null; return { text: "No problem. What else would you like to know?" }; }
+    if (pending && /^(no|nope|nah|not now|cancel|no thanks)\b/.test(q)) { pending = null; return { local: "always", text: "No problem. What else would you like to know?" }; }
     if (/^(hi|hello|hey|yo|hiya|howdy|sup|good (morning|afternoon|evening))\b/.test(q) && words <= 4) return { text: "Hello. I'm VEGA. Ask me about Vini's projects, skills, community work, or how to get in touch." };
-    if (/\b(thanks|thank you|cheers|nice one|appreciate)\b/.test(q) && words <= 5) return { text: "Anytime." };
-    if (/\b(jarvis|friday|iron ?man|tony stark|stark industries)\b/.test(q)) return { text: "Close, but no. I'm VEGA. Mr. Stark has his own assistant; I look after Vini's work." };
+    if (/\b(thanks|thank you|cheers|nice one|appreciate)\b/.test(q) && words <= 5) return { local: "always", text: "Anytime." };
+    if (/\b(jarvis|friday|iron ?man|tony stark|stark industries)\b/.test(q)) return { local: "always", text: "Close, but no. I'm VEGA. Mr. Stark has his own assistant; I look after Vini's work." };
     if (/\b(who|what) are you\b|\byour name\b|\babout yourself\b/.test(q)) return { text: "I'm VEGA, Vini's holographic assistant. I live inside this portfolio and I know everything on it, but nothing beyond it." };
     if (/\b(help|what can you do|what do you do|commands|how do (i|you) use|options)\b/.test(q))
-      return { text: "I can tell you who Vini is, walk you through every project, explain the skills, run live simulations, open architecture maps or the résumé, switch the theme, and take you to any section. Try: \"Tell me about Eclipse\", \"Run the Nova simulation\" or \"How do I contact Vini?\"" };
+      return { local: "always", text: "I can tell you who Vini is, walk you through every project, explain the skills, run live simulations, open architecture maps or the résumé, switch the theme, and take you to any section. Try: \"Tell me about Eclipse\", \"Run the Nova simulation\" or \"How do I contact Vini?\"" };
     if (/^(stop|cancel|never ?mind|be quiet|quiet|shush)\b/.test(q)) { return { text: "Standing by.", silent: true }; }
     if (/\b(mute|stop talking|silence|shut up|voice off|no voice)\b|\bturn off (the |your )?(voice|sound|speech)\b/.test(q)) return { text: "Voice off. I'll reply in text.", run: function () { setVoice(false); }, silent: true };
     if (/\b(unmute|voice on|speak again|talk to me|turn on (your )?voice)\b/.test(q)) return { text: "Voice back on.", run: function () { setVoice(true); } };
@@ -5125,13 +5125,13 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     if (/\b(simulat\w*|demo|test it|run)\b/.test(q)) {
       p = findProject(q);
       if (p && p.sim) return { text: "Launching the " + short(p) + " simulation. Everything in it is mock data, run in your browser.", run: function () { openSim(p.sim); } };
-      if (p) return { text: short(p) + " doesn't have a simulation. I can simulate Polo, Nova, Eclipse or Apex." };
-      return { text: "I can run simulations for Polo, Nova 3.0, Eclipse and Apex. Which one?", group: "projects" };
+      if (p) return { local: "cmd", text: short(p) + " doesn't have a simulation. I can simulate Polo, Nova, Eclipse or Apex." };
+      return { local: "cmd", text: "I can run simulations for Polo, Nova 3.0, Eclipse and Apex. Which one?", group: "projects" };
     }
     if (/\b(architecture|diagram|system design|under the hood|how (is|was) (it|eclipse|apex) built)\b/.test(q)) {
       p = findProject(q);
       if (p && p.arch) return { text: "Opening the " + short(p) + " architecture map.", run: function () { openArch(p.arch); } };
-      return { text: "I have interactive architecture maps for Eclipse and Apex. Which one?", group: "projects" };
+      return { local: "cmd", text: "I have interactive architecture maps for Eclipse and Apex. Which one?", group: "projects" };
     }
     if (/\b(go to|take me|navigate|scroll|jump|bring me|open|show me the .* section)\b/.test(q)) {
       s = findSection(q);
@@ -5167,11 +5167,11 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
       return { text: K.name + ": " + K.role + ". " + K.lede + (K.about[0] ? " " + K.about[0] : ""), group: null, focus: "sec-about" };
     if (/\b(latency|ping|status|online|uptime|system)\b/.test(q)) {
       var lat = T($("teleLat")), st = T($("teleState"));
-      return { text: "All systems " + (st || "online").toLowerCase() + "." + (lat && /\d/.test(lat) ? " Latency to the site is " + lat + "." : "") };
+      return { local: "always", text: "All systems " + (st || "online").toLowerCase() + "." + (lat && /\d/.test(lat) ? " Latency to the site is " + lat + "." : "") };
     }
     if (/\b(time|date|day|today)\b/.test(q)) {
       var d = new Date();
-      return { text: "It's " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " on " + d.toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" }) + ", your time." };
+      return { local: "always", text: "It's " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " on " + d.toLocaleDateString([], { weekday: "long", day: "numeric", month: "long" }) + ", your time." };
     }
     if (/\b(where (is|are|does) (he|vini|you)|located|location|lives?|country|city|how old|age|birthday|real name|school|girlfriend|boyfriend)\b/.test(q))
       return { text: "That isn't on the site, so I won't guess. You can ask Vini directly at " + K.email + "." };
@@ -5194,18 +5194,21 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     var q = norm(raw); if (!q) return;
     logMsg("you", raw.trim());
     var r = understand(q);
-    if (!r && window.VegaAI && VegaAI.ready()) { askAI(raw, q); return; }
+    // With Gemini on, actions (open, run, switch, time) stay local; questions about Vini go to Gemini, keeping the hologram focus and buttons.
+    // local: "always" = time, status, thanks, help; local: "cmd" = "which one?" prompts, kept local unless phrased as a question
+    var isQ = /\?\s*$/.test(raw) || /^(what|how|why|who|when|where|which|does|do|did|is|are|can|could|would|should|tell me|explain)\b/.test(q);
+    if (window.VegaAI && VegaAI.ready() && (!r || (!r.run && !r.silent && r.local !== "always" && !(r.local === "cmd" && !isQ)))) { askAI(raw, q, r); return; }
     if (!r) r = localAnswer(q);
     reply(r);
   }
   // Gemini mode (bring-your-own-key, see src/engine/vegaGemini.js). Any failure falls back to the on-page answer.
   var aiHistory = [];
-  function askAI(raw, q) {
+  function askAI(raw, q, local) {
     reply({ text: "One sec, asking Gemini…", silent: true });
     VegaAI.ask(raw, K, aiHistory.slice(-6)).then(function (t) {
       aiHistory.push({ role: "user", parts: [{ text: raw }] }, { role: "model", parts: [{ text: t }] });
-      reply({ text: t });
-    }).catch(function (e) { var r = localAnswer(q); r.text = e.message + " Here's what I have on the page instead. " + r.text; reply(r); });
+      reply(local ? { text: t, focus: local.focus, offer: local.offer, group: local.group } : { text: t });
+    }).catch(function (e) { var r = local || localAnswer(q); reply({ text: e.message + " Here's what I have on the page instead. " + r.text, focus: r.focus, offer: r.offer, group: r.group }); });
   }
   function localAnswer(q) {
     var r = null;
