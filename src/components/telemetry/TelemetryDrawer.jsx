@@ -8,6 +8,7 @@ import { Sparkline } from "./charts";
 import { ApexSim, BotShield, PoloDemo, TradeCalc } from "./sims";
 
 const TABS = [["apex", "Apex-Fit"], ["polo", "Polo AI"], ["shield", "Bot Shield"], ["trade", "Trade Calc"]];
+const SIMS = { apex: ApexSim, polo: PoloDemo, shield: BotShield, trade: TradeCalc };
 const NODES = ["Auth Node", "Inference Router", "State Cache", "Static CDN"];
 const BASE = 14;
 const fresh = () => ({ lat: Array.from({ length: 24 }, () => BASE + Math.round(Math.random() * 4 - 2)), stress: 0, peak: BASE, recoveredIn: null, shed: 0 });
@@ -25,13 +26,13 @@ function useFps(on) {
   return fps;
 }
 
-export default function TelemetryDrawer({ tab = "apex" }) {
-  const { close, open } = useApp();
+// The whole Command Center: tabs + one sandbox (drawer), or every sandbox at once (`all`, the full page).
+export function CommandCenter({ tab = "apex", onTab, all = false }) {
   const [live, setLive] = useState(true);
   const [sys, setSys] = useState(fresh);
   const [resetKey, setResetKey] = useState(0);
-  const report = useRef({});
-  const onReport = useCallback((r) => { report.current = r; }, []);
+  const reports = useRef({});
+  const onReport = useCallback((r) => { reports.current[r.sim] = r; }, []);
   const fps = useFps(live);
   const mem = performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null;
   const t0 = useRef(null);
@@ -53,19 +54,19 @@ export default function TelemetryDrawer({ tab = "apex" }) {
   const exportJson = () => download(`vini-telemetry-${new Date().toISOString().replace(/[:.]/g, "-")}.json`, JSON.stringify({
     capturedAt: new Date().toISOString(), note: "Simulated telemetry from vini's portfolio sandbox", mode: live ? "live" : "paused",
     fps, memoryMB: mem, latencyMs: sys.lat, peakLatencyMs: sys.peak, requestsShed: sys.shed, recoverySeconds: sys.recoveredIn,
-    nodes: NODES.map((n, i) => ({ node: n, status: health(i) })), activeSandbox: tab, sandbox: report.current,
+    nodes: NODES.map((n, i) => ({ node: n, status: health(i) })), activeSandbox: all ? "all" : tab,
+    sandbox: all ? null : reports.current[{ apex: "apex-fit", polo: "polo", shield: "bot-shield", trade: "trade-calc" }[tab]], sandboxes: reports.current,
   }, null, 2));
 
-  const Sim = { apex: ApexSim, polo: PoloDemo, shield: BotShield, trade: TradeCalc }[tab] || ApexSim;
+  const Sim = SIMS[tab] || ApexSim;
   return (
-    <Drawer title="Command Center · live telemetry" onClose={close} wide>
-      <div className="space-y-6 p-5 sm:p-6">
-        <div role="tablist" aria-label="Sandboxes" className="flex gap-1 rounded-2xl border border-zinc-700 bg-white/[.02] p-1">
+      <div className="space-y-6">
+        {!all && <div role="tablist" aria-label="Sandboxes" className="flex gap-1 rounded-2xl border border-zinc-700 bg-white/[.02] p-1">
           {TABS.map(([id, label]) => (
-            <button key={id} role="tab" aria-selected={tab === id} type="button" onClick={() => open("telemetry", { tab: id })}
+            <button key={id} role="tab" aria-selected={tab === id} type="button" onClick={() => onTab(id)}
               className={`flex-1 whitespace-nowrap rounded-xl px-1.5 py-2 text-xs transition-colors sm:px-3 sm:text-sm ${tab === id ? "bg-c1/15 text-white ring-1 ring-c1/40" : "text-zinc-400 hover:text-zinc-200"}`}>{label}</button>
           ))}
-        </div>
+        </div>}
 
         <section aria-label="System telemetry" className="card space-y-4 p-4">
           <div className="flex flex-wrap items-center gap-2">
@@ -101,7 +102,20 @@ export default function TelemetryDrawer({ tab = "apex" }) {
           {sys.shed > 0 && <p className="num text-[11px] text-zinc-500">Load shed during stress: {sys.shed} requests · auto-recovery {sys.recoveredIn ? `in ${sys.recoveredIn} s` : "in progress"}</p>}
         </section>
 
-        <Sim live={live} onReport={onReport} resetKey={resetKey} />
+        {all
+          ? <div className="grid gap-5 lg:grid-cols-2">{TABS.map(([id]) => { const S = SIMS[id]; return <div key={id} className="card p-4 sm:p-5"><S live={live} onReport={onReport} resetKey={resetKey} /></div>; })}</div>
+          : <Sim live={live} onReport={onReport} resetKey={resetKey} />}
+      </div>
+  );
+}
+
+export default function TelemetryDrawer({ tab = "apex" }) {
+  const { close, open } = useApp();
+  return (
+    <Drawer title="Command Center · live telemetry" onClose={close} wide>
+      <div className="space-y-4 p-5 sm:p-6">
+        <CommandCenter tab={tab} onTab={(id) => open("telemetry", { tab: id })} />
+        <a href="command-center.html" className="btn w-full">Open the full-screen Command Center: all four at once →</a>
       </div>
     </Drawer>
   );

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "gen": "node scripts/gen-data.mjs"
+    "gen": "node scripts/gen-data.mjs",
+    "test": "node scripts/test.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

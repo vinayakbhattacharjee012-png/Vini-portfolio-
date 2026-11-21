@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-21T04:40:24.333Z",
+  "commit": "82fb49e",
+  "passed": 145,
+  "failed": 0,
+  "suites": [
+    {
+      "name": "New features",
+      "passed": 45,
+      "failed": 0,
+      "ms": 49122
+    },
+    {
+      "name": "Original site",
+      "passed": 52,
+      "failed": 0,
+      "ms": 30752
+    },
+    {
+      "name": "Extra pages & links",
+      "passed": 24,
+      "failed": 0,
+      "ms": 77620
+    },
+    {
+      "name": "Restored content",
+      "passed": 24,
+      "failed": 0,
+      "ms": 23728
+    }
+  ],
+  "perf": {
+    "fpsBefore": 19,
+    "fpsAfter": 31,
+    "profile": "Scrolling the whole homepage on a 412 px phone profile with 4× CPU throttling"
+  }
+}

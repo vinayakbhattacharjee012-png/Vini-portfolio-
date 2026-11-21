@@ -1,0 +1,84 @@
+/* Theme tokens for every page: the Modes menu switches data-theme on <html>. */
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #ececf0;
+  --ink: #121216;
+  --muted: #5c5c68;
+  --line: #dcdce2;
+  --star: #9b1d3a;
+  --nebula: #4f5663;
+  --danger: #b3261e;
+  --star-soft: rgba(155, 29, 58, 0.09);
+  --nav-bg: rgba(245, 245, 247, 0.86);
+  --glow: 0 10px 30px rgba(16, 20, 42, 0.08);
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08080b;
+    --surface: #111115;
+    --surface-2: #19191f;
+    --ink: #ececf1;
+    --muted: #9b9ba8;
+    --line: #26262f;
+    --star: #e0566f;
+    --nebula: #c6ccd6;
+    --danger: #ff6b6b;
+    --star-soft: rgba(224, 86, 111, 0.13);
+    --nav-bg: rgba(8, 8, 11, 0.82);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08080b;
+  --surface: #111115;
+  --surface-2: #19191f;
+  --ink: #ececf1;
+  --muted: #9b9ba8;
+  --line: #26262f;
+  --star: #e0566f;
+  --nebula: #c6ccd6;
+  --danger: #ff6b6b;
+  --star-soft: rgba(224, 86, 111, 0.13);
+  --nav-bg: rgba(8, 8, 11, 0.82);
+  color-scheme: dark;
+}
+:root[data-theme="black"] {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --surface-2: #141414;
+  --ink: #f4f4f4;
+  --muted: #9b9b9b;
+  --line: #222222;
+  --star: #ea5f78;
+  --nebula: #d4d9e2;
+  --danger: #ff6b5e;
+  --star-soft: rgba(234, 95, 120, 0.15);
+  --nav-bg: rgba(0, 0, 0, 0.88);
+  --glow: 0 0 34px rgba(234, 95, 120, 0.2);
+  color-scheme: dark;
+}
+:root { --on-star: #fff; } /* text on --star fills; bright accents set it dark */
+:root[data-theme="hologram"] {
+  --bg: #03090d; --surface: #07141b; --surface-2: #0c1e27; --ink: #e3f7fc; --muted: #8db0bc; --line: #163340;
+  --star: #38d9f2; --nebula: #a9b8ff; --danger: #ff6b81; --star-soft: rgba(56, 217, 242, .13);
+  --nav-bg: rgba(3, 9, 13, .82); --glow: 0 0 34px rgba(56, 217, 242, .18); --on-star: #03141a; color-scheme: dark;
+}
+:root[data-theme="nebula"] {
+  --bg: #0a0613; --surface: #120c20; --surface-2: #1a132e; --ink: #f1ebff; --muted: #ab9fca; --line: #2b2244;
+  --star: #b98cff; --nebula: #ff9fd6; --danger: #ff6b8b; --star-soft: rgba(185, 140, 255, .14);
+  --nav-bg: rgba(10, 6, 19, .82); --glow: 0 0 34px rgba(185, 140, 255, .2); --on-star: #14082a; color-scheme: dark;
+}
+:root[data-theme="terminal"] {
+  --bg: #010503; --surface: #050f09; --surface-2: #0a1a10; --ink: #d4ffe0; --muted: #7db58c; --line: #13301f;
+  --star: #3dff8b; --nebula: #b4f5c9; --danger: #ff5f56; --star-soft: rgba(61, 255, 139, .11);
+  --nav-bg: rgba(1, 5, 3, .86); --glow: 0 0 30px rgba(61, 255, 139, .16); --on-star: #021208; color-scheme: dark;
+  --font-display: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* Animated cross-page navigation (browsers without support simply navigate). */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }

@@ -30,71 +30,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" />
+<link rel="stylesheet" href="/src/theme.css" />
 <style>
   /* Layout: deep-space night sky. Starfield hero, then sections of cards and hand-drawn mechanism diagrams. */
-  :root {
-    --bg: #f5f5f7;
-    --surface: #ffffff;
-    --surface-2: #ececf0;
-    --ink: #121216;
-    --muted: #5c5c68;
-    --line: #dcdce2;
-    --star: #9b1d3a;
-    --nebula: #4f5663;
-    --danger: #b3261e;
-    --star-soft: rgba(155, 29, 58, 0.09);
-    --nav-bg: rgba(245, 245, 247, 0.86);
-    --glow: 0 10px 30px rgba(16, 20, 42, 0.08);
-    --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
-    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #08080b;
-      --surface: #111115;
-      --surface-2: #19191f;
-      --ink: #ececf1;
-      --muted: #9b9ba8;
-      --line: #26262f;
-      --star: #e0566f;
-      --nebula: #c6ccd6;
-      --danger: #ff6b6b;
-      --star-soft: rgba(224, 86, 111, 0.13);
-      --nav-bg: rgba(8, 8, 11, 0.82);
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #08080b;
-    --surface: #111115;
-    --surface-2: #19191f;
-    --ink: #ececf1;
-    --muted: #9b9ba8;
-    --line: #26262f;
-    --star: #e0566f;
-    --nebula: #c6ccd6;
-    --danger: #ff6b6b;
-    --star-soft: rgba(224, 86, 111, 0.13);
-    --nav-bg: rgba(8, 8, 11, 0.82);
-    color-scheme: dark;
-  }
 
-  :root[data-theme="black"] {
-    --bg: #000000;
-    --surface: #0a0a0a;
-    --surface-2: #141414;
-    --ink: #f4f4f4;
-    --muted: #9b9b9b;
-    --line: #222222;
-    --star: #ea5f78;
-    --nebula: #d4d9e2;
-    --danger: #ff6b5e;
-    --star-soft: rgba(234, 95, 120, 0.15);
-    --nav-bg: rgba(0, 0, 0, 0.88);
-    --glow: 0 0 34px rgba(234, 95, 120, 0.2);
-    color-scheme: dark;
-  }
 
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
@@ -281,7 +220,10 @@
   /* Equalizer */
   .eq { display: flex; align-items: flex-end; gap: 3px; height: 26px; }
   /* Performance: sections off screen skip rendering, and their animations pause (toggled by script). */
-  main > section, .sk-sec, .band, footer { content-visibility: auto; contain-intrinsic-size: auto 1200px; }
+  /* Every section renders once at load (so its real height is remembered), then off-screen ones are skipped.
+     Skipping from the start made far jumps (nav links, #projects-python) land short of their target. */
+  main > section, .sk-sec, .band, footer { contain-intrinsic-size: auto 1200px; }
+  .cv-ready main > section, .cv-ready .sk-sec, .cv-ready .band, .cv-ready footer { content-visibility: auto; }
   .offscreen, .offscreen *, .offscreen *::before, .offscreen *::after { animation-play-state: paused !important; }
   .eq i { width: 4px; background: var(--nebula); border-radius: 2px; height: 100%; transform: scaleY(.4); transform-origin: bottom; animation: eq 1s ease-in-out infinite; }
   .eq i:nth-child(2n) { background: var(--star); animation-duration: .8s; }
@@ -1653,7 +1595,6 @@
   footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 
   /* ================= Modes: looks (colour themes) and views ================= */
-  :root { --on-star: #fff; } /* text on --star fills; bright accents set it dark */
 
   /* The hero is always a night sky, so in the light theme it keeps the dark palette (its text was dark-on-dark). */
   :root[data-theme="light"] .hero { --bg: #08080b; --surface: #111115; --surface-2: #19191f; --ink: #ececf1; --muted: #9b9ba8; --line: #26262f; --star: #e0566f; --nebula: #c6ccd6; --star-soft: rgba(224, 86, 111, .13); color: var(--ink); color-scheme: dark; }
@@ -1662,22 +1603,6 @@
   }
 
   /* New looks */
-  :root[data-theme="hologram"] {
-    --bg: #03090d; --surface: #07141b; --surface-2: #0c1e27; --ink: #e3f7fc; --muted: #8db0bc; --line: #163340;
-    --star: #38d9f2; --nebula: #a9b8ff; --danger: #ff6b81; --star-soft: rgba(56, 217, 242, .13);
-    --nav-bg: rgba(3, 9, 13, .82); --glow: 0 0 34px rgba(56, 217, 242, .18); --on-star: #03141a; color-scheme: dark;
-  }
-  :root[data-theme="nebula"] {
-    --bg: #0a0613; --surface: #120c20; --surface-2: #1a132e; --ink: #f1ebff; --muted: #ab9fca; --line: #2b2244;
-    --star: #b98cff; --nebula: #ff9fd6; --danger: #ff6b8b; --star-soft: rgba(185, 140, 255, .14);
-    --nav-bg: rgba(10, 6, 19, .82); --glow: 0 0 34px rgba(185, 140, 255, .2); --on-star: #14082a; color-scheme: dark;
-  }
-  :root[data-theme="terminal"] {
-    --bg: #010503; --surface: #050f09; --surface-2: #0a1a10; --ink: #d4ffe0; --muted: #7db58c; --line: #13301f;
-    --star: #3dff8b; --nebula: #b4f5c9; --danger: #ff5f56; --star-soft: rgba(61, 255, 139, .11);
-    --nav-bg: rgba(1, 5, 3, .86); --glow: 0 0 30px rgba(61, 255, 139, .16); --on-star: #021208; color-scheme: dark;
-    --font-display: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  }
   :root[data-theme="terminal"] h1, :root[data-theme="terminal"] h2 { letter-spacing: -.02em; }
   /* Their night skies take the theme colours instead of the burgundy clouds. */
   :root:is([data-theme="hologram"], [data-theme="nebula"], [data-theme="terminal"]) .night {
@@ -3818,6 +3743,8 @@
       entries.forEach(function (en) { en.target.classList.toggle("offscreen", !en.isIntersecting); });
     }, { rootMargin: "300px 0px" });
     document.querySelectorAll("main > section, .sk-sec, .band, footer").forEach(function (el) { el.classList.add("offscreen"); offIO.observe(el); });
+    var cvReady = function () { requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add("cv-ready"); }); }); };
+    if (document.readyState === "complete") cvReady(); else addEventListener("load", cvReady);
   } else {
     document.querySelectorAll(".diagram, .eq").forEach(function (el) { el.classList.add("live"); });
   }

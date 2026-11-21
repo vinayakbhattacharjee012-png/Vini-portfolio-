@@ -10,6 +10,11 @@ New features are added on top by `src/islands.jsx` and follow the page's themes:
 - **Start a build**: brief form with reference number (Netlify Forms, email fallback), your hours, FAQ
 - QR code, Konami code / `sudo hack` diagnostic sweep
 
+Extra pages (same look as the homepage, animated page transitions):
+
+- `command-center.html`: all four sandboxes running at once
+- `features.html`: every feature with a link that opens it, plus the latest test results
+
 ```bash
 npm install
 npm run dev      # http://localhost:5173
@@ -18,6 +23,13 @@ npm run build    # static site in dist/
 
 Content for the new sections is in `src/data/portfolioData.js` (look for `CHECK` comments).
 After changing `site.url`, run `npm run gen` to regenerate the QR code and commit heatmap.
+
+## Tests
+
+`npm test` builds the site, serves it, runs every suite in `tests/` in Chromium (original site, new features,
+restored content, extra pages and all their links), benchmarks scrolling on a throttled phone profile, and writes
+`src/data/test-report.json`, which the features page shows. It needs Playwright
+(`npm i -D playwright && npx playwright install chromium` if it isn't installed).
 
 Deploy `dist/` to any static host (Render: build `npm ci && npm run build`, publish `dist`).
 `apex-sports-hub/` is a separate app with its own README.

@@ -4,6 +4,7 @@
 @import "tailwindcss" source(none);
 @source "./components";
 @source "./islands.jsx";
+@source "./pages";
 
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;

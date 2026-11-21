@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>All features · Vini</title>
+<meta name="description" content="Everything Vini's portfolio can do, with links that open each feature, plus the automated test results." />
+<link rel="canonical" href="https://vini-portfolio.onrender.com/features.html" />
+<link rel="icon" href="favicon-64.png" type="image/png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#08080b" />
+<meta property="og:title" content="All features · Vini" />
+<meta property="og:description" content="Everything Vini's portfolio can do, with links that open each feature, plus the automated test results." />
+<meta property="og:image" content="https://vini-portfolio.onrender.com/og.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" />
+<link rel="stylesheet" href="/src/theme.css" />
+<script>
+  /* Same saved look and Calm setting as the portfolio. */
+  try {
+    var t = localStorage.getItem("theme"), r = document.documentElement;
+    if (/^(light|dark|black|hologram|nebula|terminal)$/.test(t)) r.setAttribute("data-theme", t);
+    if (localStorage.getItem("calm") === "1") r.setAttribute("data-calm", "");
+  } catch (e) {}
+</script>
+<style>
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; z-index: 90; padding: 10px 16px; border-radius: 999px;
+    background: var(--surface); color: var(--ink); border: 1px solid var(--line); font-size: .9rem; transition: opacity .25s ease, transform .25s ease; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div id="page" class="vx-host"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:24px">This page needs JavaScript. <a href="./">Back to the portfolio</a>.</p></noscript>
+<script type="module" src="/src/pages/features.jsx"></script>
+</body>
+</html>

@@ -4,9 +4,9 @@
 import { StrictMode, Suspense, lazy, useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom";
-import css from "./islands.css?inline";
 import { AppProvider, useApp } from "./lib/app";
 import { isTyping, scrollToId } from "./lib/utils";
+import { attach, syncCalm } from "./lib/mount";
 import { Lab, SnippetModal } from "./components/lab/Lab";
 import { Impact } from "./components/impact/Impact";
 import { StartBuild } from "./components/contact/Contact";
@@ -16,17 +16,6 @@ import { Sweep } from "./components/ui/Sweep";
 const TelemetryDrawer = lazy(() => import("./components/telemetry/TelemetryDrawer"));
 const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
 const GAUGE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14l4-4M3.3 17a9 9 0 1 1 17.4 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-
-function attach(host) {
-  const root = host.attachShadow({ mode: "open" });
-  const style = document.createElement("style");
-  style.textContent = css;
-  const box = document.createElement("div");
-  root.append(style, box);
-  // Keys typed into these forms must not trigger the page's single-key shortcuts (/, `, ?, galaxy).
-  host.addEventListener("keydown", (e) => { if (isTyping(e) && !e.ctrlKey && !e.metaKey && !e.altKey) e.stopPropagation(); });
-  return box;
-}
 
 function Overlays() {
   const { overlay } = useApp();
@@ -48,13 +37,15 @@ function register(a, center, go) {
     { t: "Go to Impact", d: "Stats, timeline, roadmap and lessons", k: "impact metrics milestones timeline roadmap lessons heatmap", run: go("impact") },
     { t: "Start a build", d: "Send a project brief", k: "hire inquiry brief collaborate form faq availability", run: go("build") },
     { t: "QR code", d: "Scan to open this site on your phone", k: "qr phone mobile scan", run: () => a().open("qr") },
+    { t: "Command Center page", d: "Full screen: all four sandboxes at once", k: "command center page full screen dashboard all sims", run: () => { location.href = "command-center.html"; } },
+    { t: "All features", d: "Every feature with a link, plus the test results", k: "features list everything catalogue tests summary", run: () => { location.href = "features.html"; } },
   );
 
   const f = window.__fx || {};
   if (f.cmds && f.print) {
     const help = f.cmds.help, sudo = f.cmds.sudo;
     const leave = () => f.closeTerminal?.(false);
-    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone"); };
+    f.cmds.help = (x) => { help?.(x); f.print("o", "  center           open the Command Center\n  run <sim>        apex-sim | polo | raid | trade\n  qr               QR code for your phone\n  features         every feature on this site"); };
     f.cmds.center = () => { leave(); center()(); };
     f.cmds.run = (x) => {
       const tab = { "apex-sim": "apex", apex: "apex", polo: "polo", raid: "shield", trade: "trade" }[x];
@@ -62,6 +53,7 @@ function register(a, center, go) {
       leave(); center(tab)();
     };
     f.cmds.qr = () => { leave(); a().open("qr"); };
+    f.cmds.features = () => { location.href = "features.html"; };
     f.cmds.sudo = (x) => {
       if (x !== "hack") return sudo?.(x);
       a().setSweep((n) => n + 1);
@@ -80,7 +72,7 @@ function register(a, center, go) {
   }
   // Footer links.
   const foot = document.querySelector(".foot-links");
-  for (const [label, run] of [["Command Center", center()], ["QR code", () => a().open("qr")]]) {
+  for (const [label, run] of [["Command Center", center()], ["QR code", () => a().open("qr")], ["All features", () => { location.href = "features.html"; }]]) {
     const b = document.createElement("button");
     Object.assign(b, { type: "button", className: "linkish", textContent: label });
     b.addEventListener("click", run);
@@ -134,10 +126,7 @@ if (hosts.every(Boolean)) {
   const layer = document.createElement("div");
   layer.className = "vx-host";
   document.body.append(layer);
-  const all = [...hosts, layer];
   const boxes = Object.fromEntries(hosts.map((h) => [h.id, attach(h)]));
-  const syncCalm = () => all.forEach((h) => h.classList.toggle("calm", document.documentElement.hasAttribute("data-calm")));
-  new MutationObserver(syncCalm).observe(document.documentElement, { attributes: true, attributeFilter: ["data-calm"] });
-  syncCalm();
+  syncCalm([...hosts, layer]);
   createRoot(attach(layer)).render(<StrictMode><Islands boxes={boxes} /></StrictMode>);
 }
