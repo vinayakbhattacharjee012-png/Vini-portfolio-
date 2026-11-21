@@ -24,6 +24,8 @@ The site is static and has to stay smooth on a phone. These are the rules and wh
 `node tests/perf-budget.js` serves the site, throttles the CPU 4x and fails if a budget is broken: idle fps in Lite and Full, running animations, load long tasks, and which governor loops are alive on each view.
 
 ## Known trade-offs
-- `content-visibility: auto` was tried and removed: its size guesses broke `#anchor` jumps.
+- Off-screen home sections use `content-visibility: auto`, which roughly halves the first layout. Its height guesses used to break `#anchor` jumps, so `perf.js` measures every section once when the page is idle (and before any early section-link click). Don't remove that step.
+- No layout reads (`getBoundingClientRect`, `offsetHeight`, `scrollHeight`) while the page is still loading: each one forces a full-page layout. Wait for `load` or an IntersectionObserver callback.
+- Anything inserted above the first screen after load must have its space reserved in the HTML (see the `#w2Hud` placeholder), or the page jumps.
 - The big drifting background blobs and clouds are static now. They were the largest single paint cost.
 - Full mode is still the heaviest setting. Lite is the fix for a slow device.

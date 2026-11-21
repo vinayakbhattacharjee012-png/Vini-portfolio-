@@ -41,7 +41,8 @@
     var b = el('<button type="button" role="radio" aria-checked="false" data-p="' + k + '">' + esc(PERSONAS[k].label) + "</button>");
     pill.appendChild(b);
   });
-  if (nav) nav.insertAdjacentElement("afterend", hud);
+  var preHud = document.getElementById("w2Hud"); // the empty placeholder in index.html keeps its space from the first paint
+  if (preHud) preHud.replaceWith(hud); else if (nav) nav.insertAdjacentElement("afterend", hud);
 
   var grid = $("#ai .grid"), cur = "all";
   function setPersona(k, quiet) {
@@ -145,8 +146,12 @@
   ];
   var got = {};
   try { got = JSON.parse(store("ach") || "{}") || {}; } catch (e) { got = {}; }
-  var badge = el('<button class="w2-badge" id="w2Badge" type="button" aria-haspopup="dialog"><i aria-hidden="true">◈</i><span class="long">HUD Achievements </span><b>(0/5)</b></button>');
-  document.body.appendChild(badge);
+  var badge = el('<button class="w2-badge" id="w2Badge" type="button" aria-haspopup="dialog"><i aria-hidden="true">◈</i><span class="long">Achievements </span><b>(0/5)</b></button>');
+  // lives in the bar under the navbar, not floating over the page
+  var hudWrap = $(".wrap", hud); if (hudWrap) { badge.classList.add("in-hud"); hudWrap.appendChild(badge); } else document.body.appendChild(badge);
+  // keep the first screen clean: the bottom-left status pill appears once you scroll past the top section
+  var heroEl = document.getElementById("top");
+  if (heroEl && "IntersectionObserver" in window) new IntersectionObserver(function (es) { document.body.classList.toggle("w2-athero", es[0].intersectionRatio >= 0.25); }, { threshold: [0, 0.25, 0.5] }).observe(heroEl);
   function count() { return ACH.filter(function (a) { return got[a[0]]; }).length; }
   function paintBadge() { $("b", badge).textContent = "(" + count() + "/5)"; badge.classList.toggle("full", count() === 5); }
   function unlock(id) {

@@ -223,3 +223,9 @@ html.lite .botroll-track { animation: none !important; flex-wrap: wrap; width: a
 @media (max-width: 900px) { nav .w2-sfx { display: none; } .w2-sfx.in-hud { display: inline-flex; align-items: center; height: 30px; flex: none; } }
 /* contrast: the HUD bar sits on the page background, so its text uses the page's muted colour (readable in light and dark) */
 .w2-lbl, .w2-note { color: var(--muted, #5b6472); }
+/* Declutter: the badge sits in the HUD bar; the status pill hides while the top section is on screen. */
+.w2-badge.in-hud { position: static; flex: none; margin-left: auto; padding: 5px 11px; z-index: auto; }
+html .tele { transition: opacity .25s ease, transform .25s ease, visibility 0s linear 0s; }
+html body.w2-athero .tele { opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s; }
+/* the HUD bar's height is reserved before wave2.js fills it (no layout shift) */
+.w2-hud .wrap { min-height: 54px; box-sizing: border-box; }

@@ -21,7 +21,10 @@ html .holo[data-state="listening"] .holo-wave i, html .holo[data-state="speaking
 .tele, .fab, .holo-fab, .search-btn { -webkit-backdrop-filter: none; backdrop-filter: none; }
 .tele, .fab { background-color: color-mix(in srgb, var(--surface) 92%, transparent); }
 
-/* 4. Off-screen sections pause their animations (class toggled by wave2.js). content-visibility was tried and rejected: its size estimates broke #anchor jumps. */
+/* 4. Long page: off-screen home sections skip layout until you get near them. perf.js measures every section once when the
+   page is idle (html.cv-warm for two frames), so each remembers its real height and #anchor jumps land exactly. */
+#about, #skills, #community, #security, #process, #ai, #journey, #engineering, #creative, #advertise, #contact, body > footer { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+html.cv-warm #about, html.cv-warm #skills, html.cv-warm #community, html.cv-warm #security, html.cv-warm #process, html.cv-warm #ai, html.cv-warm #journey, html.cv-warm #engineering, html.cv-warm #creative, html.cv-warm #advertise, html.cv-warm #contact, html.cv-warm body > footer { content-visibility: visible; }
 
 /* 5. Isolate repaint regions: independent cards, telemetry panels, simulation stages */
 .card, .sk-card, .tcard, .tile, .panel { contain: layout style; }

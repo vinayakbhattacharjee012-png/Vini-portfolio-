@@ -1700,6 +1700,7 @@
     </div>
   </div>
 </nav>
+<div class="w2-hud" id="w2Hud"><div class="wrap"></div></div><!-- filled by wave2.js; here from the first paint so nothing below it jumps -->
 
 <header class="hero" id="top">
   <div class="wrap">
@@ -3161,10 +3162,9 @@
         }
       });
     }, { rootMargin: "0px 0px -40px 0px" });
-    document.querySelectorAll(".reveal").forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      if (r.top > innerHeight) revIO.observe(el); else el.classList.add("in");
-    });
+    // No getBoundingClientRect here: measuring during page parse forced a full-page layout (~100 ms).
+    // The observer's first callback already reports which elements start on screen.
+    document.querySelectorAll(".reveal").forEach(function (el) { revIO.observe(el); });
   }
 
 
@@ -3175,7 +3175,7 @@
     bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scrollY / max) : 0) + ")"; ticking = false;
   }
   window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(prog); } }, { passive: true });
-  prog();
+  window.addEventListener("load", function () { requestAnimationFrame(prog); }); // not during parse: reading scrollHeight here forced a full layout
 
   // Card spotlight follows the pointer
   if (!reduce && window.matchMedia && matchMedia("(hover: hover)").matches) {

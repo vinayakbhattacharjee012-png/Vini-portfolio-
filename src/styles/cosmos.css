@@ -97,3 +97,9 @@ html[style*="--fx-hud"] .w2-badge, html[style*="--fx-hud"] .tele, html[style*="-
 .holo-ai[hidden] { display: none; } .holo-ai p { margin: 0 0 8px; } .holo-ai label { display: block; margin-bottom: 4px; opacity: .8; }
 .holo-ai input { width: 100%; box-sizing: border-box; font: 500 .85rem ui-monospace, monospace; color: inherit; background: rgba(0, 0, 0, .35); border: 1px solid rgba(var(--holo-c, 90, 225, 255), .4); border-radius: 8px; padding: 8px 10px; }
 .holo-ai-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; } .holo-ai .holo-ai-msg { margin: 8px 0 0; min-height: 1.2em; }
+/* Phones: the auto-scroll rail is one play button stacked above the corner buttons; its other controls show only while it runs. */
+@media (max-width: 560px) {
+  .w2-asrail { top: auto; bottom: calc(132px + env(safe-area-inset-bottom, 0px)); transform: none; right: max(14px, env(safe-area-inset-right, 0px)); }
+  .w2-asrail:not(.on) { padding: 3px; }
+  .w2-asrail:not(.on) > :not(#w2AsBtn) { display: none; }
+}

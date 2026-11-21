@@ -83,6 +83,32 @@
     window.addEventListener("hashchange", function () { win = Math.min(win, 4); });
   }
 
+  /* Long page: perf.css lets off-screen sections skip layout. Measure them all once (two frames with html.cv-warm) so each
+     section remembers its real height; before that, a section jump would land in the wrong place. */
+  var warm = 0, waiting = [];
+  function cvWarm(cb) {
+    if (warm === 2) { if (cb) cb(); return; }
+    if (cb) waiting.push(cb);
+    if (warm === 1) return; warm = 1; root.classList.add("cv-warm");
+    requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.remove("cv-warm"); warm = 2; waiting.splice(0).forEach(function (f) { f(); }); }); });
+  }
+  function anchorTarget(h) { return h && h.length > 1 && !/^#\//.test(h) ? document.getElementById(decodeURIComponent(h.slice(1))) : null; }
+  // a section link clicked before the measuring is done: measure first, then jump
+  document.addEventListener("click", function (e) {
+    if (warm === 2 || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest && e.target.closest('a[href^="#"]'), h = a && a.getAttribute("href"); if (!anchorTarget(h)) return;
+    e.preventDefault(); cvWarm(function () { if (location.hash === h) anchorTarget(h).scrollIntoView({ block: "start" }); else location.hash = h; });
+  }, true);
+  // a page opened at #section, or a jump made by code before the measuring: correct the position afterwards
+  window.addEventListener("hashchange", function () { if (warm !== 2) cvWarm(function () { var t = anchorTarget(location.hash); if (t) t.scrollIntoView({ block: "start" }); }); });
+  var touched = false; // only correct the position if the visitor hasn't started scrolling themselves
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (n) { window.addEventListener(n, function () { touched = true; }, { passive: true, once: true }); });
+  window.addEventListener("load", function () {
+    var t = anchorTarget(location.hash);
+    (window.requestIdleCallback || function (f) { setTimeout(f, 800); })(function () { cvWarm(function () { if (t && !touched) t.scrollIntoView({ block: "start" }); }); }, { timeout: 1500 });
+  });
+  window.__cvWarm = cvWarm;
+
   window.__perf = { set: set, cycle: cycle, mode: function () { return mode; } };
   var CM = window.__cmds = window.__cmds || [];
   CM.push({ t: "Performance mode", d: "Switch between Auto, Lite and Full effects", k: "performance lite fast lag smooth animation speed", run: cycle });
