@@ -1,7 +1,7 @@
 {
   "name": "Vini · Builder, Community Founder, Creator",
   "short_name": "Vini",
-  "description": "AI and software builder, Discord network founder, server security architect and creator.",
+  "description": "I build AI apps and Discord bots, run Discord communities and design server security.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

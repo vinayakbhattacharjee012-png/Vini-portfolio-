@@ -12,7 +12,7 @@
     '<div class="ec-grid"><div class="ec-stage"><canvas id="ecCv" width="720" height="560" role="img" aria-label="Rotating holographic Earth with a quarter cutaway showing crust, mantle, outer core and inner core"></canvas>' +
     '<p class="ec-hint" id="ecHint">Click the crust to trigger an earthquake. Click any layer to inspect it.</p></div>' +
     '<div class="ec-side">' +
-    '<div class="ec-card ec-journey" id="ecJ"><h2>My journey, drilled</h2><p class="ec-note" style="margin-top:0">Each depth is a layer of the work on this site. Order follows how the stack builds on itself, not dates.</p>' +
+    '<div class="ec-card ec-journey" id="ecJ"><h2>My journey, drilled</h2><p class="ec-note" style="margin-top:0">Each depth is a layer of the work on this site. The order follows how the stack builds on itself. It is not a timeline.</p>' +
     '<ol class="ec-steps" id="ecJs" aria-label="Journey stages"></ol><div id="ecJb" aria-live="polite"></div>' +
     '<div class="ec-row"><button type="button" class="w2-go alt" id="ecJp">← Back</button><button type="button" class="w2-go" id="ecJn">Drill deeper →</button><button type="button" class="w2-go alt" id="ecJa">Play</button><button type="button" class="w2-go alt" id="ecJc">Save card</button></div></div>' +
     '<div class="ec-card"><h2>Exploded view</h2><input type="range" id="ecEx" min="0" max="100" value="0" aria-label="Exploded view percent"/><output id="ecExV">0%</output>' +
@@ -207,7 +207,7 @@
   /* My journey: copy comes from the Experience, About and Testing sections of this site. No dates are claimed. */
   var JOURNEY = [
     { d: 0, t: "Creator", w: "Surface", p: "Away from the keyboard I cut European football highlight edits to soundtracks I make myself." },
-    { d: 35, t: "Moderation", w: "Crust", p: "Junior moderator in a Roblox community server of 90,000 members, and Head Administrator owning Galaxy network hubs. This is where community safety got personal." },
+    { d: 35, t: "Moderation", w: "Crust", p: "Junior moderator in a Roblox community server of 90,000 members, and Head Administrator who owned Galaxy network hubs." },
     { d: 900, t: "Bots", w: "Upper mantle", p: "Bot developer: Nova 3.0 Ultimate with verification views, leveling, anti-spam and AFK tracking, live in communities." },
     { d: 2600, t: "Security", w: "Lower mantle", p: "Server security architect: a layered defence of anti-nuke, automod and containment, with ownership kept in a separate Vault Account." },
     { d: 4000, t: "Testing", w: "Outer core", p: "Every bot meets the same attacks in a private sandbox first: floods, mass joins, channel deletes, bad links, permission checks and false positives. Only a pass goes live." },

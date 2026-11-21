@@ -180,8 +180,8 @@
   function bag(ws) { var o = {}; ws.forEach(function (w) { o[w] = (o[w] || 0) + 1; }); return o; }
 
   var STEPS = [["tok", "Tokenization"], ["emb", "Vector embedding"], ["sim", "Similarity match"], ["grd", "Guardrail check"], ["res", "Response"]];
-  var rag = el('<div class="panel sec w2-rag" id="w2Rag"><h2>How my AI pipelines think</h2>' +
-    '<p class="note">Type a query or pick one. Watch it move through the same five stages my health AI work uses. Everything runs in your browser: no model, no API, no key. Embeddings here are toy hashes for illustration.</p>' +
+  var rag = el('<div class="panel sec w2-rag" id="w2Rag"><h2>How a query moves through my AI pipelines</h2>' +
+    '<p class="note">Type a query or pick one and watch it go through five stages: tokens, embedding, match, guardrail check, answer. It all runs in your browser. No model, no API, no key, and the embeddings are toy hashes just to show the idea.</p>' +
     '<div class="w2-q"><label class="lbl" for="w2Q">Query</label><div class="w2-qrow"><input id="w2Q" autocomplete="off" maxlength="140" placeholder="Try: how does your bot stop raids?" /><button type="button" class="w2-go" id="w2Run">Run pipeline</button></div>' +
     '<div class="chips" id="w2Chips"></div></div>' +
     '<ol class="w2-nodes" id="w2Nodes" aria-label="Pipeline stages"></ol><div class="out w2-detail" id="w2Detail" aria-live="polite">Pick a query to start.</div></div>');
@@ -222,14 +222,14 @@
   }
 
   /* ---------- 5. before / after refactor slider (Engineering) ---------- */
-  var eng = el('<section id="engineering"><div class="wrap"><div class="sec-head reveal"><span class="eyebrow">Engineering</span><h2>Unoptimized monolith vs lean modules</h2>' +
-    '<p>Drag the handle. Left is this site before the performance pass: every effect on, always running. Right is after: modular files and a Lite profile. Numbers were measured with Playwright on a headless browser with the CPU throttled to phone class.</p></div>' +
+  var eng = el('<section id="engineering"><div class="wrap"><div class="sec-head reveal"><span class="eyebrow">Engineering</span><h2>Before and after I tuned it</h2>' +
+    '<p>Drag the handle. Left is this site before I tuned it: every effect on, all the time. Right is after: separate files and a Lite mode. I measured it with Playwright, headless, with the CPU slowed to phone speed.</p></div>' +
     '<div class="w2-cmp" id="w2Cmp" style="--pos:50%">' +
-    '<div class="w2-side after"><h3>Modular lean architecture</h3><p class="w2-tag">arena.js · labs.js · themes.js · perf.js · wave2.js · soundEngine.js, loaded as separate cached files, Lite profile on weak devices</p>' + metrics(["60 fps", "60 fps", "2", "2", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
-    '<div class="w2-side before"><h3>Unoptimized monolith</h3><p class="w2-tag">One 400 KB page, every effect live, nothing paused off screen, blur and glass everywhere</p>' + metrics(["27 fps", "36 fps", "225", "22", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
+    '<div class="w2-side after"><h3>After: split files, Lite mode</h3><p class="w2-tag">arena.js, labs.js, themes.js, perf.js, wave2.js and soundEngine.js as separate cached files, with Lite mode on weak devices</p>' + metrics(["60 fps", "60 fps", "2", "2", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
+    '<div class="w2-side before"><h3>Before: one big page</h3><p class="w2-tag">One 400 KB page, every effect running, nothing paused off screen, blur everywhere</p>' + metrics(["27 fps", "36 fps", "225", "22", "Idle frame rate", "Scroll frame rate", "Running animations", "Long tasks (>50 ms)"]) + '</div>' +
     '<div class="w2-hnd" aria-hidden="true"><span>⇆</span></div>' +
     '<input type="range" min="4" max="96" value="50" id="w2Rng" aria-label="Compare before and after: drag to reveal" />' +
-    '</div><p class="w2-foot">Bytes shipped are the same on both sides. Lite changes runtime work, not payload size. Latency here means main-thread long tasks, not network time.</p></div></section>');
+    '</div><p class="w2-foot">Bytes shipped are the same on both sides. Lite cuts work in the browser, not file size. "Latency" here means long main-thread tasks, not network time.</p></div></section>');
   function metrics(a) { var h = ""; for (var i = 0; i < 4; i++) h += '<div class="w2-m"><b>' + a[i] + "</b><span>" + a[i + 4] + "</span></div>"; return '<div class="w2-ms">' + h + "</div>"; }
   var anchor = $("#creative"); if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(eng, anchor);
   // home teaser: seven stages that deep-link into the Earth core journey
