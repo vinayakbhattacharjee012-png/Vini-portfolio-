@@ -32,14 +32,3 @@ export const Reset = (p) => <S {...p}><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6" />
 export const Monitor = (p) => <S {...p}><rect x="3" y="4" width="18" height="12" rx="2" /><path d="M8 20h8M12 16v4" /></S>;
 export const Tablet = (p) => <S {...p}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M11 18h2" /></S>;
 export const Phone = (p) => <S {...p}><rect x="7" y="3" width="10" height="18" rx="2" /><path d="M11 18h2" /></S>;
-
-export function Emblem({ size = 28 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <defs><linearGradient id="emb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="var(--c1)" /><stop offset="1" stopColor="var(--c2)" /></linearGradient></defs>
-      <rect x="1" y="1" width="62" height="62" rx="16" fill="#0b0e15" stroke="rgb(255 255 255 / .1)" />
-      <path d="M14 16h10l8 22 8-22h10L36 50h-8z" fill="url(#emb)" />
-      <circle cx="32" cy="12" r="3" fill="var(--c1)" />
-    </svg>
-  );
-}

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useInterval } from "../../lib/hooks";
 import { LineChart } from "./charts";
 
-const Tag = ({ children }) => <span className="rounded-full border border-white/10 px-2 py-0.5 font-mono text-[10px] text-zinc-500">{children}</span>;
+const Tag = ({ children }) => <span className="rounded-full border border-zinc-700 px-2 py-0.5 font-mono text-[10px] text-zinc-500">{children}</span>;
 function Slider({ id, label, value, min, max, step = 1, unit, onChange }) {
   return (
     <div>
@@ -148,7 +148,7 @@ export function BotShield({ live, onReport, resetKey }) {
       </div>
       <button type="button" className="btn btn-primary" disabled={!live || raid.current > 0} onClick={() => { raid.current = 16; push("raid", "⚠ Raid spike incoming"); }}>Trigger raid spike</button>
       {!live && <p className="text-xs text-zinc-500">Resume the live stream to run the simulation.</p>}
-      <ul className="num h-56 overflow-y-auto rounded-xl border border-white/[.06] bg-obsidian/70 p-3 text-[11px] leading-6" aria-live="off" aria-label="Server event log">
+      <ul className="num h-56 overflow-y-auto rounded-xl border border-zinc-700 bg-obsidian/70 p-3 text-[11px] leading-6" aria-live="off" aria-label="Server event log">
         {log.map((l) => <li key={l.id} className={{ raid: "text-rose-300", bot: "text-c1", ok: "text-emerald-300", ev: "text-zinc-500" }[l.kind]}><span className="text-zinc-600">{l.t}</span> {l.text}</li>)}
       </ul>
     </div>

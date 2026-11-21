@@ -1,6 +1,7 @@
+// Inside shadow DOM, e.target is retargeted to the host, so look at the real origin.
 export const isTyping = (e) => {
-  const t = e.target, tag = (t.tagName || "").toLowerCase();
-  return tag === "input" || tag === "textarea" || tag === "select" || t.isContentEditable;
+  const t = e.composedPath?.()[0] || e.target;
+  return t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || "");
 };
 
 export async function copyText(text) {
@@ -24,29 +25,6 @@ export function download(name, text, type = "application/json") {
 export function scrollToId(id, reduced) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
-}
-
-// Subsequence fuzzy match. Higher is better; -1 means no match.
-export function fuzzy(query, text) {
-  const q = query.toLowerCase().trim(), t = text.toLowerCase();
-  if (!q) return 0;
-  if (t.includes(q)) return 100 - t.indexOf(q);
-  let score = 0, ti = 0, run = 0;
-  for (const ch of q) {
-    if (ch === " ") continue;
-    const at = t.indexOf(ch, ti);
-    if (at < 0) return -1;
-    run = at === ti ? run + 1 : 0;
-    score += 1 + run * 2 + (at === 0 || t[at - 1] === " " ? 3 : 0);
-    ti = at + 1;
-  }
-  return score;
-}
-
-export const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-
-export function istTime(date = new Date(), tz = "Asia/Kolkata") {
-  return new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: tz }).format(date);
 }
 
 export function hourIn(tz, date = new Date()) {

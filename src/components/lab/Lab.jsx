@@ -10,7 +10,7 @@ import { Copy, Layers, Monitor, Phone, Tablet } from "../ui/Icons";
 export function Code({ code, className = "" }) {
   const parts = useMemo(() => highlight(code), [code]);
   return (
-    <pre className={`num overflow-x-auto rounded-xl border border-white/[.06] bg-obsidian/80 p-4 text-[12px] leading-relaxed text-zinc-300 ${className}`}>
+    <pre className={`num overflow-x-auto rounded-xl border border-zinc-700 bg-obsidian/80 p-4 text-[12px] leading-relaxed text-zinc-300 ${className}`}>
       <code>{parts.map(([k, t], i) => (k ? <span key={i} className={`code-${k}`}>{t}</span> : t))}</code>
     </pre>
   );
@@ -27,7 +27,7 @@ function Pipeline() {
         {pipeline.map((p, i) => (
           <div key={p.id} role="presentation" className="relative">
             <button type="button" role="tab" aria-selected={at === i} onClick={() => setAt(i)}
-              className={`w-full rounded-xl border p-3 text-left transition active:scale-[.98] ${at === i ? "border-c1/50 bg-c1/[.07]" : "border-white/[.07] hover:border-white/20"}`}>
+              className={`w-full rounded-xl border p-3 text-left transition active:scale-[.98] ${at === i ? "border-c1/50 bg-c1/[.07]" : "border-zinc-700 hover:border-zinc-600"}`}>
               <span className="num text-[11px] text-c1">0{i + 1}</span>
               <span className="mt-1 block text-sm font-medium text-zinc-100">{p.title}</span>
             </button>
@@ -76,7 +76,7 @@ function GuardrailInspector() {
       <textarea id="gr-in" rows="2" value={raw} onChange={(e) => setRaw(e.target.value)} className="field mt-3 resize-none text-sm" />
       <ol className="mt-4 grid gap-2 sm:grid-cols-3">
         {r.stages.map((s) => (
-          <li key={s.name} className={`rounded-xl border p-3 ${s.ok === false ? "border-rose-400/40" : s.ok ? "border-emerald-400/25" : "border-white/[.06]"}`}>
+          <li key={s.name} className={`rounded-xl border p-3 ${s.ok === false ? "border-rose-400/40" : s.ok ? "border-emerald-400/25" : "border-zinc-700"}`}>
             <p className="flex items-center justify-between text-xs"><span className="text-zinc-300">{s.name}</span><span className={`num ${s.ok === false ? "text-rose-400" : s.ok ? "text-emerald-400" : "text-zinc-600"}`}>{s.ok === false ? "BLOCK" : s.ok ? "PASS" : "—"}</span></p>
             <p className="mt-1 text-[11px] text-zinc-500">{s.note}</p>
           </li>
@@ -112,7 +112,7 @@ function LeanDiff() {
     <div className="card p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="kicker">Bloated vs lean</p>
-        <div className="flex rounded-full border border-white/[.08] p-1" role="group" aria-label="Code version">
+        <div className="flex rounded-full border border-zinc-700 p-1" role="group" aria-label="Code version">
           <button type="button" aria-pressed={!lean} onClick={() => setLean(false)} className={`rounded-full px-3 py-1 text-xs ${!lean ? "bg-rose-400/15 text-rose-200" : "text-zinc-400"}`}>Bloated</button>
           <button type="button" aria-pressed={lean} onClick={() => setLean(true)} className={`rounded-full px-3 py-1 text-xs ${lean ? "bg-c1/15 text-white" : "text-zinc-400"}`}>Lean</button>
         </div>
@@ -144,14 +144,14 @@ function GatewayRouter() {
     <div ref={ref} className="card p-5 sm:p-6">
       <p className="kicker">API gateway router · fallback switching</p>
       <div className="relative mt-5 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-center text-xs">
-        <div className="rounded-xl border border-white/10 p-3 text-zinc-300">Client</div>
+        <div className="rounded-xl border border-zinc-700 p-3 text-zinc-300">Client</div>
         <div className="relative w-16 overflow-hidden sm:w-28" aria-hidden="true">
           <div className="h-px bg-c1/40" />
           {seen && pkt && <span key={pkt.id} className="absolute -top-1 left-0 size-2 rounded-full bg-c1 shadow-[0_0_8px_var(--c1)]" style={{ "--to": "100%", animation: "packet .6s var(--ease) both" }} />}
         </div>
         <div className="grid gap-2">
           <div className={`rounded-xl border p-2.5 ${limited ? "border-amber-400/40 text-amber-300" : "border-c1/40 text-zinc-100"}`}>Primary model {limited && "· 429"}</div>
-          <div className={`rounded-xl border p-2.5 ${limited ? "border-c2/50 text-zinc-100" : "border-white/10 text-zinc-500"}`}>Fallback model</div>
+          <div className={`rounded-xl border p-2.5 ${limited ? "border-c2/50 text-zinc-100" : "border-zinc-700 text-zinc-500"}`}>Fallback model</div>
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
@@ -176,7 +176,7 @@ function LighthouseBadges() {
           return (
             <li key={k} className="grid justify-items-center gap-2 text-center">
               <svg viewBox="0 0 36 36" className="size-14" role="img" aria-label={`${k}: ${v ?? "not measured"}`}>
-                <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgb(255 255 255 / .08)" strokeWidth="3" />
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--line)" strokeWidth="3" />
                 <circle cx="18" cy="18" r="15.9" fill="none" stroke={c} strokeWidth="3" strokeDasharray={`${v ?? 0} 100`} strokeLinecap="round" transform="rotate(-90 18 18)" />
                 <text x="18" y="22" textAnchor="middle" fontSize="10" fill={c} fontFamily="var(--font-mono)">{v ?? "–"}</text>
               </svg>
@@ -190,19 +190,14 @@ function LighthouseBadges() {
 }
 
 /* 61-62: stack recommender + starter snippet */
-const SNIPPET = `// src/data/portfolioData.js — one file drives the whole site
+const SNIPPET = `// data.js: content lives in one place
 export const projects = [
-  {
-    id: "apex-fit",
-    name: "Apex-Fit Telemetry Engine",
-    category: "telemetry",
-    stack: ["React", "TypeScript", "SVG charts"],
-    sandbox: "apex", // opens the matching Command Center tab
-  },
+  { id: "apex-fit", name: "Apex-Fit", stack: ["React", "SVG charts"], sandbox: "apex" },
+  { id: "polo", name: "Polo Health AI", stack: ["Claude", "JSON schema"], sandbox: "polo" },
 ];
 
-// Any component just maps the data:
-import { projects } from "../data/portfolioData";
+// Builds.jsx: components only render what they get
+import { projects } from "./data";
 export const Builds = () => projects.map((p) => <Card key={p.id} {...p} />);`;
 function Recommender() {
   const { open } = useApp();
@@ -216,7 +211,7 @@ function Recommender() {
         {keys.map((x) => <button key={x} type="button" aria-pressed={k === x} onClick={() => setK(x)} className={`chip transition active:scale-[.98] ${k === x ? "border-c1/50 text-white" : "hover:text-zinc-200"}`}>{x}</button>)}
       </div>
       <ol key={k} className="anim-fade mt-4 grid gap-1.5">
-        {b.layers.map((l, i) => <li key={l} className="flex items-center gap-3 rounded-lg border border-white/[.06] px-3 py-2 text-sm text-zinc-300"><span className="num text-[11px] text-c1">L{i + 1}</span>{l}</li>)}
+        {b.layers.map((l, i) => <li key={l} className="flex items-center gap-3 rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300"><span className="num text-[11px] text-c1">L{i + 1}</span>{l}</li>)}
       </ol>
       <p className="mt-3 text-sm text-zinc-400"><span className="text-zinc-200">Host:</span> {b.host}. {b.note}</p>
       <button type="button" className="btn mt-4 h-9 px-3 text-xs" onClick={() => open("snippet")}><Layers size={14} />Starter architecture snippet</button>
@@ -269,17 +264,17 @@ function ViewportPreview() {
     <div className="card p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="kicker">Responsive preview · Apex-Fit dashboard</p>
-        <div className="flex rounded-full border border-white/[.08] p-1" role="group" aria-label="Viewport">
+        <div className="flex rounded-full border border-zinc-700 p-1" role="group" aria-label="Viewport">
           {FRAMES.map(([k, , I], i) => <button key={k} type="button" aria-pressed={f === i} onClick={() => setF(i)} aria-label={k} title={k} className={`grid size-8 place-items-center rounded-full ${f === i ? "bg-c1/15 text-white" : "text-zinc-400"}`}><I size={15} /></button>)}
         </div>
       </div>
-      <div className="mt-4 grid h-72 place-items-center overflow-hidden rounded-xl border border-white/[.06] bg-obsidian/70 p-3">
-        <div key={f} className="anim-fade @container h-full max-w-full overflow-hidden rounded-lg border border-white/10 bg-panel p-3" style={{ width: FRAMES[f][1] }}>
+      <div className="mt-4 grid h-72 place-items-center overflow-hidden rounded-xl border border-zinc-700 bg-obsidian/70 p-3">
+        <div key={f} className="anim-fade @container h-full max-w-full overflow-hidden rounded-lg border border-zinc-700 bg-panel p-3" style={{ width: FRAMES[f][1] }}>
           <div className="flex items-center justify-between"><span className="text-xs font-semibold text-zinc-100">Apex-Fit</span><span className="num text-[10px] text-emerald-400">● LIVE</span></div>
           <div className="mt-3 grid grid-cols-1 gap-2 @md:grid-cols-3">
-            {[["HR", "142"], ["Pace", "18.4"], ["Load", "61"]].map(([k, v]) => <div key={k} className="rounded-md border border-white/[.06] p-2"><p className="text-[9px] text-zinc-500">{k}</p><p className="num text-sm text-zinc-100">{v}</p></div>)}
+            {[["HR", "142"], ["Pace", "18.4"], ["Load", "61"]].map(([k, v]) => <div key={k} className="rounded-md border border-zinc-700 p-2"><p className="text-[9px] text-zinc-500">{k}</p><p className="num text-sm text-zinc-100">{v}</p></div>)}
           </div>
-          <div className="mt-2 hidden h-16 rounded-md border border-white/[.06] bg-gradient-to-r from-c2/10 to-c1/20 @sm:block" />
+          <div className="mt-2 hidden h-16 rounded-md border border-zinc-700 bg-gradient-to-r from-c2/10 to-c1/20 @sm:block" />
           <div className="mt-2 grid grid-cols-2 gap-2 @lg:grid-cols-4">{["Z1", "Z2", "Z3", "Z4"].map((z) => <div key={z} className="num rounded bg-white/[.04] py-1 text-center text-[9px] text-zinc-400">{z}</div>)}</div>
         </div>
       </div>
@@ -289,7 +284,7 @@ function ViewportPreview() {
 
 export function Lab() {
   return (
-    <Section id="lab" n="04" kicker="Architecture & workflow lab" title="How I build, shown instead of told" intro="Interactive pieces of my process: every widget here runs in your browser with no server and no API key.">
+    <Section id="lab" n="09" kicker="Architecture & workflow lab" title="How I build, shown instead of told" intro="Interactive pieces of my process: every widget here runs in your browser with no server and no API key.">
       <div className="grid gap-5">
         <Pipeline />
         <div className="grid gap-5 lg:grid-cols-2"><GuardrailInspector /><GatewayRouter /></div>

@@ -60,7 +60,7 @@ export default function TelemetryDrawer({ tab = "apex" }) {
   return (
     <Drawer title="Command Center · live telemetry" onClose={close} wide>
       <div className="space-y-6 p-5 sm:p-6">
-        <div role="tablist" aria-label="Sandboxes" className="flex gap-1 rounded-2xl border border-white/[.08] bg-white/[.02] p-1">
+        <div role="tablist" aria-label="Sandboxes" className="flex gap-1 rounded-2xl border border-zinc-700 bg-white/[.02] p-1">
           {TABS.map(([id, label]) => (
             <button key={id} role="tab" aria-selected={tab === id} type="button" onClick={() => open("telemetry", { tab: id })}
               className={`flex-1 whitespace-nowrap rounded-xl px-1.5 py-2 text-xs transition-colors sm:px-3 sm:text-sm ${tab === id ? "bg-c1/15 text-white ring-1 ring-c1/40" : "text-zinc-400 hover:text-zinc-200"}`}>{label}</button>
@@ -91,7 +91,7 @@ export default function TelemetryDrawer({ tab = "apex" }) {
             {NODES.map((n, i) => {
               const h = health(i);
               return (
-                <li key={n} className="flex items-center gap-2 rounded-xl border border-white/[.06] px-3 py-2 text-xs">
+                <li key={n} className="flex items-center gap-2 rounded-xl border border-zinc-700 px-3 py-2 text-xs">
                   <i aria-hidden="true" className={`dot ${live ? "dot-live" : ""} ${h === "ok" ? (i % 2 ? "!bg-c2 ![box-shadow:0_0_10px_var(--c2)]" : "") : "!bg-amber-400 ![box-shadow:0_0_10px_#fbbf24]"}`} />
                   <span className="text-zinc-300">{n}</span><span className={`num ml-auto text-[10px] ${h === "ok" ? "text-zinc-500" : "text-amber-300"}`}>{h.toUpperCase()}</span>
                 </li>

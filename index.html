@@ -1422,7 +1422,7 @@
     html.print-cv .cv-xp li, html.print-cv .cv-skills li, html.print-cv .cv-proj div { break-inside: avoid; }
     html.print-cv .cv-foot { margin-top: 12px; }
     html:not(.print-cv) nav, .loader, .bg-fx, canvas, .night, .tele, .fab, .vt, .toast, dialog, .search, .progress, .scroll-cue, .orbit,
-    .skip, .ptabs, .card-actions, .botroll, .themes, .modes, .tour, .menu-btn, .holo-foil, .foot-links, .cv-btn, .gx-tip { display: none !important; }
+    .skip, .ptabs, .card-actions, .botroll, .themes, .modes, .tour, .vx-host, .menu-btn, .holo-foil, .foot-links, .cv-btn, .gx-tip { display: none !important; }
     .reveal, .card, .tcard, .skb, .diagram, .sec-head, .stat, .spec, .sk-card, .xp li, .role, .fact { opacity: 1 !important; transform: none !important; filter: none !important; rotate: none !important; translate: none !important; }
     section, .sk-sec, .band { background: none !important; padding-block: 18px !important; }
     .hero { min-height: 0 !important; padding-block: 12px !important; }
@@ -2659,6 +2659,10 @@
   </section>
 
   <!-- CONTACT -->
+  <!-- New features: rendered by src/islands.jsx in the page's theme. The page works without them. -->
+  <section id="lab" class="vx-host" aria-label="How I build, shown instead of told" data-k="Architecture & workflow lab" data-d="Interactive pieces of my process, running in your browser."></section>
+  <section id="impact" class="vx-host" aria-label="What the work adds up to" data-k="Metrics, milestones & impact" data-d="Numbers, the path so far, and what's being built next."></section>
+  <section id="build" class="vx-host" aria-label="Got a project? Send a brief" data-k="Start a build" data-d="Pick a project type, describe it and get a reference number."></section>
   <section id="contact">
     <div class="wrap">
       <div class="contact card reveal">
@@ -4798,6 +4802,7 @@
     if (/\b(who|what) are you\b|\byour name\b|\babout yourself\b/.test(q)) return { text: "I'm VEGA, Vini's holographic assistant. I live inside this portfolio and I know everything on it, but nothing beyond it." };
     if (/\b(help|what can you do|what do you do|commands|how do (i|you) use|options)\b/.test(q))
       return { text: "I can tell you who Vini is, walk you through every project, explain the skills, run live simulations, open architecture maps or the résumé, switch the theme or mode, give you a guided tour, and take you to any section. Try: \"Tell me about Eclipse\", \"Run the Nova simulation\" or \"How do I contact Vini?\"" };
+    if (/\bcommand cent(er|re)\b|\btelemetry\b|\bsandbox(es)?\b|\bapex[- ]?fit\b|\bstress test\b|\btrade calc\w*|\braid sim\w*/.test(q)) return { text: "Opening the Command Center: live telemetry and four sandboxes.", run: function () { closeHolo(true, true); setTimeout(function () { if (window.__vx) __vx.open("telemetry", { tab: "apex" }); }, 300); } };
     if (/\b(recruiter|hiring manager|short version|tl;?dr)\b/.test(q)) return { text: "Switching to recruiter view: the short version, with projects, skills and contact up top.", run: function () { closeHolo(true, true); setTimeout(function () { if (window.__modes) __modes.recruiter(true); }, 300); } };
     if (/\b(calm|focus) mode\b|\breduce (the )?motion\b|\b(stop|disable|turn off|kill) (the |all )?(animations?|motion|effects)\b/.test(q)) return { text: "Calm mode on. Motion and glow are off.", run: function () { if (window.__modes) __modes.calm(true); } };
     if (/\b(tour|walk ?through|show me around|guide me|presentation)\b/.test(q)) return { text: "Starting the guided tour. Use the arrow keys or the Next button.", run: function () { closeHolo(true, true); setTimeout(function () { if (window.__modes) __modes.tour(); }, 300); } };
@@ -5321,7 +5326,7 @@
   }
   function about(el) {
     var p = el.querySelector(".sec-head p, .lede") || el.querySelector("p");
-    return { k: T(el.querySelector(".eyebrow")), t: T(el.querySelector("h1, h2")), d: T(p) };
+    return { k: T(el.querySelector(".eyebrow")) || el.dataset.k || "", t: T(el.querySelector("h1, h2")) || el.getAttribute("aria-label") || "", d: T(p) || el.dataset.d || "" };
   }
   function startTour() {
     closePanel();
@@ -5433,6 +5438,10 @@
   }
 })();
 </script>
+<form name="inquiry" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="bot-field" /><input name="name" /><input name="email" /><input name="type" /><textarea name="message"></textarea><input name="ref" />
+</form>
+<script type="module" src="/src/islands.jsx"></script>
 </body>
 </html>
 

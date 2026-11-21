@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { community, devEnv, lessons, media, principles, roadmap, stats, timeline } from "../../data/portfolioData";
+import { devEnv, lessons, principles, roadmap, stats, timeline } from "../../data/portfolioData";
 import { activity } from "../../data/generated";
 import { useApp } from "../../lib/app";
 import { useCountUp, useInView } from "../../lib/hooks";
@@ -20,7 +20,7 @@ function Stat({ s, start }) {
 function Timeline() {
   const [open, setOpen] = useState(timeline.length - 1);
   return (
-    <ol className="relative grid gap-2 border-l border-white/[.08] pl-5">
+    <ol className="relative grid gap-2 border-l border-zinc-700 pl-5">
       {timeline.map((t, i) => (
         <li key={t.title} className="relative">
           <span aria-hidden="true" className={`absolute -left-[25px] top-3 size-2.5 rounded-full border ${open === i ? "border-c1 bg-c1 shadow-[0_0_10px_var(--c1)]" : "border-white/30 bg-obsidian"}`} />
@@ -39,7 +39,7 @@ function Heatmap() {
   const weeks = [];
   for (let i = 0; i < activity.days.length; i += 7) weeks.push(activity.days.slice(i, i + 7));
   const max = Math.max(1, ...activity.days.map((d) => d[1]));
-  const shade = (n) => (n === 0 ? "rgb(255 255 255 / .05)" : `color-mix(in srgb, var(--c1) ${25 + Math.round((n / max) * 75)}%, transparent)`);
+  const shade = (n) => (n === 0 ? "color-mix(in srgb, var(--ink) 7%, transparent)" : `color-mix(in srgb, var(--c1) ${25 + Math.round((n / max) * 75)}%, transparent)`);
   return (
     <div>
       <svg viewBox={`0 0 ${weeks.length * 12} ${7 * 12}`} className="w-full" role="img" aria-label={`${activity.total} commits to the ${activity.repo} repository in the last 26 weeks`}>
@@ -54,7 +54,7 @@ function Lesson({ l }) {
   const [open, setOpen] = useState(false);
   return (
     <li>
-      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className={`w-full rounded-xl border p-3 text-left transition active:scale-[.98] ${open ? "border-c2/40 bg-c2/[.05]" : "border-white/[.07] hover:border-white/15"}`}>
+      <button type="button" aria-expanded={open} onClick={() => setOpen(!open)} className={`w-full rounded-xl border p-3 text-left transition active:scale-[.98] ${open ? "border-c2/40 bg-c2/[.05]" : "border-zinc-700 hover:border-zinc-600"}`}>
         <span className="flex items-center justify-between gap-2 text-sm font-medium text-zinc-100">{l.title}<Chevron size={15} className={`text-zinc-500 transition-transform ${open ? "rotate-180" : ""}`} /></span>
         {open && <span className="anim-fade mt-1.5 block text-sm text-zinc-400">{l.text}</span>}
       </button>
@@ -66,21 +66,9 @@ export function Impact() {
   const [ref, seen] = useInView();
   const box = "card p-5 sm:p-6";
   return (
-    <Section id="impact" n="05" kicker="Metrics, milestones & impact" title="What the work adds up to" intro="Numbers, the path so far, and what's being built next.">
+    <Section id="impact" n="10" kicker="Metrics, milestones & impact" title="What the work adds up to" intro="Numbers, the path so far, and what's being built next.">
       <div ref={ref} className="grid gap-4 sm:grid-cols-3">{stats.map((s) => <Stat key={s.label} s={s} start={seen} />)}</div>
       <div className="mt-4 grid gap-4 md:grid-cols-6">
-        <div className={`${box} md:col-span-4`}>
-          <p className="kicker text-c1">Community leadership</p>
-          <h3 className="mt-2 text-lg font-semibold">{community.title}</h3>
-          <p className="mt-2 text-sm text-zinc-400">{community.text}</p>
-          <ul className="mt-4 flex flex-wrap gap-1.5">{community.points.map((p) => <li key={p} className="chip">{p}</li>)}</ul>
-        </div>
-        <div className={`${box} md:col-span-2`}>
-          <p className="kicker text-c2">Creative</p>
-          <h3 className="mt-2 text-lg font-semibold">{media.title}</h3>
-          <p className="mt-2 text-sm text-zinc-400">{media.text}</p>
-          <ul className="mt-4 flex flex-wrap gap-1.5">{media.tags.map((t) => <li key={t} className="chip">{t}</li>)}</ul>
-        </div>
         <div className={`${box} md:col-span-3`}><p className="kicker mb-4">Build timeline</p><Timeline /></div>
         <div className={`${box} md:col-span-3`}>
           <p className="kicker mb-4">Currently building / next up</p>

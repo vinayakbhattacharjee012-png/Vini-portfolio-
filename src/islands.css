@@ -1,0 +1,91 @@
+/* Styles for the new sections. They live inside shadow roots, so nothing here can touch the
+   rest of the page, and the page's theme tokens (--star, --ink, --surface…) flow in from outside:
+   every look in the Modes menu, light included, restyles these sections too. */
+@import "tailwindcss" source(none);
+@source "./components";
+@source "./islands.jsx";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+@theme inline {
+  --color-c1: var(--c1);
+  --color-c2: var(--c2);
+  --color-obsidian: var(--bg);
+  --color-panel: var(--surface);
+  --color-panel-2: var(--surface-2);
+}
+
+:host {
+  --c1: var(--star); --c2: var(--nebula); --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Neutral greys and "white" follow the page's ink, so light themes get dark text automatically. */
+  --color-white: var(--ink);
+  --color-zinc-50: var(--ink); --color-zinc-100: var(--ink); --color-zinc-200: var(--ink);
+  --color-zinc-300: color-mix(in srgb, var(--ink) 82%, var(--muted));
+  --color-zinc-400: var(--muted); --color-zinc-500: var(--muted);
+  --color-zinc-600: color-mix(in srgb, var(--muted) 80%, var(--surface));
+  --color-zinc-700: var(--line);
+  /* Status colours readable on both light and dark surfaces. */
+  --color-emerald-300: light-dark(#047857, #6ee7b7); --color-emerald-400: light-dark(#047857, #34d399);
+  --color-rose-200: light-dark(#9f1239, #fecdd3); --color-rose-300: light-dark(#be123c, #fda4af); --color-rose-400: light-dark(#be123c, #fb7185);
+  --color-amber-300: light-dark(#b45309, #fcd34d); --color-amber-400: light-dark(#b45309, #fbbf24);
+  display: block; color: var(--ink); font: 400 16px/1.6 var(--font-sans); -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  h1, h2, h3 { font-family: var(--font-display, var(--font-sans)); color: var(--ink); text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--star); outline-offset: 3px; border-radius: 8px; }
+  button, summary { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+  ::selection { background: color-mix(in srgb, var(--star) 30%, transparent); }
+  [hidden] { display: none !important; }
+  /* Grids without explicit columns get one column that can shrink (no sideways scroll on phones). */
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@layer components {
+  .eyebrow { font: 500 .78rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--star); }
+  .sec-title { font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.15; letter-spacing: -.03em; font-weight: 700; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+  .glass { background: color-mix(in srgb, var(--surface) 94%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid var(--line); }
+  .kicker { font: 500 .7rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 2.5rem; padding: 0 1rem; border-radius: 999px; font: 600 .875rem var(--font-display, var(--font-sans));
+    border: 1px solid var(--line); color: var(--ink); background: var(--surface); transition: border-color .2s var(--ease), transform .18s var(--ease), box-shadow .2s var(--ease); }
+  .btn:hover { border-color: var(--star); box-shadow: 0 0 18px -8px var(--star); }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .5; }
+  .btn-primary { color: var(--on-star, #fff); border-color: var(--star); background: linear-gradient(180deg, color-mix(in srgb, var(--star) 92%, #fff), var(--star)); }
+  .chip { display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .65rem; border-radius: 999px; font-size: .75rem; color: var(--muted); border: 1px solid var(--line); background: var(--surface-2); }
+  .field { width: 100%; border-radius: 12px; padding: .7rem .9rem; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); font: inherit; transition: border-color .2s var(--ease); }
+  .field:focus { outline: none; border-color: var(--star); box-shadow: 0 0 0 3px color-mix(in srgb, var(--star) 18%, transparent); }
+  .field[aria-invalid="true"] { border-color: var(--danger); }
+  .dot { width: .5rem; height: .5rem; border-radius: 999px; background: var(--c1); box-shadow: 0 0 10px var(--c1); }
+  .dot-live { position: relative; }
+  .dot-live::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: ping 1.8s var(--ease) infinite; }
+  .hairline-top { position: relative; }
+  .hairline-top::before { content: ""; position: absolute; left: 12%; right: 12%; top: -1px; height: 1px; background: linear-gradient(90deg, transparent, var(--star), transparent); }
+  .reveal { opacity: 0; transform: translateY(14px); }
+  .reveal.in { opacity: 1; transform: none; transition: opacity .32s var(--ease), transform .32s var(--ease); }
+  .code-k { color: var(--star); } .code-s { color: color-mix(in srgb, var(--nebula) 75%, var(--ink)); } .code-c { color: var(--muted); font-style: italic; }
+  .code-n { color: light-dark(#b45309, #fbbf24); } .code-t { color: color-mix(in srgb, var(--star) 55%, var(--ink)); }
+}
+
+@keyframes ping { 75%, 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes slide-in-right { from { transform: translateX(100%); } }
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+@keyframes sweep { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
+@keyframes packet { from { transform: translateX(0); opacity: 0; } 10%, 90% { opacity: 1; } to { transform: translateX(var(--to, 200px)); opacity: 0; } }
+.anim-pop { animation: pop .24s var(--ease) both; }
+.anim-fade { animation: fade .2s var(--ease) both; }
+.anim-right { animation: slide-in-right .32s var(--ease) both; }
+
+/* Calm mode (the page mirrors data-calm onto each host as .calm) and the OS reduce-motion setting. */
+:host(.calm) *, :host(.calm) *::before, :host(.calm) *::after {
+  animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
