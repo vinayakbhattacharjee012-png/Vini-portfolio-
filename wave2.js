@@ -150,6 +150,8 @@
       c.fillStyle = on ? "#06070a" : "#4b5567"; c.font = "700 22px system-ui"; c.textAlign = "center"; c.fillText(on ? "✓" : String(i + 1), px + 22, 380); c.textAlign = "left";
     }
     c.fillStyle = "#9aa7b8"; c.font = '500 18px ui-monospace, Menlo, monospace'; c.fillText("PASS ID  " + id, 60, 490); c.fillText(new Date().toISOString().slice(0, 10), 60, 520);
+    var fmv = window.__fm, role = store("persona"); // registry progress and the persona you browsed as
+    c.fillStyle = "#06b6d4"; c.fillText("FEATURES " + (fmv ? fmv.runs + " run · " + fmv.unlocked + " milestones" : "0 run") + (role && role !== "all" ? " · VIEW " + role.toUpperCase() : ""), 60, 552);
     var h = hash(id); c.fillStyle = "#e8f7fb"; // barcode from the id
     for (var b = 0, bx = 560; b < 44; b++) { h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; var w = 2 + (h & 3); if (h & 8) c.fillRect(bx, 470, w, 70); bx += w + 3; if (bx > 940) break; }
     $("#w2Dl").disabled = false; return name;

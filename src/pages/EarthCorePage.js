@@ -25,6 +25,7 @@
     '<div class="ec-row"><button type="button" class="w2-go alt" id="ecQuake">Quake at random</button><button type="button" class="w2-go alt" id="ecClear">Clear</button></div>' +
     '<p class="ec-key"><i class="p"></i>P-wave (compression) <i class="s"></i>S-wave (shear)</p><p class="ec-note" id="ecQnote">No event yet.</p></div>' +
     '<div class="ec-card" id="ecInsp" aria-live="polite"><h2>Layer inspector</h2><div class="ec-row" id="ecLb"></div><div id="ecInspBody"><p class="ec-note">Pick a layer.</p></div></div>' +
+    '<div class="ec-card"><h2>Presets</h2><p class="ec-note" style="margin-top:0">Historic quakes, hotspot plumes, field reversals and depth probes.</p><label class="lbl" for="ecPre">Pick one</label><select id="ecPre" aria-label="Earth presets" style="width:100%;margin:6px 0;padding:8px;border-radius:8px;background:var(--ob);color:var(--tx);border:1px solid var(--ob-line)"><option value="">Loading presets…</option></select><div class="ec-row"><button type="button" class="w2-go" id="ecPa" disabled>Apply</button></div></div>' +
     '<a class="w2-go ec-orbit" href="#/cosmos">Zoom out to orbit →</a></div></div>';
   var $ = function (id) { return document.getElementById(id); };
   var cv = $("ecCv"), c = cv.getContext("2d"), W = 720, H = 560, cx = W / 2, cy = H / 2 + 6, RP = 168;
@@ -247,6 +248,18 @@
     x.fillStyle = "#4b5567"; x.font = '500 13px ui-monospace, Menlo, monospace'; x.fillText("vini-portfolio.onrender.com/#/earth-core", 50, 618);
     cc.toBlob(function (b) { if (!b) return; var a = document.createElement("a"), u = URL.createObjectURL(b); a.href = u; a.download = "vini-journey-card.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 3000); ev("journey-card"); }, "image/png");
   });
+  // presets come from the registries (Engine 07 and the depth probes); loaded on first view of this page
+  window.FeatureHub.core().then(function (FM) {
+    var sel = $("ecPre"), groups = {}, pre = FM.list.filter(function (x) { return x.p && x.p.apply && x.p.apply[1] === "earth"; });
+    pre.forEach(function (x) { var g = x.r === 2 ? "Depth probes" : /^Quake|^Synthetic quake/.test(x.n) ? "Earthquakes" : /^Hotspot|^Synthetic plume/.test(x.n) ? "Plumes" : "Field reversals"; (groups[g] = groups[g] || []).push(x); });
+    sel.innerHTML = '<option value="">Choose a preset…</option>' + Object.keys(groups).map(function (g) { return '<optgroup label="' + g + '">' + groups[g].map(function (x) { return '<option value="' + x.id + '">' + FM.esc(x.n) + "</option>"; }).join("") + "</optgroup>"; }).join("");
+    $("ecPa").disabled = false;
+    $("ecPa").addEventListener("click", function () {
+      var x = FM.by[sel.value]; if (!x) return; var a = x.p.apply[2], E = window.__earth; FM.record(x); ev("preset");
+      if (a.quake) E.setQuake(a.quake); if (a.drill != null) E.setDrill(a.drill); if (a.plume) E.setPlume(a.plume); if (a.pol != null) E.setPolarity(a.pol);
+      FM.toast("Applied: " + x.n);
+    });
+  }).catch(function () { var s = $("ecPre"); if (s) s.innerHTML = '<option value="">Presets unavailable</option>'; });
   paintProbe(); inspect(0, true);
 
   window.__earth = {

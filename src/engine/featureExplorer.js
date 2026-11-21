@@ -42,12 +42,38 @@
     if (!state.list.length) els.list.innerHTML = '<li class="fm-empty" style="display:block">No features match.</li>';
     var s = FM.stats(); els.stat.textContent = "Showing " + end + " of " + state.list.length + " matches · " + FM.list.length.toLocaleString() + " features total · you ran " + s.runs + " (" + s.unique + " unique), " + s.unlocked + " milestones unlocked";
   }
-  FM.open = function (q) {
+  FM.open = function (q, eng) {
     if (!dlg) build();
     if (!dlg.open) dlg.showModal();
     FM.flag("fm");
     if (typeof q === "string") { els.q.value = q; state.q = q.toLowerCase(); }
+    if (eng) { state.eng = eng; Array.prototype.forEach.call(els.eng.children, function (c) { c.setAttribute("aria-pressed", c.dataset.e === eng); }); }
     refilter(); setTimeout(function () { els.q.focus(); }, 0);
+  };
+
+  /* Inline panel: the same list + runner, mounted inside a page (Lab, Arena, Vault, Logs). Paged, debounced, built once. */
+  FM.mount = function (host, engKey, title, hint) {
+    if (host.querySelector(".fm-mini")) return;
+    var box = document.createElement("div"); box.className = "panel sec fm-mini";
+    box.innerHTML = "<h2>" + esc(title) + '</h2><p class="note">' + esc(hint) + '</p><input type="search" class="fm-mq" placeholder="Search…" autocomplete="off" aria-label="Search ' + esc(title) + '"/><div class="fm-mbody"><ul class="fm-list" role="list"></ul><div class="fm-run"><p class="fm-empty">Pick one and press Launch.</p></div></div>';
+    host.appendChild(box);
+    var ul = box.querySelector(".fm-list"), run = box.querySelector(".fm-run"), q = box.querySelector(".fm-mq"), list = [], shown = 0, t = 0;
+    var all = FM.list.filter(function (f) { return engKey.indexOf(f.r + "-" + f.e) > -1; });
+    function paint() {
+      var frag = document.createDocumentFragment(), end = Math.min(list.length, shown + PAGE), i; var more = ul.querySelector(".fm-moreli"); if (more) more.remove();
+      for (i = shown; i < end; i++) { var f = list[i], li = document.createElement("li"); li.innerHTML = "<code>" + f.id.slice(4) + "</code><span title='" + esc(f.n) + "'>" + esc(f.n) + "</span><button type='button' data-id='" + f.id + "'>Launch</button>"; frag.appendChild(li); }
+      shown = end; ul.appendChild(frag);
+      if (end < list.length) { var m = document.createElement("li"); m.className = "fm-moreli"; m.style.display = "block"; m.innerHTML = '<button type="button" class="fm-more">Load ' + Math.min(PAGE, list.length - end) + " more</button>"; ul.appendChild(m); }
+      if (!list.length) ul.innerHTML = '<li class="fm-empty" style="display:block">No matches.</li>';
+    }
+    function filter() { var w = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean); list = all.filter(function (f) { return w.every(function (x) { return f.k.indexOf(x) > -1; }); }); shown = 0; ul.textContent = ""; paint(); }
+    q.addEventListener("input", function () { clearTimeout(t); t = setTimeout(filter, 120); });
+    ul.addEventListener("click", function (e) {
+      if (e.target.closest(".fm-more")) { paint(); return; }
+      var b = e.target.closest("button[data-id]"); if (!b) return; Array.prototype.forEach.call(ul.querySelectorAll("li.on"), function (x) { x.classList.remove("on"); }); b.parentNode.classList.add("on");
+      try { FM.run(FM.by[b.dataset.id], run); } catch (er) { run.innerHTML = "<p class='fm-empty'>Failed: " + esc(er.message) + "</p>"; }
+    });
+    filter();
   };
 
   /* ---------- terminal bridge: tab-complete, flags and pipes ---------- */

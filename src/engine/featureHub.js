@@ -13,8 +13,14 @@
     load: load,
     page: function (k) { return seq(PAGES[k]); },
     core: function () { return seq(CORE).then(function () { if (window.FM.terminal) window.FM.terminal(); return window.FM; }); },
-    open: function (q) { return hub.core().then(function (FM) { FM.open(q); }); }
+    open: function (q, eng) { return hub.core().then(function (FM) { FM.open(q, eng); }); }
   };
+  // Registry engines live inside their own pages too: Lab, Arena, Vault and Logs get an inline browser, mounted on first visit.
+  var MOUNTS = { "#/lab": ["1-2", "Widget library", "100 small tools: unit converters, heart-rate zones, rate limiters, validators, colour checks and more."], "#/arena": ["1-3", "Test vectors", "100 guardrail and bot-defence scenarios. Run one and see which layer catches it."], "#/vault": ["1-4", "Blueprint library", "100 code patterns with a small diagram each. Search, then copy."], "#/logs": ["1-6", "Build log", "Real commits from this repo, plus technique notes. Filter and open any entry."] };
+  function mounts() { var m = MOUNTS[location.hash]; if (!m) return; var view = document.querySelector('.view[data-view="' + location.hash.slice(2) + '"] .wrap'); if (view && !view.querySelector(".fm-mini")) hub.core().then(function (FM) { FM.mount(view, [m[0]], m[1], m[2]); }).catch(function () {}); }
+  window.addEventListener("hashchange", mounts); mounts();
+  // Skills: a button under the skills grid opens the explorer on the 100 skill and concept nodes.
+  (function () { var g = document.getElementById("skGrid"); if (!g || !g.parentNode) return; var b = document.createElement("button"); b.type = "button"; b.className = "cta sk-more"; b.textContent = "Browse the 100 skill and concept nodes"; b.addEventListener("click", function () { hub.open("", "1-5"); }); g.parentNode.appendChild(b); })();
   function route() { var h = location.hash; if (h === "#/earth-core") hub.page("earth"); else if (h === "#/cosmos") hub.page("cosmos"); }
   window.addEventListener("hashchange", route); route();
   document.addEventListener("keydown", function (e) {

@@ -70,3 +70,8 @@ html[style*="--glass"] nav, html[style*="--glass"] .w2-hud { -webkit-backdrop-fi
 html.lite[style*="--glass"] nav, html.lite[style*="--glass"] .w2-hud { -webkit-backdrop-filter: none; backdrop-filter: none; }
 html[style*="--fx-r"] .card, html[style*="--fx-r"] .sk-card, html[style*="--fx-r"] .ec-card { border-radius: var(--fx-r); }
 html[style*="--fx-hud"] .w2-badge, html[style*="--fx-hud"] .tele, html[style*="--fx-hud"] .fab { opacity: var(--fx-hud); }
+/* inline registry panels (Lab, Arena, Vault, Logs) */
+.fm-mini { margin-top: 18px; } .fm-mini .fm-mq { width: 100%; box-sizing: border-box; font: 500 .9rem var(--font-body, system-ui); color: var(--tx); background: var(--ob-2); border: 1px solid var(--ob-line); border-radius: 10px; padding: 9px 12px; margin: 8px 0; }
+.fm-mbody { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 12px; } .fm-mbody .fm-list { max-height: 420px; border: 1px solid var(--ob-line); border-radius: 10px; } .fm-mbody .fm-run { max-height: 420px; border: 1px solid var(--ob-line); border-radius: 10px; }
+@media (max-width: 760px) { .fm-mbody { grid-template-columns: minmax(0, 1fr); } }
+.sk-more { margin-top: 14px; }
