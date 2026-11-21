@@ -36,7 +36,7 @@ function Shell({ current, children }) {
             <p className="max-w-[42ch]">Discord moderation and security, Python bots, websites and AI prototypes, and football edits.</p>
             <a className="num text-xs hover:text-c1" href={`mailto:${contact.email}`}>{contact.email}</a>
           </div>
-          {[["Pages", [...NAV, ["brand.html", "Brand"], ["contact.html", "Hire me"]]], ["More", MORE]].map(([label, links]) => (
+          {[["Pages", [...NAV, ["brand.html", "Brand"], ["story.html", "Story"], ["contact.html", "Hire me"]]], ["More", MORE]].map(([label, links]) => (
             <nav key={label} aria-label={label} className="grid content-start gap-2">
               <p className="kicker">{label}</p>
               {links.map(([href, text]) => <a key={href} href={href} {...ext(href)} className="w-fit hover:text-c1">{text}</a>)}

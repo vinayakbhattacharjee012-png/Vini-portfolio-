@@ -44,6 +44,7 @@ function register(a, center, go) {
     { t: "Case studies", d: "Each project: the problem, the build, where it stands", k: "work case studies projects results portfolio", run: page("work.html") },
     { t: "Services", d: "What you can hire me for", k: "services hire offer bots security moderation website edits ads", run: page("services.html") },
     { t: "Galaxy network", d: "Five brands, treaties and advertising", k: "galaxy network community brands treaty charter advertise ads", run: page("galaxy.html") },
+    { t: "Background story", d: "How the work got built, chapter by chapter", k: "story background history timeline journey how built", run: page("story.html") },
     { t: "Brand kit", d: "Logo, colours, fonts and bio", k: "brand kit logo colours colors fonts press bio", run: page("brand.html") },
     { t: "Hire me", d: "Send a brief, or reach me by email or Discord", k: "hire contact brief email discord work together project", run: page("contact.html") },
   );

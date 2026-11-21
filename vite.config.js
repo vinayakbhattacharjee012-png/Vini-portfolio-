@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwind from "@tailwindcss/vite";
 import { transform } from "esbuild";
 
-const PAGES = ["index", "command-center", "features", "work", "services", "galaxy", "contact", "brand"];
+const PAGES = ["index", "command-center", "features", "work", "services", "galaxy", "contact", "brand", "story"];
 
 // Build only: inline the small shared theme CSS (one less request blocking first paint) and minify the
 // inline <style> and classic <script> blocks the homepage is written in (esbuild keeps top-level names).

@@ -5,7 +5,7 @@ const BASE = process.env.BASE_URL || 'http://localhost:4173/';
 let fails = 0;
 const check = (n, ok, x = '') => { if (!ok) fails++; console.log((ok ? 'PASS ' : 'FAIL ') + n + (x ? '  ' + x : '')); };
 const quiet = (m) => /Failed to load resource|fonts\.g|ERR_/.test(m);
-const PAGES = ['command-center.html', 'features.html', 'work.html', 'services.html', 'galaxy.html', 'contact.html', 'brand.html'];
+const PAGES = ['command-center.html', 'features.html', 'work.html', 'services.html', 'galaxy.html', 'contact.html', 'brand.html', 'story.html'];
 
 async function open(b, path, { vp = { width: 1280, height: 860 }, theme } = {}) {
   const ctx = await b.newContext({ viewport: vp, acceptDownloads: true });
@@ -153,6 +153,13 @@ const topOf = (p, id) => p.evaluate((id) => Math.round(document.getElementById('
   const mail = await p.locator('a:has-text("Send via email")').getAttribute('href');
   check('brief hands over to email off Netlify, with a reference', /^mailto:/.test(mail) && /Server%20security/.test(mail) && await p.locator('dt:text-is("Reference")').isVisible());
   check('no form POST off Netlify (it would be lost)', p.posts.length === 0, p.posts.join(' '));
+  await p.context().close();
+
+  // Background story
+  p = await open(b, 'story.html');
+  check('Story page loads without errors', p.errs.length === 0, p.errs.join(' | '));
+  check('story shows the chapters', (await p.locator('#chapters li').count()) >= 5);
+  check('story lists principles and lessons', (await p.locator('#principles h3').count()) === 3 && (await p.locator('#lessons h3').count()) >= 3);
   await p.context().close();
 
   // Brand kit

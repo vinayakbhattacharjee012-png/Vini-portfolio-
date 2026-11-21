@@ -140,6 +140,7 @@ export const featureAreas = [
     ["Animated network map", "Galaxy Empire with the four brands around it", "galaxy.html#brands"],
     ["Advertising on the network", "Options, steps and an enquiry button", "galaxy.html#advertise"],
     ["Hire me page", "Direct lines, brief form, availability and FAQ", "contact.html"],
+    ["Background story page", "Chapters, principles and lessons behind the work", "story.html"],
     ["Brand kit page", "Logo downloads, colours to copy, fonts, taglines, bio", "brand.html"],
     ["One-click copy for email and Discord", "Hire me page", "contact.html"],
     ["Hire me button in the nav", "Every page, and the phone menu", "./"],
