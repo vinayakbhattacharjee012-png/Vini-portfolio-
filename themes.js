@@ -183,7 +183,7 @@
   var fb = document.getElementById("themesBtn");
   if (fb) fb.addEventListener("click", function () { open(fb); });
   document.addEventListener("DOMContentLoaded", function () {
-    ["themesBtn", "themesNavBtn"].forEach(function (id) {
+    ["themesBtn", "themesNavBtn", "themesHeroBtn"].forEach(function (id) {
       var b = document.getElementById(id); if (b && !b._bound) { b._bound = 1; b.addEventListener("click", function () { open(b); }); }
     });
   });

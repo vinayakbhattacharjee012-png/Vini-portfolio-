@@ -136,3 +136,7 @@ body.route-view nav { background: rgba(6, 7, 10, .92); border-bottom-color: var(
 .view .now-tag.live i { background: var(--good); box-shadow: 0 0 10px var(--good); }
 @media (max-width: 960px) { .view .cols4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .view .cols3 { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 600px) { .view .cols4, .view form.enq .two { grid-template-columns: minmax(0, 1fr); } }
+
+/* hero themes button */
+.theme-dots { width: 16px; height: 16px; border-radius: 50%; margin-right: 8px; display: inline-block; flex: none;
+  background: conic-gradient(var(--star), var(--nebula), var(--ink), var(--star)); box-shadow: 0 0 0 1px var(--line); }
