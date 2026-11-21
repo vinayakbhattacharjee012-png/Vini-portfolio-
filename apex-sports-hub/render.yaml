@@ -1,0 +1,20 @@
+# Render Blueprint: one-click deploy of Apex Sports Hub (API + built frontend in one Node service).
+services:
+  - type: web
+    name: apex-sports-hub
+    runtime: node
+    rootDir: apex-sports-hub
+    plan: starter
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: GEMINI_API_KEY
+        sync: false   # set in the Render dashboard; never committed
+# Match archive storage. On the free plan the disk is wiped on every redeploy/restart, so the
+# archive refills from ESPN on boot. To keep history, upgrade to a paid plan, add a disk mounted at
+# /var/data, and set DATA_DIR=/var/data as an env var.
