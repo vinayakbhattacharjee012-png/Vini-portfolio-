@@ -32,6 +32,7 @@
     try { sessionStorage.setItem("arenaSeen", "1"); } catch (e) {}
     cv.style.transform = "";
     loader.classList.add("exit");
+    window.dispatchEvent(new Event("arena:done"));
     setTimeout(done, 380);
   }
 
@@ -58,7 +59,7 @@
     s.buffer = n; f.type = "bandpass"; f.frequency.value = freq; g.gain.value = gain;
     s.connect(f); f.connect(g); g.connect(a.destination); s.start();
   }
-  function clash() { noise(0.18, 2400, 0.35); }
+  function clash() { noise(0.18, 2400, 0.35); if (!soundOn && window.SFX) SFX.clash(); }
   function whoosh() { noise(0.35, 700, 0.18); }
   function setSound(on) {
     soundOn = on;
