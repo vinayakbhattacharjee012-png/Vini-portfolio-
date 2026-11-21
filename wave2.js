@@ -75,6 +75,44 @@
   });
   setPersona(store("persona") || "all", true);
 
+  /* ---------- auto-scroll: hands-free, non-stop reading mode ---------- */
+  var AS = [["Slow", 45], ["Normal", 90], ["Fast", 160], ["Turbo", 280]], asI = Math.max(0, Math.min(3, +(store("asSpeed") || 1))), asOn = false, asAcc = 0, asHold = 0, asLoopOn = store("asLoop") !== "off";
+  var asBtn = el('<button class="w2-as" id="w2AsBtn" type="button" aria-pressed="false" title="Scroll the page for you (Alt+Shift+S)">▶ Auto-scroll</button>');
+  var asBar = el('<div class="w2-asbar" id="w2As" role="group" aria-label="Auto-scroll controls" hidden><button type="button" data-a="p">⏸ Pause</button><button type="button" data-a="s"></button><button type="button" data-a="l"></button><button type="button" data-a="t" aria-label="Back to top">↑ Top</button></div>');
+  var hw = $(".wrap", hud); if (hw) hw.appendChild(asBtn); document.body.appendChild(asBar);
+  function asPaint() { $("[data-a=s]", asBar).textContent = "Speed: " + AS[asI][0]; $("[data-a=l]", asBar).textContent = "Loop: " + (asLoopOn ? "on" : "off"); asBtn.setAttribute("aria-pressed", asOn); asBtn.textContent = asOn ? "⏸ Auto-scroll" : "▶ Auto-scroll"; asBar.hidden = !asOn; }
+  var asLoop = window.Gov ? Gov.loop("autoscroll", function (now, dt) {
+    var de = document.documentElement;
+    if (asHold) { if (now < asHold) return; asHold = 0; }
+    asAcc += AS[asI][1] * dt; var n = Math.floor(asAcc);
+    if (n >= 1) { asAcc -= n; window.scrollBy({ top: n, left: 0, behavior: "instant" }); }
+    if (innerHeight + scrollY >= de.scrollHeight - 2) { if (asLoopOn) { asHold = now + 1400; setTimeout(function () { if (asOn) window.scrollTo({ top: 0, left: 0, behavior: "instant" }); }, 1400); } else asStop("Reached the end"); }
+  }, { fps: 60, liteFps: 60, when: function () { return asOn; } }) : null;
+  function asStart() {
+    if (!asLoop) return; if (reduce) { toast("Auto-scroll is off because your device asks for reduced motion"); return; }
+    asOn = true; asAcc = 0; asHold = 0; asLoop.start(); asPaint(); sfx("tick");
+  }
+  function asStop(msg) { if (!asOn) return; asOn = false; asPaint(); if (msg) toast(msg); }
+  function asToggle() { asOn ? asStop("Auto-scroll paused") : asStart(); }
+  asBtn.addEventListener("click", asToggle);
+  asBar.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return; var a = b.dataset.a;
+    if (a === "p") asStop("Auto-scroll paused");
+    else if (a === "s") { asI = (asI + 1) % 4; store("asSpeed", asI); asPaint(); }
+    else if (a === "l") { asLoopOn = !asLoopOn; store("asLoop", asLoopOn ? "on" : "off"); asPaint(); }
+    else if (a === "t") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  });
+  window.__autoscroll = { toggle: asToggle, start: asStart, stop: function () { asStop("Auto-scroll paused"); }, speed: function (i) { asI = Math.max(0, Math.min(3, i)); store("asSpeed", asI); asPaint(); }, get on() { return asOn; } };
+  // any manual scroll input hands control back to you
+  ["wheel", "touchstart"].forEach(function (n) { window.addEventListener(n, function (e) { if (asOn && !(e.target.closest && e.target.closest("#w2As, #w2AsBtn"))) asStop("Auto-scroll paused. You took over"); }, { passive: true }); });
+  window.addEventListener("keydown", function (e) {
+    if (e.altKey && e.shiftKey && (e.key === "S" || e.key === "s")) { e.preventDefault(); asToggle(); return; }
+    if (asOn && /^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(e.key) && !/INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ""))) asStop("Auto-scroll paused. You took over");
+  });
+  asPaint();
+  (window.__cmds = window.__cmds || []).push({ t: "Auto-scroll", d: "Scroll the page for you, non-stop. Pause any time", k: "auto scroll autoscroll hands free reading play pause", run: asToggle });
+  if (window.__fx && __fx.cmds && __fx.print) __fx.cmds.autoscroll = function (a) { if (a === "slow" || a === "normal" || a === "fast" || a === "turbo") { window.__autoscroll.speed(["slow", "normal", "fast", "turbo"].indexOf(a)); } if (a === "off") asStop("Auto-scroll paused"); else if (!asOn) asStart(); __fx.print("g", "auto-scroll " + (asOn ? "on" : "off") + " (" + AS[asI][0] + ")"); };
+
   /* ---------- 4. SFX button in the navbar ---------- */
   var sfxBtn = el('<button class="w2-sfx" id="w2Sfx" type="button" aria-pressed="false" title="Toggle interface sound effects">[SFX: OFF]</button>');
   var sb = $("#searchBtn"); if (sb && sb.parentNode) sb.parentNode.insertBefore(sfxBtn, sb);
