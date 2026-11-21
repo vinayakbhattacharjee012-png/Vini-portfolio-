@@ -92,3 +92,8 @@ html[style*="--fx-hud"] .w2-badge, html[style*="--fx-hud"] .tele, html[style*="-
 .w2-asv { font: 600 .58rem "JetBrains Mono", ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; color: var(--cy); }
 @media (max-width: 560px) { .w2-asrail { right: max(4px, env(safe-area-inset-right, 0px)); padding: 4px 3px; gap: 3px; } .w2-asrail button { width: 30px; height: 30px; font-size: .8rem; } .w2-asrail #w2AsBtn { width: 34px; height: 34px; } }
 @media print { .w2-asrail { display: none !important; } }
+/* VEGA Gemini panel */
+.holo-ai { margin: 8px 0 0; padding: 10px 12px; border: 1px solid rgba(var(--holo-c, 90, 225, 255), .4); border-radius: 10px; background: rgba(2, 14, 22, .7); font-size: .78rem; line-height: 1.5; color: inherit; }
+.holo-ai[hidden] { display: none; } .holo-ai p { margin: 0 0 8px; } .holo-ai label { display: block; margin-bottom: 4px; opacity: .8; }
+.holo-ai input { width: 100%; box-sizing: border-box; font: 500 .85rem ui-monospace, monospace; color: inherit; background: rgba(0, 0, 0, .35); border: 1px solid rgba(var(--holo-c, 90, 225, 255), .4); border-radius: 8px; padding: 8px 10px; }
+.holo-ai-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; } .holo-ai .holo-ai-msg { margin: 8px 0 0; min-height: 1.2em; }

@@ -5194,7 +5194,22 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     var q = norm(raw); if (!q) return;
     logMsg("you", raw.trim());
     var r = understand(q);
-    if (!r) {
+    if (!r && window.VegaAI && VegaAI.ready()) { askAI(raw, q); return; }
+    if (!r) r = localAnswer(q);
+    reply(r);
+  }
+  // Gemini mode (bring-your-own-key, see src/engine/vegaGemini.js). Any failure falls back to the on-page answer.
+  var aiHistory = [];
+  function askAI(raw, q) {
+    reply({ text: "One sec, asking Gemini…", silent: true });
+    VegaAI.ask(raw, K, aiHistory.slice(-6)).then(function (t) {
+      aiHistory.push({ role: "user", parts: [{ text: raw }] }, { role: "model", parts: [{ text: t }] });
+      reply({ text: t });
+    }).catch(function (e) { var r = localAnswer(q); r.text = e.message + " Here's what I have on the page instead. " + r.text; reply(r); });
+  }
+  function localAnswer(q) {
+    var r = null;
+    {
       var hit = searchPage(q);
       if (hit) {
         var sec = hit.el.closest("section, .sk-sec"), secName = sec ? T(sec.querySelector(".sec-head .eyebrow, .sec-head h2")).replace(/^\d+\s*\/\s*/, "") : "the site";
@@ -5203,7 +5218,7 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
           offer: { label: "Show me", run: function () { closeHolo(true, true); setTimeout(function () { hit.el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }); hit.el.classList.remove("flash"); void hit.el.offsetWidth; hit.el.classList.add("flash"); }, 60); } } };
       } else r = { text: "I don't have that on record. I only know what's on this site. Try asking about projects, skills, security, or how to contact Vini." };
     }
-    reply(r);
+    return r;
   }
   function reply(r) {
     if (r.group !== undefined) hlGroup = r.group;
@@ -5495,6 +5510,7 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
 <script src="soundEngine.js"></script>
 <script src="wave2.js"></script>
 <script src="src/engine/featureHub.js"></script>
+<script src="src/engine/vegaGemini.js"></script>
 </body>
 </html>
 
