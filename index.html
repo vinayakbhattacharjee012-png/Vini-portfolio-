@@ -1073,7 +1073,7 @@
   @keyframes loaderOut { to { opacity: 0; visibility: hidden; } }
   @keyframes loaderZoom { to { transform: scale(1.4); filter: blur(6px); opacity: 0; } }
   @keyframes loaderSafety { to { opacity: 0; visibility: hidden; } }
-  html.loading body { overflow: hidden; }
+  html.loading body { overflow: auto; } /* never lock scrolling, even during the intro */
   html.loading .hero .eyebrow, html.loading .hero h1, html.loading .hero .lede, html.loading .hero .stat, html.loading .hero .stat::after { animation-play-state: paused; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1649,7 +1649,9 @@
   .fab:focus-visible, .tele:focus-visible { border-radius: 999px; }
   footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 </style>
-<script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
+<script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");
+// failsafe: whatever stalls (slow resource, blocked script), the page is usable after 7 s
+setTimeout(function () { document.documentElement.classList.remove("loading"); var l = document.getElementById("loader"); if (l) l.className = "loader arena done"; }, 7000);</script>
 <script>(function () { var r = document.documentElement, m = "auto"; try { m = localStorage.getItem("perf") || "auto"; } catch (e) {}
   var n = navigator, weak = (n.hardwareConcurrency && n.hardwareConcurrency <= 4) || (n.deviceMemory && n.deviceMemory <= 4) || (n.connection && n.connection.saveData) ||
     (window.matchMedia && matchMedia("(pointer: coarse)").matches && innerWidth < 900);

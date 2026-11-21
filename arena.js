@@ -281,6 +281,7 @@
     else if (!raf) { t0 += performance.now() - pausedAt; raf = requestAnimationFrame(frame); }
   });
   if (!loaded) window.addEventListener("load", function () { loaded = true; });
+  setTimeout(function () { loaded = true; }, 3500); // never hold the intro hostage to a slow resource
 
   window.__arenaReplay = replay;
   start(false);
