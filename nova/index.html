@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>NOVA OS</title>
+<meta name="description" content="NOVA OS — a browser desktop with the NEXUS command center." />
+<meta name="theme-color" content="#050816" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238b5cf6'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='%23050816'/%3E%3Cpath d='M9 23V9l14 14V9' stroke='url(%23g)' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="wallpaper" aria-hidden="true"><div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div><canvas id="stars"></canvas></div>
+
+<header class="topbar" role="banner">
+  <div class="tb-left">
+    <button class="brand" id="brandBtn" aria-label="Open app launcher"><span class="brand-mark">N</span><span class="brand-name">NOVA</span></button>
+    <span class="active-app" id="activeApp" aria-live="polite">Desktop</span>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn search-btn" id="paletteBtn" aria-label="Open command palette (Ctrl+K)"><span class="ico" data-icon="search"></span><span class="hint">Search or command</span><kbd class="kbd-mod">Ctrl K</kbd></button>
+    <span class="tb-stat" id="netStat"></span>
+    <span class="tb-stat" id="batStat"></span>
+    <button class="tb-btn bell" id="bellBtn" aria-label="Notifications" aria-expanded="false" aria-controls="notifCenter"><span class="ico" data-icon="bell"></span><span class="badge" id="bellBadge" hidden></span></button>
+    <time class="clock" id="clock"></time>
+  </div>
+</header>
+
+<main class="desktop" id="desktop">
+  <section class="widgets" id="widgets" aria-label="Desktop widgets">
+    <article class="widget w-clock glass">
+      <div class="w-time" id="wTime"></div>
+      <div class="w-date" id="wDate"></div>
+      <div class="w-greet" id="wGreet"></div>
+    </article>
+    <article class="widget w-nexus glass">
+      <header><span class="ico" data-icon="nexus"></span><h2>NEXUS</h2><span class="pill">local demo</span></header>
+      <form id="wNexusForm" class="w-nexus-form"><input id="wNexusInput" placeholder="Ask NEXUS… try “open notes”" aria-label="Ask NEXUS" autocomplete="off" /><button aria-label="Send"><span class="ico" data-icon="send"></span></button></form>
+      <div class="chips" id="wNexusChips"></div>
+    </article>
+    <article class="widget w-system glass">
+      <header><span class="ico" data-icon="monitor"></span><h2>System</h2><button class="link" data-open="monitor">Details</button></header>
+      <dl class="stats" id="wSystem"></dl>
+    </article>
+    <article class="widget w-notes glass">
+      <header><span class="ico" data-icon="notes"></span><h2>Recent notes</h2><button class="link" data-open="notes">All</button></header>
+      <ul class="w-list" id="wNotes"></ul>
+    </article>
+  </section>
+  <div class="windows" id="windows"></div>
+</main>
+
+<nav class="dock glass" id="dock" aria-label="Dock">
+  <button class="dock-btn launcher-btn" id="launcherBtn" aria-label="App launcher" aria-expanded="false" aria-controls="launcher"><span class="ico" data-icon="grid"></span></button>
+  <span class="dock-sep" aria-hidden="true"></span>
+  <div class="dock-apps" id="dockApps"></div>
+</nav>
+
+<div class="launcher glass" id="launcher" role="dialog" aria-label="App launcher" hidden>
+  <div class="field"><span class="ico" data-icon="search"></span><input id="launcherSearch" placeholder="Search apps" aria-label="Search apps" autocomplete="off" /></div>
+  <div class="launcher-body" id="launcherBody"></div>
+</div>
+
+<aside class="notif-center glass" id="notifCenter" aria-label="Notifications" hidden>
+  <header><h2>Notifications</h2><button class="link" id="notifClear">Clear all</button></header>
+  <ul id="notifList"></ul>
+</aside>
+
+<div class="palette-backdrop" id="palette" hidden>
+  <div class="palette glass" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="field"><span class="ico" data-icon="search"></span><input id="paletteInput" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" placeholder="Search apps, notes and commands… or ask NEXUS" autocomplete="off" /><kbd>Esc</kbd></div>
+    <ul class="palette-list" id="paletteList" role="listbox"></ul>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<noscript><p class="noscript">NOVA OS needs JavaScript.</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
