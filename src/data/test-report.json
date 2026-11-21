@@ -1,6 +1,6 @@
 {
-  "date": "2026-11-21T05:46:08.168Z",
-  "commit": "8887e1f",
+  "date": "2026-11-21T06:11:06.618Z",
+  "commit": "a3bb998",
   "passed": 195,
   "failed": 0,
   "suites": [
@@ -8,30 +8,30 @@
       "name": "New features",
       "passed": 45,
       "failed": 0,
-      "ms": 44074
+      "ms": 44870
     },
     {
       "name": "Original site",
       "passed": 52,
       "failed": 0,
-      "ms": 31168
+      "ms": 30390
     },
     {
       "name": "Extra pages & links",
       "passed": 74,
       "failed": 0,
-      "ms": 102442
+      "ms": 103146
     },
     {
       "name": "Restored content",
       "passed": 24,
       "failed": 0,
-      "ms": 23279
+      "ms": 22947
     }
   ],
   "perf": {
     "fpsBefore": 19,
-    "fpsAfter": 41,
+    "fpsAfter": 32,
     "profile": "Scrolling the whole homepage on a 412 px phone profile with 4× CPU throttling (median of 3 runs)"
   }
 }
