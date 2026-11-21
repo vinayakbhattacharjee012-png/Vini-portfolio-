@@ -93,14 +93,9 @@
     });
   }
 
-  var raf = 0, onRoute = false, vis = true, last = 0;
-  function tick(now) {
-    raf = 0; if (!onRoute || document.hidden || !vis) return;
-    var gap = lite() ? 1000 / 24 : 1000 / 50;
-    if (now - last >= gap) { var dt = Math.min(0.08, (now - last) / 1000); last = now; if (!reduce) S.tsim += dt * S.warp; frame(now, reduce ? 0 : dt); if (reduce) return; }
-    raf = requestAnimationFrame(tick);
-  }
-  function wake() { if (!raf && onRoute && !document.hidden && vis) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+  var onRoute = false, vis = true;
+  var loop = Gov.loop("cosmos", function (now, dt) { if (!reduce) S.tsim += dt * S.warp; frame(now, reduce ? 0 : dt); }, { fps: 50, liteFps: 24, once: reduce, when: function () { return onRoute && vis; } });
+  function wake() { if (onRoute && vis) loop.start(); }
   if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { vis = e[0].isIntersecting; wake(); }).observe(cv);
   function sync() { onRoute = location.hash === "#/cosmos"; if (onRoute) { ev("cosmos"); wake(); } }
   window.addEventListener("hashchange", sync); document.addEventListener("visibilitychange", wake);

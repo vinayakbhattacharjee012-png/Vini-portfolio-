@@ -158,14 +158,10 @@
   }
 
   /* loop: runs only while the route is visible, the tab is visible and the canvas is on screen */
-  var raf = 0, last = 0, vis = true, onRoute = false;
-  function tick(now) {
-    raf = 0; if (!onRoute || document.hidden || !vis) return;
-    var gap = lite() ? 1000 / 24 : 1000 / 50;
-    if (now - last >= gap) { last = now; update(now); frame(now); if (reduce) return; }
-    raf = requestAnimationFrame(tick);
-  }
-  function wake() { if (!raf && onRoute && !document.hidden && vis) raf = requestAnimationFrame(tick); }
+  var vis = true, onRoute = false;
+  // one shared governor loop: capped fps, parked whenever the route or canvas is not on screen, one frame only under reduced motion
+  var loop = Gov.loop("earth-core", function (now) { update(now); frame(now); }, { fps: 50, liteFps: 24, once: reduce, when: function () { return onRoute && vis; } });
+  function wake() { if (onRoute && vis) loop.start(); }
   function update(now) {
     st.ex = reduce ? st.exT : st.ex + (st.exT - st.ex) * 0.18; if (Math.abs(st.exT - st.ex) < 0.002) st.ex = st.exT;
     st.pol += (st.polT - st.pol) * 0.04;
