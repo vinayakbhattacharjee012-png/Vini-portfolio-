@@ -21,7 +21,11 @@
   window.addEventListener("hashchange", mounts); mounts();
   // Skills: a button under the skills grid opens the explorer on the 100 skill and concept nodes.
   (function () { var g = document.getElementById("skGrid"); if (!g || !g.parentNode) return; var b = document.createElement("button"); b.type = "button"; b.className = "cta sk-more"; b.textContent = "Browse the 100 skill and concept nodes"; b.addEventListener("click", function () { hub.open("", "1-5"); }); g.parentNode.appendChild(b); })();
-  function route() { var h = location.hash; if (h === "#/earth-core") hub.page("earth"); else if (h === "#/cosmos") hub.page("cosmos"); }
+  function route() {
+    var h = location.hash, m = /^#\/f\/(R[12]-E\d\d-\d{3})$/i.exec(h);
+    if (m) { hub.core().then(function (FM) { FM.openId(m[1]); }); return; }
+    if (h === "#/earth-core") hub.page("earth"); else if (h === "#/cosmos") hub.page("cosmos");
+  }
   window.addEventListener("hashchange", route); route();
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey && e.shiftKey && (e.key === "F" || e.key === "f")) { e.preventDefault(); hub.open(); }

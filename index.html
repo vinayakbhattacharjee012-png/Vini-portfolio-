@@ -29,7 +29,8 @@
 <meta name="description" content="Vini builds AI apps and Discord bots, runs a network of Discord communities and designs server security. Also cuts football highlight edits." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" /></noscript>
 <script src="themes.js"></script>
 <link rel="stylesheet" href="labs.css" />
 <link rel="stylesheet" href="src/styles/cosmos.css" />
@@ -1678,7 +1679,7 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     <button type="button" class="arena-btn" id="arenaSkip">Skip Intro [ESC]</button>
   </div>
 </div>
-<script src="arena.js"></script>
+<script src="arena.js" defer></script>
 <div class="bg-fx" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grid-lines"></div><canvas id="bgStars"></canvas></div>
 <a class="skip" href="#main">Skip to content</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
@@ -2032,31 +2033,31 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
             <path class="edge dashed" d="M820,200 L820,339 L580,339" marker-end="url(#arrM)" />
             <path class="edge dashed" d="M380,339 L80,339 L80,204" marker-end="url(#arrM)" />
 
-            <g class="fnode" data-i="0" tabindex="0" role="button" aria-label="Step 1, Detect">
+            <g class="fnode" data-i="0" tabindex="0" role="button">
               <rect class="box" x="10" y="130" width="140" height="70" rx="10" />
               <text class="n" x="22" y="148">01</text>
               <text class="t-title" x="80" y="168" text-anchor="middle">Detect</text>
               <text class="t-sub" x="80" y="186" text-anchor="middle">automod · reports</text>
             </g>
-            <g class="fnode" data-i="1" tabindex="0" role="button" aria-label="Step 2, Triage">
+            <g class="fnode" data-i="1" tabindex="0" role="button">
               <polygon class="box" points="250,120 310,165 250,210 190,165" />
               <text class="n" x="250" y="146" text-anchor="middle">02</text>
               <text class="t-title" x="250" y="170" text-anchor="middle">Triage</text>
               <text class="t-sub" x="250" y="186" text-anchor="middle">what is it?</text>
             </g>
-            <g class="fnode warn" data-i="2" tabindex="0" role="button" aria-label="Step 3a, Lockdown">
+            <g class="fnode warn" data-i="2" tabindex="0" role="button">
               <rect class="box" x="350" y="30" width="170" height="66" rx="10" />
               <text class="n" x="362" y="47">03a</text>
               <text class="t-title" x="435" y="62" text-anchor="middle">Lockdown</text>
               <text class="t-sub" x="435" y="80" text-anchor="middle">anti-nuke bots react</text>
             </g>
-            <g class="fnode" data-i="3" tabindex="0" role="button" aria-label="Step 4a, Restore and audit">
+            <g class="fnode" data-i="3" tabindex="0" role="button">
               <rect class="box" x="570" y="30" width="150" height="66" rx="10" />
               <text class="n" x="582" y="47">04a</text>
               <text class="t-title" x="645" y="62" text-anchor="middle">Restore &amp; audit</text>
               <text class="t-sub" x="645" y="80" text-anchor="middle">roles · channels · perms</text>
             </g>
-            <g class="fnode" data-i="4" tabindex="0" role="button" aria-label="Step 3b, Action ladder">
+            <g class="fnode" data-i="4" tabindex="0" role="button">
               <rect class="box" x="350" y="200" width="340" height="100" rx="10" />
               <text class="n" x="362" y="218">03b</text>
               <text class="t-title" x="520" y="222" text-anchor="middle">Action ladder</text>
@@ -2072,13 +2073,13 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
               <rect class="chip" x="626" y="252" width="58" height="30" rx="15" style="fill: var(--danger); fill-opacity: .65" />
               <text class="chip-t" x="655" y="271" text-anchor="middle">Ban</text>
             </g>
-            <g class="fnode" data-i="5" tabindex="0" role="button" aria-label="Step 5, Log and evidence">
+            <g class="fnode" data-i="5" tabindex="0" role="button">
               <rect class="box" x="750" y="130" width="140" height="70" rx="10" />
               <text class="n" x="762" y="148">05</text>
               <text class="t-title" x="820" y="168" text-anchor="middle">Log &amp; evidence</text>
               <text class="t-sub" x="820" y="186" text-anchor="middle">mod-log channel</text>
             </g>
-            <g class="fnode" data-i="6" tabindex="0" role="button" aria-label="Step 6, Review and tune">
+            <g class="fnode" data-i="6" tabindex="0" role="button">
               <rect class="box" x="380" y="322" width="200" height="34" rx="17" />
               <text class="t-title" x="480" y="344" text-anchor="middle">06 · Review, appeals &amp; tune</text>
             </g>
@@ -2107,40 +2108,40 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
             <text class="t-no" x="724" y="200">fail</text>
             <path class="attack" d="M424,236 L403,236 L403,150" marker-end="url(#arrTr)" />
 
-            <g class="fnode" data-i="0" tabindex="0" role="button" aria-label="Step 1, Sandbox server">
+            <g class="fnode" data-i="0" tabindex="0" role="button">
               <rect class="box" x="10" y="80" width="130" height="66" rx="10" />
               <text class="n" x="22" y="97">01</text>
               <text class="t-title" x="75" y="112" text-anchor="middle">Sandbox</text>
               <text class="t-sub" x="75" y="130" text-anchor="middle">private test server</text>
             </g>
-            <g class="fnode" data-i="1" tabindex="0" role="button" aria-label="Step 2, Permissions">
+            <g class="fnode" data-i="1" tabindex="0" role="button">
               <rect class="box" x="174" y="80" width="130" height="66" rx="10" />
               <text class="n" x="186" y="97">02</text>
               <text class="t-title" x="239" y="112" text-anchor="middle">Permissions</text>
               <text class="t-sub" x="239" y="130" text-anchor="middle">least privilege</text>
             </g>
-            <g class="fnode warn" data-i="2" tabindex="0" role="button" aria-label="Step 3, Simulate">
+            <g class="fnode warn" data-i="2" tabindex="0" role="button">
               <rect class="box" x="338" y="80" width="130" height="66" rx="10" />
               <text class="n" x="350" y="97">03</text>
               <text class="t-title" x="403" y="112" text-anchor="middle">Simulate</text>
               <text class="t-sub" x="403" y="130" text-anchor="middle">spam · raids · nukes</text>
             </g>
-            <g class="fnode" data-i="3" tabindex="0" role="button" aria-label="Step 4, Check results">
+            <g class="fnode" data-i="3" tabindex="0" role="button">
               <rect class="box" x="502" y="80" width="130" height="66" rx="10" />
               <text class="n" x="514" y="97">04</text>
               <text class="t-title" x="567" y="112" text-anchor="middle">Check</text>
               <text class="t-sub" x="567" y="130" text-anchor="middle">logs · false positives</text>
             </g>
-            <g class="fnode" data-i="4" tabindex="0" role="button" aria-label="Step 5, Pass or fail">
+            <g class="fnode" data-i="4" tabindex="0" role="button">
               <polygon class="box" points="716,68 776,113 716,158 656,113" />
               <text class="n" x="716" y="96" text-anchor="middle">05</text>
               <text class="t-title" x="716" y="118" text-anchor="middle">Pass?</text>
             </g>
-            <g class="fnode" data-i="5" tabindex="0" role="button" aria-label="Step 6, Tune config">
+            <g class="fnode" data-i="5" tabindex="0" role="button">
               <rect class="box" x="428" y="219" width="166" height="34" rx="17" />
               <text class="t-title" x="511" y="241" text-anchor="middle">06 · Tune &amp; re-test</text>
             </g>
-            <g class="fnode" data-i="6" tabindex="0" role="button" aria-label="Step 7, Go live">
+            <g class="fnode" data-i="6" tabindex="0" role="button">
               <rect class="box" x="810" y="80" width="140" height="66" rx="10" />
               <text class="n" x="822" y="97">07</text>
               <text class="t-title" x="880" y="112" text-anchor="middle">Go live</text>
@@ -3709,7 +3710,7 @@ setTimeout(function () { document.documentElement.classList.remove("loading"); v
     document.querySelectorAll(".tcard.flow-test").forEach(function (card) {
       var key = card.getAttribute("data-flow") || (card.querySelector("code").textContent.indexOf("MOD") >= 0 ? "mod" : "test");
       card.setAttribute("role", "button"); card.setAttribute("tabindex", "0");
-      card.setAttribute("aria-label", "Open the " + (key === "mod" ? "moderation" : "bot") + " flowchart");
+      card.setAttribute("aria-label", (card.querySelector("b") || card).textContent.trim() + ": open the flowchart"); // name starts with the visible text
       function go() { document.getElementById("process").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); setTimeout(function () { if (window.__flows) window.__flows.open(key, 0); }, 350); }
       card.addEventListener("click", go);
       card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });

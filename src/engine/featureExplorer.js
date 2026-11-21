@@ -13,6 +13,7 @@
     dlg.innerHTML = '<div class="fm-top"><h2 id="fmT">Feature Matrix Explorer <b>(' + v.active.toLocaleString() + "/" + tot.toLocaleString() + ' Active)</b></h2><input type="search" id="fmQ" placeholder="Search 2,000 features…" autocomplete="off" aria-label="Search features"/><button type="button" class="fm-x" id="fmX" aria-label="Close">esc</button></div>' +
       '<div class="fm-eng" id="fmEng" role="group" aria-label="Filter by engine"></div><div class="fm-body"><ul class="fm-list" id="fmList" aria-live="polite"></ul><div class="fm-run" id="fmRun"><p class="fm-empty">Pick a feature and press Launch. Everything runs in your browser.</p></div></div><div class="fm-stat" id="fmStat"></div>';
     document.body.appendChild(dlg);
+    dlg.addEventListener("close", function () { if (/^#\/f\//.test(location.hash) && history.replaceState) history.replaceState(null, "", location.pathname + location.search); });
     els = { q: $("#fmQ", dlg), eng: $("#fmEng", dlg), list: $("#fmList", dlg), run: $("#fmRun", dlg), stat: $("#fmStat", dlg) };
     var chips = '<button type="button" aria-pressed="true" data-e="all">All</button>';
     FM.engines.forEach(function (e) { chips += '<button type="button" aria-pressed="false" data-e="' + e.r + "-" + e.id + '" title="' + esc(e.n) + '">R' + e.r + " · E" + String(e.id).padStart(2, "0") + " " + esc(e.n.split(/ [&(]/)[0]) + "</button>"; });
@@ -28,7 +29,12 @@
       launch(f);
     });
   }
-  function launch(f) { state.sel = f; try { FM.run(f, els.run); } catch (e) { els.run.innerHTML = "<p class='fm-empty'>This feature failed: " + esc(e.message) + "</p>"; } els.run.scrollTop = 0; if (window.SFX) SFX.tick(); if (matchMedia("(max-width:760px)").matches) els.run.scrollIntoView({ block: "nearest" }); }
+  // every feature has its own link: #/f/<id>
+  function launch(f) {
+    state.sel = f; try { FM.run(f, els.run); } catch (e) { els.run.innerHTML = "<p class='fm-empty'>This feature failed: " + esc(e.message) + "</p>"; }
+    if (history.replaceState) history.replaceState(null, "", "#/f/" + f.id);
+    var link = document.createElement("button"); link.type = "button"; link.className = "fm-x"; link.style.float = "right"; link.textContent = "Copy link";
+    link.addEventListener("click", function () { FM.copy(location.href.split("#")[0] + "#/f/" + f.id, "Link"); }); els.run.insertBefore(link, els.run.firstChild); els.run.scrollTop = 0; if (window.SFX) SFX.tick(); if (matchMedia("(max-width:760px)").matches) els.run.scrollIntoView({ block: "nearest" }); }
   function refilter() {
     var q = state.q, words = q ? q.split(/\s+/) : [];
     state.list = FM.list.filter(function (f) { if (state.eng !== "all" && engKey(f) !== state.eng) return false; for (var i = 0; i < words.length; i++) if (f.k.indexOf(words[i]) < 0 && f.id.toLowerCase().indexOf(words[i]) < 0) return false; return true; });
@@ -42,6 +48,7 @@
     if (!state.list.length) els.list.innerHTML = '<li class="fm-empty" style="display:block">No features match.</li>';
     var s = FM.stats(); els.stat.textContent = "Showing " + end + " of " + state.list.length + " matches · " + FM.list.length.toLocaleString() + " features total · you ran " + s.runs + " (" + s.unique + " unique), " + s.unlocked + " milestones unlocked";
   }
+  FM.openId = function (id) { var f = FM.by[String(id).toUpperCase()]; FM.open(); if (f) { els.q.value = f.id; state.q = f.id.toLowerCase(); refilter(); launch(f); } };
   FM.open = function (q, eng) {
     if (!dlg) build();
     if (!dlg.open) dlg.showModal();

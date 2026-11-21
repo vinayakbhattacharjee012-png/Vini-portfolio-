@@ -221,3 +221,5 @@ html.lite .botroll-track { animation: none !important; flex-wrap: wrap; width: a
 /* SFX toggle: in the navbar on wide screens, in the bar under it on small ones (no horizontal overflow) */
 .w2-sfx.in-hud { display: none; }
 @media (max-width: 900px) { nav .w2-sfx { display: none; } .w2-sfx.in-hud { display: inline-flex; align-items: center; height: 30px; flex: none; } }
+/* contrast: the HUD bar sits on the page background, so its text uses the page's muted colour (readable in light and dark) */
+.w2-lbl, .w2-note { color: var(--muted, #5b6472); }
