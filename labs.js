@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   var root = document.documentElement, body = document.body;
-  var ROUTES = { lab: "Lab", arena: "Arena", vault: "Vault", logs: "Engineering log", dossier: "Dossier", about: "About", services: "Services", contact: "Contact", now: "Now", uses: "Uses", explore: "All pages" };
+  var ROUTES = { lab: "Lab", arena: "Arena", vault: "Vault", logs: "Engineering log", dossier: "Dossier", about: "About", services: "Services", contact: "Contact", now: "Now", uses: "Uses", explore: "All pages", "earth-core": "Earth core", cosmos: "Cosmos" };
   var views = {};
   document.querySelectorAll(".view[data-view]").forEach(function (v) { views[v.getAttribute("data-view")] = v; });
   var reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -24,7 +24,7 @@
 
   // ---------- router ----------
   var current = null;
-  function routeName(h) { var m = /^#\/([a-z]+)$/.exec(h || ""); return m && views[m[1]] ? m[1] : null; }
+  function routeName(h) { var m = /^#\/([a-z-]+)$/.exec(h || ""); return m && views[m[1]] ? m[1] : null; }
   function show(name) {
     document.querySelectorAll("dialog[open]").forEach(function (d) { d.close(); });
     current = name;
@@ -203,6 +203,9 @@
       if (st.traffic) { clearInterval(st.traffic); st.traffic = null; b.textContent = "Start traffic"; b.setAttribute("aria-pressed", "false"); log("info", "traffic stopped"); }
       else { st.traffic = setInterval(function () { message(); if (Math.random() < 0.15) join(false); stats(); }, reduce ? 900 : 420); b.textContent = "Stop traffic"; b.setAttribute("aria-pressed", "true"); log("info", "traffic started"); }
     });
+    function pauseTraffic() { if (st.traffic) { clearInterval(st.traffic); st.traffic = null; var tb = $("arena-traffic"); tb.textContent = "Start traffic"; tb.setAttribute("aria-pressed", "false"); } }
+    window.addEventListener("hashchange", function () { if (location.hash !== "#/arena") pauseTraffic(); });
+    document.addEventListener("visibilitychange", function () { if (document.hidden) pauseTraffic(); });
     $("arena-raid").addEventListener("click", function () { raidBurst(); setTimeout(nuke, 2000); });
     $("arena-reset").addEventListener("click", function () {
       if (st.traffic) { clearInterval(st.traffic); st.traffic = null; $("arena-traffic").textContent = "Start traffic"; $("arena-traffic").setAttribute("aria-pressed", "false"); }
@@ -385,7 +388,7 @@
     var pages = [["about", "About", "Who I am and what I do"], ["services", "Services", "Bots, moderation, edits and ads"], ["contact", "Contact", "Email, Discord and the enquiry form"],
       ["now", "Now", "What I'm working on right now"], ["uses", "Uses", "The tools behind my projects"], ["lab", "Lab", "Heart-rate simulator, triage flow and guardrail inspector"],
       ["arena", "Arena", "Bot raid simulation and a trade calculator"], ["vault", "Vault", "Layer maps, starter code and a bloated vs lean comparison"],
-      ["logs", "Engineering log", "Shipped work with real dates"], ["dossier", "Dossier", "Project summary with print and copy"]];
+      ["earth-core", "Earth core", "Cutaway Earth, drill probe and seismic waves"], ["cosmos", "Cosmos", "Magnetosphere, solar wind and satellite orbits"], ["logs", "Engineering log", "Shipped work with real dates"], ["dossier", "Dossier", "Project summary with print and copy"]];
     grid.innerHTML = pages.map(function (x) { return '<a class="tile" href="#/' + x[0] + '"><span class="kick">Page</span><h2 style="font-size:1rem">' + esc(x[1]) + "</h2><p>" + esc(x[2]) + "</p></a>"; }).join("");
     var cases = [["polo", "Polo", "Health AI app"], ["nova", "Nova 3.0 Ultimate", "Discord bot"], ["eclipse", "Eclipse", "discord.py bot"], ["apex", "Apex", "AI co-pilot"]];
     $("explore-cases").innerHTML = cases.map(function (x) { return '<a class="tile" href="projects/' + x[0] + '.html"><span class="kick">' + esc(x[2]) + "</span><h3>" + esc(x[1]) + "</h3><p>Case study →</p></a>"; }).join("");
@@ -397,7 +400,7 @@
    ["vault", "Vault", "Architecture maps, starter snippets, bloated vs lean"], ["logs", "Engineering log", "Shipped work, architecture and community operations"],
    ["dossier", "Dossier", "Project summary, print and copy"], ["about", "About", "Who I am and what I do"], ["services", "Services", "Bots, moderation, edits and ads"],
    ["contact", "Contact", "Email, Discord and the enquiry form"], ["now", "Now", "What I'm working on right now"], ["uses", "Uses", "The tools behind my projects"],
-   ["explore", "All pages", "Every page on this site"]].forEach(function (r) {
+   ["explore", "All pages", "Every page on this site"], ["earth-core", "Earth core", "Cutaway Earth, drill probe, seismic waves"], ["cosmos", "Cosmos", "Magnetosphere, solar wind, LEO/MEO/GEO orbits"]].forEach(function (r) {
     CM.push({ t: "Go to " + r[1], d: r[2], k: r[0] + " " + r[1].toLowerCase() + " page view route", run: function () { location.hash = "#/" + r[0]; } });
   });
   CM.push({ t: "Replay intro duel", d: "Play the loading duel again", k: "intro duel replay loader arena", run: function () { if (window.__arenaReplay) window.__arenaReplay(); } });

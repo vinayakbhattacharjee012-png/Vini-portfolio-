@@ -15,7 +15,7 @@
   /* ---------- lag fix: pause looping SVG/CSS animation while off screen ---------- */
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle("w2-off", !e.isIntersecting); }); }, { rootMargin: "120px" });
-    $$("svg, .botroll-track").forEach(function (n) { io.observe(n); });
+    $$("svg, .botroll-track, #about, #skills, #community, #security, #process, #ai, #engineering, #creative, #advertise, #contact, body > footer").forEach(function (n) { io.observe(n); });
   }
 
   /* ---------- 1. persona switcher ---------- */

@@ -40,6 +40,7 @@
     toggle: function () { SFX.set(!on); }
   };
   window.SFX = SFX;
+  document.addEventListener("visibilitychange", function () { if (!ac) return; document.hidden ? ac.suspend() : (on && ac.resume()); }); // no audio work in background tabs
 
   // Hover ticks on interactive things; one delegated listener, only when on.
   document.addEventListener("mouseover", function (e) {

@@ -32,6 +32,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" />
 <script src="themes.js"></script>
 <link rel="stylesheet" href="labs.css" />
+<link rel="stylesheet" href="src/styles/cosmos.css" />
 <style>
   /* Layout: deep-space night sky. Starfield hero, then sections of cards and hand-drawn mechanism diagrams. */
   :root {
@@ -1654,6 +1655,7 @@
     (window.matchMedia && matchMedia("(pointer: coarse)").matches && innerWidth < 900);
   if (m === "lite" || (m === "auto" && weak)) r.classList.add("lite");
   r.setAttribute("data-perf", m); })();</script>
+<link rel="stylesheet" href="src/styles/perf.css" />
 </head>
 <body>
 <div class="loader arena" id="loader" role="status" aria-label="Loading Vini's portfolio">
@@ -1686,6 +1688,7 @@
       <a href="#creative">Creative</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
+      <a href="#/earth-core">Earth core</a>
       <a href="#/explore">Pages</a>
     </div>
     <button class="search-btn" id="searchBtn" type="button" aria-label="Search the site" aria-haspopup="dialog">
@@ -1727,6 +1730,7 @@
       <a class="cta primary" href="#contact">Work with me</a>
       <a class="cta" href="#ai">See my work</a>
       <button class="cta holo-cta" type="button" data-holo><span class="mini-reactor" aria-hidden="true"></span>Talk to my hologram</button>
+      <a class="cta" href="#/earth-core">Explore the Earth's core</a>
       <button class="cta" type="button" id="themesHeroBtn" aria-haspopup="dialog"><span class="theme-dots" aria-hidden="true"></span>1000 themes</button>
     </div>
     <a class="scroll-cue" href="#about" aria-label="Scroll down to About me"><span>Scroll</span><i></i></a>
@@ -2907,6 +2911,28 @@
   </div>
 </section>
 
+<section class="view" id="view-earth-core" data-view="earth-core" aria-labelledby="ec-h" tabindex="-1">
+  <div class="wrap">
+    <header class="head">
+      <a class="back" href="#">← Back to portfolio</a>
+      <span class="kick">Planetary prototype</span>
+      <h1 id="ec-h">Earth core</h1>
+      <p class="lede">A rotating holographic Earth with a quarter cutaway: crust, mantle, outer core and inner core. Drill to the centre, explode the shells, or trigger an earthquake. Values follow a simplified PREM-style model, for learning, not research.</p>
+    </header>
+    <div id="ec-root"><p class="fm-empty">Loading the planet…</p></div>
+  </div>
+</section>
+<section class="view" id="view-cosmos" data-view="cosmos" aria-labelledby="cs-h" tabindex="-1">
+  <div class="wrap">
+    <header class="head">
+      <a class="back" href="#">← Back to portfolio</a>
+      <span class="kick">Orbital prototype</span>
+      <h1 id="cs-h">Cosmos</h1>
+      <p class="lede">Solar wind flowing around Earth's magnetosphere, with simulated LEO, MEO and GEO satellites moving at Keplerian speeds. Nothing is live: it is a physics sketch that runs in your browser. <a href="#/earth-core">Back to the core →</a></p>
+    </header>
+    <div id="cs-root"><p class="fm-empty">Loading orbit…</p></div>
+  </div>
+</section>
 <section class="view" id="view-explore" data-view="explore" aria-labelledby="explore-h" tabindex="-1">
   <div class="wrap">
     <header class="head">
@@ -2926,7 +2952,7 @@
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <span class="hint">vini.official.netops@gmail.com</span>
-    <span class="foot-links"><a class="linkish" href="#/lab">Lab</a><a class="linkish" href="#/arena">Arena</a><a class="linkish" href="#/vault">Vault</a><a class="linkish" href="#/logs">Logs</a><a class="linkish" href="#/dossier">Dossier</a><a class="linkish" href="#/explore">All pages</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" id="themesBtn">Themes</button><button class="linkish" type="button" id="perfBtn" aria-live="polite">Performance: Auto</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
+    <span class="foot-links"><a class="linkish" href="#/lab">Lab</a><a class="linkish" href="#/arena">Arena</a><a class="linkish" href="#/vault">Vault</a><a class="linkish" href="#/logs">Logs</a><a class="linkish" href="#/dossier">Dossier</a><a class="linkish" href="#/earth-core">Earth core</a><a class="linkish" href="#/cosmos">Cosmos</a><button class="linkish" type="button" data-fm-open>Features<kbd>Ctrl+Shift+F</kbd></button><a class="linkish" href="#/explore">All pages</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" id="themesBtn">Themes</button><button class="linkish" type="button" id="perfBtn" aria-live="polite">Performance: Auto</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -3119,6 +3145,7 @@
   var words = ["health AI", "Discord bots", "web prototypes", "defense grids", "highlight edits", "game servers"];
   var rot = document.getElementById("rotator"), wi = 0;
   if (!reduce) setInterval(function () {
+    if (document.hidden || window.scrollY > 900 || document.body.classList.contains("route-view")) return; // skip when nobody can see it
     rot.classList.add("out");
     setTimeout(function () { wi = (wi + 1) % words.length; rot.textContent = words[wi]; rot.classList.remove("out"); }, 350);
   }, 2400);
@@ -3166,14 +3193,17 @@
   // Card spotlight follows the pointer
   if (!reduce && window.matchMedia && matchMedia("(hover: hover)").matches) {
     document.querySelectorAll(".card").forEach(function (c) {
-      c.addEventListener("pointermove", function (e) {
-        var r = c.getBoundingClientRect();
-        c.style.setProperty("--mx", (e.clientX - r.left) + "px");
-        c.style.setProperty("--my", (e.clientY - r.top) + "px");
-        var rx = ((e.clientY - r.top) / r.height - 0.5) * -5, ry = ((e.clientX - r.left) / r.width - 0.5) * 5;
+      var px = 0, py = 0, raf = 0;
+      function apply() {
+        raf = 0; var r = c.getBoundingClientRect();
+        c.style.setProperty("--mx", (px - r.left) + "px");
+        c.style.setProperty("--my", (py - r.top) + "px");
+        var rx = ((py - r.top) / r.height - 0.5) * -5, ry = ((px - r.left) / r.width - 0.5) * 5;
         c.style.transform = "perspective(900px) rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) translateY(-2px)";
-      });
-      c.addEventListener("pointerleave", function () { c.style.setProperty("--mx", "-999px"); c.style.transform = ""; });
+      }
+      // one write per frame, never per pointer event; skipped entirely on Lite
+      c.addEventListener("pointermove", function (e) { if (document.documentElement.classList.contains("lite")) return; px = e.clientX; py = e.clientY; if (!raf) raf = requestAnimationFrame(apply); }, { passive: true });
+      c.addEventListener("pointerleave", function () { if (raf) { cancelAnimationFrame(raf); raf = 0; } c.style.setProperty("--mx", "-999px"); c.style.transform = ""; });
     });
   }
 
@@ -3319,10 +3349,11 @@
       }
       bctx.globalAlpha = 1;
     }
-    function bloop(t) { if (root.classList.contains("lite")) { brun = false; return; } if (root.classList.contains("loading")) { requestAnimationFrame(bloop); return; } if (document.hidden) { brun = false; return; } if (t - blast > 42) { bpaint(t); blast = t; } requestAnimationFrame(bloop); }
+    function bloop(t) { if (root.classList.contains("lite")) { brun = false; return; } if (root.classList.contains("loading")) { requestAnimationFrame(bloop); return; } if (document.hidden || document.body.classList.contains("route-view")) { brun = false; return; } if (t - blast > 42) { bpaint(t); blast = t; } requestAnimationFrame(bloop); }
     var brun = false; function bstart() { if (reduce || root.classList.contains("lite")) { bpaint(0); return; } if (!brun) { brun = true; requestAnimationFrame(bloop); } }
     bcolors(); bsize(); bstart();
     document.addEventListener("visibilitychange", function () { if (!document.hidden) bstart(); });
+    window.addEventListener("hashchange", function () { if (!document.body.classList.contains("route-view")) bstart(); }); // resume after leaving a #/view
     new MutationObserver(function () { bcolors(); if (reduce) bpaint(0); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
     var brt; window.addEventListener("resize", function () { clearTimeout(brt); brt = setTimeout(function () { bsize(); if (reduce) bpaint(0); }, 150); });
   } catch (e) {}
@@ -3477,7 +3508,7 @@
     }
     function nframe(t) {
       if (!nalive) return;
-      if (root.classList.contains("lite")) { nalive = false; return; }
+      if (root.classList.contains("lite") || document.hidden) { nalive = false; return; }
       if (t - nlast < 33) { requestAnimationFrame(nframe); return; } nlast = t;
       nx.clearRect(0, 0, NW, NH);
       for (var i = 0; i < stars.length; i++) {
@@ -3520,6 +3551,7 @@
       nextFire = performance.now() + 9000;
       if ("IntersectionObserver" in window) new IntersectionObserver(function (en) { if (en[0].isIntersecting && !nalive) { nalive = true; requestAnimationFrame(nframe); } else if (!en[0].isIntersecting) nalive = false; }).observe(hero);
       else { nalive = true; requestAnimationFrame(nframe); }
+      document.addEventListener("visibilitychange", function () { if (!document.hidden && !nalive && !root.classList.contains("lite")) { nalive = true; requestAnimationFrame(nframe); } });
       setTimeout(storm, 2500);
       var nrt; window.addEventListener("resize", function () { clearTimeout(nrt); nrt = setTimeout(nsize, 150); });
     }
@@ -3635,6 +3667,7 @@
         if (!reduce) { detail.classList.remove("swap"); void detail.offsetWidth; detail.classList.add("swap"); }
       }
       function stop() { clearInterval(timer); timer = null; playBtn.textContent = "Play the flow"; }
+      document.addEventListener("visibilitychange", function () { if (document.hidden && timer) stop(); });
       function play() {
         if (timer) { stop(); return; }
         playBtn.textContent = "Pause";
@@ -5454,6 +5487,7 @@
 <script src="perf.js"></script>
 <script src="soundEngine.js"></script>
 <script src="wave2.js"></script>
+<script src="src/engine/featureHub.js"></script>
 </body>
 </html>
 
