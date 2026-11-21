@@ -1652,7 +1652,10 @@
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");
 // failsafe: whatever stalls (slow resource, blocked script), the page is usable after 7 s
 setTimeout(function () { document.documentElement.classList.remove("loading"); var l = document.getElementById("loader"); if (l) l.className = "loader arena done"; }, 7000);</script>
-<script>(function () { var r = document.documentElement, m = "auto"; try { m = localStorage.getItem("perf") || "auto"; } catch (e) {}
+<script>(function () { var r = document.documentElement, m = "auto";
+  // Safe mode: open the site with ?safe to skip the intro and force the lightest mode (remembered for next time).
+  if (/[?&]safe\b/.test(location.search)) { try { localStorage.setItem("perf", "lite"); sessionStorage.setItem("arenaSeen", "1"); } catch (e) {} }
+  try { m = localStorage.getItem("perf") || "auto"; } catch (e) {}
   var n = navigator, weak = (n.hardwareConcurrency && n.hardwareConcurrency <= 4) || (n.deviceMemory && n.deviceMemory <= 4) || (n.connection && n.connection.saveData) ||
     (window.matchMedia && matchMedia("(pointer: coarse)").matches && innerWidth < 900);
   if (m === "lite" || (m === "auto" && weak)) r.classList.add("lite");
