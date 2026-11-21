@@ -12,7 +12,13 @@
 "use strict";
 const http = require("http");
 
-const KEY = process.env.GEMINI_API_KEY || "";
+// The key comes from the GEMINI_API_KEY env var, or from a Render secret file named GEMINI_API_KEY (served at /etc/secrets/GEMINI_API_KEY).
+function readKey() {
+  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY.trim();
+  for (const f of ["/etc/secrets/GEMINI_API_KEY", "./GEMINI_API_KEY"]) { try { const t = require("fs").readFileSync(f, "utf8").trim(); if (t) return t; } catch (e) { /* not there */ } }
+  return "";
+}
+const KEY = readKey();
 const SITE = (process.env.SITE_URL || "https://vini-portfolio.onrender.com/").replace(/\/?$/, "/");
 const ORIGINS = (process.env.ALLOWED_ORIGINS || "https://vini-portfolio.onrender.com").split(",").map((s) => s.trim()).filter(Boolean);
 const DAILY_CAP = Number(process.env.DAILY_CAP) || 400;
@@ -125,5 +131,9 @@ const server = http.createServer(async (req, res) => {
   const e = ERR[out.error] || ERR.busy;
   return send(res, e[1], { error: e[0] }, origin);
 });
-if (require.main === module) server.listen(Number(process.env.PORT) || 8787, () => console.log("vega proxy listening, key " + (KEY ? "set" : "MISSING")));
+if (require.main === module) server.listen(Number(process.env.PORT) || 8787, () => {
+  console.log("vega proxy listening, key " + (KEY ? "set (" + KEY.length + " chars)" : "MISSING"));
+  // one tiny startup check so the logs say whether Google accepts the key (the key itself is never logged)
+  if (KEY) gemini([{ role: "user", content: "Reply with the word ok." }]).then((o) => console.log("startup check:", o.answer ? "Gemini accepted the key" : "FAILED (" + o.error + ")")).catch((e) => console.log("startup check error:", e.message));
+});
 module.exports = { server, toText, system };
