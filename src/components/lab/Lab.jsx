@@ -284,7 +284,7 @@ function ViewportPreview() {
 
 export function Lab() {
   return (
-    <Section id="lab" n="09" kicker="Architecture & workflow lab" title="How I build, shown instead of told" intro="Interactive pieces of my process: every widget here runs in your browser with no server and no API key.">
+    <Section id="lab" n="10" kicker="Architecture & workflow lab" title="How I build, shown instead of told" intro="Interactive pieces of my process: every widget here runs in your browser with no server and no API key.">
       <div className="grid gap-5">
         <Pipeline />
         <div className="grid gap-5 lg:grid-cols-2"><GuardrailInspector /><GatewayRouter /></div>

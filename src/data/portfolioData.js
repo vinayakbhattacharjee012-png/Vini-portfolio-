@@ -67,8 +67,7 @@ export const principles = [
   { title: "Guardrails by default", text: "Safety, permissions and fallbacks go in before features." },
 ];
 
-// CHECK: replace with your actual setup.
-export const devEnv = ["Windows & Linux", "Git + GitHub", "Node 22 + Vite", "Python 3", "Browser-first AI builders"];
+export const devEnv = ["Lenovo ThinkPad X270", "Core i5 · 16 GB RAM", "External monitor", "Multi-device workflow", "Python + Node", "Git + GitHub"];
 
 export const lessons = [
   { title: "Rate limits are a feature", text: "Bots that respect Discord's limits never get banned mid-raid. Queue, back off, retry." },

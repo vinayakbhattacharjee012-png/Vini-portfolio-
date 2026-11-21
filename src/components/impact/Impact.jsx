@@ -66,7 +66,7 @@ export function Impact() {
   const [ref, seen] = useInView();
   const box = "card p-5 sm:p-6";
   return (
-    <Section id="impact" n="10" kicker="Metrics, milestones & impact" title="What the work adds up to" intro="Numbers, the path so far, and what's being built next.">
+    <Section id="impact" n="11" kicker="Metrics, milestones & impact" title="What the work adds up to" intro="Numbers, the path so far, and what's being built next.">
       <div ref={ref} className="grid gap-4 sm:grid-cols-3">{stats.map((s) => <Stat key={s.label} s={s} start={seen} />)}</div>
       <div className="mt-4 grid gap-4 md:grid-cols-6">
         <div className={`${box} md:col-span-3`}><p className="kicker mb-4">Build timeline</p><Timeline /></div>

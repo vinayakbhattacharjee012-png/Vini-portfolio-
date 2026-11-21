@@ -385,6 +385,41 @@
   @keyframes breathe { 50% { box-shadow: 0 0 70px var(--star-soft); transform: scale(1.04); } }
 
 
+  .terminal { padding: 0; overflow: hidden; gap: 0; }
+  .term-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+  .term-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .term-bar i:first-child { background: var(--danger); } .term-bar i:nth-child(2) { background: var(--star); } .term-bar i:nth-child(3) { background: var(--nebula); }
+  .term-bar span { margin-left: 8px; font-size: 0.74rem; color: var(--muted); }
+  .term { margin: 0; padding: 16px 18px; font: 500 0.84rem/1.75 var(--font-mono); color: var(--ink); min-height: 13.5em; white-space: pre-wrap; overflow-x: auto; }
+  .term .cmd { color: var(--star); } .term .ok { color: var(--nebula); } .term .live { color: var(--ink); font-weight: 600; }
+  .caret { display: inline-block; width: 8px; height: 1em; vertical-align: -2px; background: var(--star); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .raid-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; }
+  .btn { font: 600 0.88rem var(--font-display); padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--danger); background: transparent; color: var(--danger); transition: background .15s ease, color .15s ease; }
+  .btn:hover:not(:disabled) { background: var(--danger); color: var(--bg); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .raid-log { font: 500 0.8rem var(--font-mono); color: var(--muted); min-width: 0; }
+  svg .raider { fill: var(--danger); }
+  svg .raider.hit { animation: burst .6s ease-out forwards; transform-box: fill-box; transform-origin: center; }
+  @keyframes burst { to { transform: scale(3.2); opacity: 0; } }
+
+  .beat-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; }
+  .beat-time { font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .track { position: relative; height: 76px; border-radius: 10px; background: var(--surface-2); overflow: hidden; }
+  .wave { position: absolute; inset: 8px 6px; display: flex; align-items: center; gap: 2px; }
+  .wave i { flex: 1; border-radius: 2px; background: var(--nebula); opacity: .45; transition: opacity .2s ease; }
+  .wave i.past { opacity: .95; }
+  .marker { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--star); opacity: .55; }
+  .marker.hit { animation: hit .5s ease-out; }
+  @keyframes hit { 0% { opacity: 1; box-shadow: 0 0 14px 3px var(--star); } 100% { opacity: .55; box-shadow: none; } }
+  .playhead { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; background: var(--ink); box-shadow: 0 0 10px var(--ink); }
+  .clips { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
+  .clips span { font: 500 0.68rem var(--font-mono); color: var(--muted); text-align: center; padding: 6px 2px; border-radius: 6px;
+    background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: all .2s ease; }
+  .clips span.on { color: var(--bg); background: var(--star); border-color: var(--star); transform: translateY(-2px); }
+  @media (max-width: 560px) { .clips span { font-size: 0.6rem; } }
   .inventory { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
   @media (max-width: 480px) { .inventory { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .slot { position: relative; isolation: isolate; overflow: hidden; border-radius: 12px; padding: 12px 10px; text-align: center; min-width: 0; }
@@ -1778,6 +1813,7 @@
       <a href="#process">How I work</a>
       <a href="#ai">Projects</a>
       <a href="#creative">Creative</a>
+      <a href="#gaming">Gaming</a>
       <a href="#advertise">Advertise</a>
       <a href="#contact">Contact</a>
     </div>
@@ -1840,7 +1876,7 @@
     <div class="orbit" aria-label="My five areas of work, orbiting">
       <div class="orb o3">
         <span class="planet"><a href="#creative" style="--c: var(--nebula)">Creative</a></span>
-        <span class="planet bottom"></span>
+        <span class="planet bottom"><a href="#gaming">Gaming</a></span>
       </div>
       <div class="orb o2">
         <span class="planet"><a href="#community">Community</a></span>
@@ -1859,6 +1895,10 @@
     </div>
   </div>
 </header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker"></div>
+</div>
 
 <main id="main">
   <!-- ABOUT -->
@@ -1880,7 +1920,13 @@
         <div class="about-text reveal">
           <p>I build things with AI and code, and I run the communities they're built for.</p>
           <p>Right now I'm designing <strong>Polo</strong>, a health AI app with clinical safety guardrails, and writing Python Discord bots like <strong>Nova 3.0 Ultimate</strong>. I founded the <strong>Galaxy network</strong>, five community brands with 1.5k–2k members, and I've moderated servers as big as <strong>90,000 members</strong>, so security and good moderation are close to my heart.</p>
-          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself.</p>
+          <p>Away from the keyboard I cut European football highlight edits to soundtracks I make myself, and play Blox Fruits at max level.</p>
+          <div class="facts">
+            <div class="fact"><span>I build</span><b>Health AI &amp; Discord bots</b></div>
+            <div class="fact"><span>I run</span><b>The Galaxy network</b></div>
+            <div class="fact"><span>I protect</span><b>Servers up to 90k members</b></div>
+            <div class="fact"><span>I create</span><b>Football edits &amp; music</b></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1966,6 +2012,33 @@
           <ul class="sk-pills"><li>Bolt.new</li><li>Lovable</li><li>Replit Agent</li><li>Base44</li><li>Manus.space</li><li>Google AI Studio</li><li>Render deployments</li><li>Netlify</li><li>UptimeRobot monitoring</li><li>GitHub</li></ul>
         </article>
       </div>
+
+      <!-- Restored from earlier versions: the skill constellation and the Discord skill maps -->
+      <div class="subhead reveal"><span class="kicker">Constellation</span><h3>All my skills on one map</h3><p>59 skills across 8 areas. Tap a star in the constellation or a filter to explore one area; bigger stars hold more skills.</p></div>
+      <div class="skill-wrap">
+        <figure class="diagram constellation reveal" id="constellation">
+          <svg id="cSvg" viewBox="0 0 520 520" role="img" aria-label="Skill constellation: eight skill areas around Vini, sized by number of skills."><polygon points="260.0,80.0 380.2,129.8 430.0,250.0 380.2,370.2 260.0,420.0 139.8,370.2 90.0,250.0 139.8,129.8" class="edge dashed"></polygon><line x1="260" y1="250" x2="260.0" y2="80.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="129.8" class="edge flow"></line><line x1="260" y1="250" x2="430.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="380.2" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="260.0" y2="420.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="370.2" class="edge flow"></line><line x1="260" y1="250" x2="90.0" y2="250.0" class="edge flow"></line><line x1="260" y1="250" x2="139.8" y2="129.8" class="edge flow"></line><circle cx="260" cy="250" r="44" style="fill: var(--surface)"></circle><circle cx="260" cy="250" r="44" class="hub"></circle><text x="260" y="248" text-anchor="middle" class="t-title">Vini</text><text x="260" y="266" text-anchor="middle" class="t-sub">59 skills</text><g class="cnode" tabindex="0" role="button" aria-label="AI product, 5 skills"><circle cx="260.0" cy="80.0" r="30" class="halo"></circle><circle cx="260.0" cy="80.0" r="24" style="fill: var(--surface)"></circle><circle cx="260.0" cy="80.0" r="24" class="dot"></circle><text x="260.0" y="82.0" text-anchor="middle" class="num">5</text><text x="260.0" y="95.0" text-anchor="middle" class="code">AI</text><text x="260.0" y="47.0" text-anchor="middle" class="lbl">AI product</text></g><g class="cnode" tabindex="0" role="button" aria-label="Engineering, 7 skills"><circle cx="380.2" cy="129.8" r="32.8" class="halo"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="380.2" cy="129.8" r="26.799999999999997" class="dot"></circle><text x="380.2" y="131.8" text-anchor="middle" class="num">7</text><text x="380.2" y="144.8" text-anchor="middle" class="code">DEV</text><text x="380.2" y="94.0" text-anchor="middle" class="lbl">Engineering</text></g><g class="cnode" tabindex="0" role="button" aria-label="AI builder tools, 7 skills"><circle cx="430.0" cy="250.0" r="32.8" class="halo"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" style="fill: var(--surface)"></circle><circle cx="430.0" cy="250.0" r="26.799999999999997" class="dot"></circle><text x="430.0" y="252.0" text-anchor="middle" class="num">7</text><text x="430.0" y="265.0" text-anchor="middle" class="code">TLS</text><text x="430.0" y="292.8" text-anchor="middle" class="lbl">AI builder tools</text></g><g class="cnode" tabindex="0" role="button" aria-label="Deploy &amp; monitor, 5 skills"><circle cx="380.2" cy="370.2" r="30" class="halo"></circle><circle cx="380.2" cy="370.2" r="24" style="fill: var(--surface)"></circle><circle cx="380.2" cy="370.2" r="24" class="dot"></circle><text x="380.2" y="372.2" text-anchor="middle" class="num">5</text><text x="380.2" y="385.2" text-anchor="middle" class="code">OPS</text><text x="380.2" y="410.2" text-anchor="middle" class="lbl">Deploy &amp; monitor</text></g><g class="cnode" tabindex="0" role="button" aria-label="Leadership, 6 skills"><circle cx="260.0" cy="420.0" r="31.4" class="halo"></circle><circle cx="260.0" cy="420.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="260.0" cy="420.0" r="25.4" class="dot"></circle><text x="260.0" y="422.0" text-anchor="middle" class="num">6</text><text x="260.0" y="435.0" text-anchor="middle" class="code">LDR</text><text x="260.0" y="461.4" text-anchor="middle" class="lbl">Leadership</text></g><g class="cnode" tabindex="0" role="button" aria-label="Moderation &amp; security, 17 skills"><circle cx="139.8" cy="370.2" r="46.8" class="halo"></circle><circle cx="139.8" cy="370.2" r="40.8" style="fill: var(--surface)"></circle><circle cx="139.8" cy="370.2" r="40.8" class="dot"></circle><text x="139.8" y="372.2" text-anchor="middle" class="num">17</text><text x="139.8" y="385.2" text-anchor="middle" class="code">SEC</text><text x="139.8" y="427.0" text-anchor="middle" class="lbl">Moderation &amp; security</text></g><g class="cnode" tabindex="0" role="button" aria-label="Creative, 6 skills"><circle cx="90.0" cy="250.0" r="31.4" class="halo"></circle><circle cx="90.0" cy="250.0" r="25.4" style="fill: var(--surface)"></circle><circle cx="90.0" cy="250.0" r="25.4" class="dot"></circle><text x="90.0" y="252.0" text-anchor="middle" class="num">6</text><text x="90.0" y="265.0" text-anchor="middle" class="code">ART</text><text x="90.0" y="291.4" text-anchor="middle" class="lbl">Creative</text></g><g class="cnode" tabindex="0" role="button" aria-label="Gaming, 6 skills"><circle cx="139.8" cy="129.8" r="31.4" class="halo"></circle><circle cx="139.8" cy="129.8" r="25.4" style="fill: var(--surface)"></circle><circle cx="139.8" cy="129.8" r="25.4" class="dot"></circle><text x="139.8" y="131.8" text-anchor="middle" class="num">6</text><text x="139.8" y="144.8" text-anchor="middle" class="code">GMG</text><text x="139.8" y="95.4" text-anchor="middle" class="lbl">Gaming</text></g></svg>
+          <figcaption><b>Skill constellation.</b> Moderation &amp; security has the most skills, 17, from the layered bot setup and how I test it.</figcaption>
+        </figure>
+        <div class="reveal" style="min-width: 0;">
+          <div class="filters" id="filters" role="group" aria-label="Filter skills by area"><button type="button" aria-pressed="true">All<b>59</b></button><button type="button" aria-pressed="false">AI product<b>5</b></button><button type="button" aria-pressed="false">Engineering<b>7</b></button><button type="button" aria-pressed="false">AI builder tools<b>7</b></button><button type="button" aria-pressed="false">Deploy &amp; monitor<b>5</b></button><button type="button" aria-pressed="false">Leadership<b>6</b></button><button type="button" aria-pressed="false">Moderation &amp; security<b>17</b></button><button type="button" aria-pressed="false">Creative<b>6</b></button><button type="button" aria-pressed="false">Gaming<b>6</b></button></div>
+          <div class="tiles" id="tiles"><div class="tile" data-cat="ai"><code>AI</code><span>Health AI product design</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Structured wellness workflows</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Clinical safety guardrails</span></div><div class="tile" data-cat="ai"><code>AI</code><span>AI-assisted prototyping</span></div><div class="tile" data-cat="ai"><code>AI</code><span>Prompting with Claude Pro</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Python</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Discord bot development</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Interactive button views</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Leveling &amp; XP systems</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>Anti-spam logic</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>AFK tracking</span></div><div class="tile alt" data-cat="dev"><code>DEV</code><span>UI architecture</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Bolt.new</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Manus.space</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Base44</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Lovable</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Replit Agent</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Google AI Studio</span></div><div class="tile" data-cat="tools"><code>TLS</code><span>Claude Pro</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Render deployments</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>UptimeRobot monitoring</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Uptime &amp; latency alerts</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Live service upkeep</span></div><div class="tile alt" data-cat="ops"><code>OPS</code><span>Multi-device dev workflow</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Founding communities</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Multi-brand network management</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Governance frameworks</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Mergers &amp; treaty drafting</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Partnerships</span></div><div class="tile" data-cat="lead"><code>LDR</code><span>Staff leadership</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Large-scale moderation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Server administration</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Anti-nuke &amp; raid defense</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Permission architecture</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Vault Account isolation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Wick</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bravers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Security Bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Krypton</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Dyno</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Carl-bot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Sapphire</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>JailBot</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Bot testing in sandbox servers</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Raid &amp; spam simulation</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Automod rule tuning</span></div><div class="tile alt" data-cat="sec"><code>SEC</code><span>Case logs &amp; appeals</span></div><div class="tile" data-cat="art"><code>ART</code><span>Football highlight editing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Match footage sourcing</span></div><div class="tile" data-cat="art"><code>ART</code><span>Beat-synced cutting</span></div><div class="tile" data-cat="art"><code>ART</code><span>Velocity curves</span></div><div class="tile" data-cat="art"><code>ART</code><span>Soundtrack composition</span></div><div class="tile" data-cat="art"><code>ART</code><span>Google Flow Music</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Minecraft SMP admin</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Cross-platform servers</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Blox Fruits endgame</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>High-tier PvP</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Sea Events</span></div><div class="tile alt" data-cat="game"><code>GMG</code><span>Trading &amp; middleman</span></div></div>
+          <p class="skill-count" id="skillCount" aria-live="polite">Showing all 59 skills</p>
+        </div>
+      </div>
+    
+      <div class="subhead reveal"><span class="kicker">Skill maps</span><h3>What I'm good at</h3><p>Discord first: that's where most of my work lives. The second map shows everything else.</p></div>
+      <figure class="diagram tree reveal" data-skill-box="discord">
+        <div class="hub-node"><svg class="dc" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 5.3A17 17 0 0 0 15.8 4l-.5 1a15.7 15.7 0 0 0-4.6 0l-.5-1A17 17 0 0 0 4 5.3C1.4 9.2.7 13 1 16.8a17 17 0 0 0 5.2 2.6l1.1-1.8a11 11 0 0 1-1.7-.8l.4-.3a12.2 12.2 0 0 0 10.4 0l.4.3-1.7.8 1.1 1.8a17 17 0 0 0 5.2-2.6c.4-4.4-.7-8.2-3-11.5ZM8.7 14.5c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.6 0c-1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg><div><b>Discord</b><span>moderation · security · bots</span></div></div>
+        <div class="branches"><div class="br br-mod" data-skill-box="mod"><div class="node head"><code>MOD</code><div><h4>Moderation</h4><span>Keeping big servers healthy</span></div></div><ul class="leaves"><li><span>Large-scale moderation (90k)</span></li><li><span>Server administration</span></li><li><span>Staff leadership</span></li><li><span>Automod rule tuning</span></li><li><span>Case logs &amp; appeals</span></li></ul></div><div class="br br-sec" data-skill-box="sec"><div class="node head"><code>SEC</code><div><h4>Security</h4><span>Stopping raids before they land</span></div></div><ul class="leaves"><li><span>Anti-nuke &amp; raid defense</span></li><li><span>Permission architecture</span></li><li><span>Vault Account isolation</span></li><li><span>Raid &amp; spam simulation</span></li><li><span>Bot testing in sandboxes</span></li></ul></div><div class="br br-bots" data-skill-box="bots"><div class="node head"><code>BOT</code><div><h4>Bots I build</h4><span>Python, live in real servers</span></div></div><ul class="leaves"><li><span>Python</span></li><li><span>Discord bot development</span></li><li><span>Interactive button views</span></li><li><span>Leveling &amp; XP systems</span></li><li><span>Anti-spam &amp; AFK tracking</span></li></ul></div></div>
+        <div class="stack-node"><span>Security stack I run</span><i>Wick</i><i>Bravers</i><i>Security Bot</i><i>Krypton</i><i>Dyno</i><i>Carl-bot</i><i>Sapphire</i><i>JailBot</i></div>
+        <figcaption><b>My Discord skill map.</b> Three branches, one goal: big servers that stay safe and fun.</figcaption>
+      </figure>
+      <figure class="diagram htree reveal">
+        <div class="hub-node alt"><b>Beyond Discord</b><span>6 more areas</span></div>
+        <div class="hrows"><div class="hrow" data-skill-box="lead"><div class="node head small"><code>LDR</code><h4>Community leadership</h4></div><div class="chips"><span>Founding communities</span><span>Multi-brand network</span><span>Governance frameworks</span><span>Mergers &amp; treaties</span><span>Partnerships</span></div></div><div class="hrow" data-skill-box="ai"><div class="node head small"><code>AI</code><h4>AI product</h4></div><div class="chips"><span>Health AI product design</span><span>Wellness workflows</span><span>Clinical safety guardrails</span><span>AI-assisted prototyping</span></div></div><div class="hrow" data-skill-box="tools"><div class="node head small"><code>TLS</code><h4>AI builder tools</h4></div><div class="chips"><span>Bolt.new</span><span>Lovable</span><span>Replit Agent</span><span>Base44</span><span>Manus.space</span><span>Google AI Studio</span><span>Claude Pro</span></div></div><div class="hrow" data-skill-box="ops"><div class="node head small"><code>OPS</code><h4>Deploy &amp; monitor</h4></div><div class="chips"><span>Render deployments</span><span>UptimeRobot monitoring</span><span>Uptime &amp; latency alerts</span></div></div><div class="hrow" data-skill-box="art"><div class="node head small"><code>ART</code><h4>Creative</h4></div><div class="chips"><span>Football highlight editing</span><span>Beat-synced cutting</span><span>Velocity curves</span><span>Original soundtracks</span></div></div><div class="hrow" data-skill-box="game"><div class="node head small"><code>GMG</code><h4>Gaming</h4></div><div class="chips"><span>Minecraft SMP admin</span><span>Blox Fruits endgame</span><span>High-tier PvP &amp; Sea Events</span><span>Trading &amp; middleman</span></div></div></div>
+      </figure>
+    
     </div>
   </div>
 
@@ -2046,6 +2119,7 @@
           <span class="kicker">Moderation &amp; administration</span>
           <h3>Large-scale moderation</h3>
           <div class="roles">
+            <div class="role"><b>Senior Moderator</b><span>Fruity Blox · Blox Fruits community · 40,000 members</span></div>
             <div class="role"><b>Junior Moderator</b><span><a href="https://discord.gg/vtacNP4kG" target="_blank" rel="noopener">Roblox community server ↗</a> · 90,000 members</span></div>
             <div class="role"><b>Head Administrator</b><span>Owned Galaxy network hubs</span></div>
           </div>
@@ -2087,7 +2161,37 @@
             <line class="attack-x" x1="80" y1="348" x2="96" y2="364" />
             <line class="attack-x" x1="96" y1="348" x2="80" y2="364" />
             <text class="t-danger" x="14" y="408">raid / nuke</text>
+            <g id="raidLayer"></g>
           </svg>
+          <div class="raid-bar">
+            <button class="btn" id="raidBtn" type="button">Simulate a raid</button>
+            <span class="raid-log" id="raidLog" aria-live="polite">12 attackers are waiting.</span>
+          </div>
+          <figcaption><b>Four rings of defense.</b> Attacks are stopped at the outer anti-nuke layer, misbehaving users are handled by automod and JailBot, and ownership stays out of reach in the Vault Account.</figcaption>
+        </figure>
+        <div style="display:grid; gap:16px; align-content:start; min-width:0;">
+          <article class="card reveal">
+            <span class="kicker">Layer 1</span>
+            <h3>Anti-nuke &amp; raid defense</h3>
+            <p>Wick, Bravers, Security Bot and Krypton watch for mass bans, channel deletions and raid waves.</p>
+          </article>
+          <article class="card reveal">
+            <span class="kicker">Layer 2</span>
+            <h3>Moderation &amp; automod</h3>
+            <p>Dyno, Carl-bot and Sapphire handle automod rules, logging and everyday moderation.</p>
+          </article>
+          <article class="card reveal">
+            <span class="kicker">Layer 3</span>
+            <h3>Containment</h3>
+            <p>JailBot isolates problem accounts so they can be reviewed without touching the rest of the server.</p>
+          </article>
+          <article class="card reveal">
+            <span class="kicker">Core</span>
+            <h3>Vault Account</h3>
+            <p>Technical server ownership lives in a dedicated account, so a compromised staff account can’t take over the server.</p>
+          </article>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2275,6 +2379,7 @@
       <div class="xp-wrap">
         <ol class="xp">
           <li class="reveal"><time>Now</time><div><b>Founder &amp; director, <a href="https://discord.gg/JJkyD2Rhc" target="_blank" rel="noopener">Galaxy Empire ↗</a></b><span>Five community brands, 1.5k–2k members. Governance, mergers and treaties.</span></div></li>
+          <li class="reveal"><time>Moderation</time><div><b>Senior moderator, Fruity Blox</b><span>Blox Fruits community of 40,000 members.</span></div></li>
           <li class="reveal"><time>Moderation</time><div><b>Junior moderator, <a href="https://discord.gg/vtacNP4kG" target="_blank" rel="noopener">Roblox community server ↗</a></b><span>Moderating a server of 90,000 members.</span></div></li>
           <li class="reveal"><time>Security</time><div><b>Server security architect</b><span>Built a layered defence: anti-nuke, automod and containment, with ownership kept in a separate Vault Account.</span></div></li>
           <li class="reveal"><time>Bots</time><div><b>Bot developer, Nova 3.0 Ultimate</b><span>Verification views, leveling, anti-spam and AFK tracking, live in communities.</span></div></li>
@@ -2282,6 +2387,8 @@
       </div>
     </div>
   </section>
+
+  <div class="band"><div class="wrap"><span class="eyebrow">Part two</span><h2>Projects &amp; creative</h2><p>Apps, websites, bots and football edits.</p></div></div>
 
   <!-- AI & SOFTWARE -->
   <section id="ai">
@@ -2332,6 +2439,7 @@
           <span class="kicker">Ops</span>
           <h3>Deployment &amp; monitoring</h3>
           <p>Deploying live services on Render and tracking uptime and latency alerts through UptimeRobot.</p>
+          <p>Multi-device workflow on a Lenovo ThinkPad X270 (Core i5, 16GB RAM) with an external monitor.</p>
           <div class="pills"><span class="pill">Render</span><span class="pill">UptimeRobot</span></div>
         </article>
         <article class="card reveal featured" data-tags="python bots ops" data-sim="eclipse">
@@ -2359,6 +2467,11 @@
           </ul>
           <div class="metrics"><span class="metric"><b>1</b>file</span><span class="metric"><b>0</b>build steps</span><span class="metric"><b>session</b>only key</span></div>
           <div class="card-actions"><button class="cta" type="button" data-arch="apex">View architecture</button></div>
+        </article>
+
+        <article class="card terminal reveal" style="grid-column: 1 / -1;" data-tags="python ops">
+          <div class="term-bar"><i></i><i></i><i></i><span class="mono">nova-3.0-ultimate · start-up (illustration)</span></div>
+          <pre class="term" id="term" aria-label="Illustrated start-up log for Nova 3.0 Ultimate"></pre>
         </article>
 
         <figure class="diagram span reveal" data-tags="ops">
@@ -2515,7 +2628,15 @@
           <span class="kicker">Audio</span>
           <h3>Original soundtracks</h3>
           <p>Custom background scores and audio tracks for my edits, produced with Google Flow Music Premium.</p>
+          <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </article>
+
+        <figure class="diagram span reveal" id="beat">
+          <div class="beat-head"><span class="kicker">Edit timeline · illustration</span><span class="beat-time mono" id="beatTime">00:00.0</span></div>
+          <div class="track" id="track"><div class="wave" id="wave"></div><div class="playhead" id="playhead"></div></div>
+          <div class="clips" id="clips"></div>
+          <figcaption><b>Cutting on the beat.</b> Each gold marker is a beat drop, and the clip changes the moment the playhead crosses it.</figcaption>
+        </figure>
 
         <figure class="diagram span reveal">
           <div class="diagram-scroll">
@@ -2551,6 +2672,42 @@
           </div>
           <figcaption><b>From raw footage to a finished edit.</b> Every cut lands on the music, and the music is written for the edit.</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMING -->
+  <section id="gaming">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Gaming operations</span>
+        <h2>Servers and endgame play</h2>
+        <p>Running multiplayer servers and playing Blox Fruits at the highest level.</p>
+      </div>
+      <div class="skillrow reveal" data-skill-box="gaming" aria-label="Gaming skills"><div class="skb"><code>MC</code><b>Minecraft SMP admin</b><span>PC &amp; mobile servers</span></div><div class="skb"><code>BF</code><b>Blox Fruits endgame</b><span>Max level 2,800</span></div><div class="skb"><code>PVP</code><b>PvP &amp; Sea Events</b><span>High-tier play</span></div><div class="skb"><code>TRD</code><b>Trading &amp; middleman</b><span>INR &amp; crypto deals</span></div></div>
+
+      <div class="grid">
+        <article class="card reveal">
+          <span class="kicker">Minecraft</span>
+          <h3>SMP server administration</h3>
+          <p>Set up and managed cross-platform (PC and mobile) Survival Multiplayer community servers.</p>
+          <div class="pills"><span class="pill">PC &amp; mobile players</span><span class="pill">Community SMP</span></div>
+        </article>
+        <article class="card reveal">
+          <span class="kicker">Roblox · Blox Fruits</span>
+          <h3>Endgame operations</h3>
+          <p>Max-level (2800) veteran running several endgame accounts. Active in high-tier PvP, Sea Events and structured item trading and middleman work.</p>
+          <div class="inventory">
+            <div class="slot" style="--i:0"><b>Human V4</b><span>maxed</span></div>
+            <div class="slot" style="--i:1"><b>Cursed Dual Katana</b><span>owned</span></div>
+            <div class="slot" style="--i:2"><b>Soul Guitar</b><span>owned</span></div>
+            <div class="slot" style="--i:3"><b>Shark Anchor</b><span>owned</span></div>
+            <div class="slot" style="--i:4"><b>Spiky Trident</b><span>owned</span></div>
+            <div class="slot" style="--i:5"><b>Gravity Cane</b><span>Strong Grip</span></div>
+            <div class="slot wide" style="--i:6"><span>Fragments</span><b>40,000+</b></div>
+          </div>
+          <div class="pay"><span>Trades &amp; middleman deals in</span><span class="coin inr"><i>₹</i>INR</span><span class="coin crypto"><i>₿</i>Crypto</span></div>
+        </article>
       </div>
     </div>
   </section>
@@ -2944,6 +3101,13 @@
     document.addEventListener("click", function (e) { if (navEl.classList.contains("open") && !navEl.contains(e.target)) setMenu(false); });
   } catch (e) {}
 
+  // Ticker
+  var skills = ["Health AI", "Python", "Discord bots", "Bolt.new", "Lovable", "Replit Agent", "Base44", "Manus.space",
+    "Google AI Studio", "Claude Pro", "Render", "UptimeRobot", "Anti-nuke", "Wick", "Dyno", "Carl-bot", "Governance",
+    "Moderation", "Video editing", "Beat sync", "Google Flow Music", "Discord security", "Galaxy network", "Minecraft SMP", "Blox Fruits PvP", "Middleman trading"];
+  var track = document.getElementById("ticker");
+  var html = skills.map(function (s) { return "<span>" + s + "</span>"; }).join("");
+  track.innerHTML = html + html;
 
   // Rotating word
   var words = ["health AI", "Discord bots", "web prototypes", "defense grids", "highlight edits", "game servers"];
@@ -3011,6 +3175,183 @@
     if (!("IntersectionObserver" in window)) { cb(true); return; }
     new IntersectionObserver(function (en) { cb(en[0].isIntersecting); }).observe(el);
   }
+
+  // Nova terminal
+  try {
+    var term = document.getElementById("term");
+    var tl = [["cmd", "$ python nova.py"], ["ok", "✓ verification views ready"], ["ok", "✓ leveling progression online"],
+      ["ok", "✓ anti-spam shield armed"], ["ok", "✓ AFK tracker listening"], ["cmd", "$ deploy --to render"],
+      ["live", "● live · UptimeRobot watching uptime & latency"]];
+    function full() { return tl.map(function (l) { return '<span class="' + l[0] + '">' + l[1] + "</span>"; }).join("\n"); }
+    term.innerHTML = full() + ' <span class="caret"></span>';
+    var tVisible = false, tRunning = false;
+    function typeAll() {
+      if (tRunning) return; tRunning = true;
+      var li = 0, ci = 0, out = "";
+      (function next() {
+        if (!tVisible) { tRunning = false; term.innerHTML = full() + ' <span class="caret"></span>'; return; }
+        if (li >= tl.length) { setTimeout(function () { tRunning = false; if (tVisible) typeAll(); }, 3500); return; }
+        var l = tl[li]; ci++;
+        var cur = '<span class="' + l[0] + '">' + l[1].slice(0, ci) + "</span>";
+        term.innerHTML = out + cur + '<span class="caret"></span>';
+        if (ci >= l[1].length) { out += cur + "\n"; li++; ci = 0; setTimeout(next, 280); } else setTimeout(next, 22);
+      })();
+    }
+    if (!reduce) onVisible(term, function (v) { tVisible = v; if (v) typeAll(); });
+  } catch (e) {}
+
+  // Raid simulator
+  try {
+    var raidBtn = document.getElementById("raidBtn"), raidLayer = document.getElementById("raidLayer"), raidLog = document.getElementById("raidLog");
+    var NS = "http://www.w3.org/2000/svg";
+    raidBtn.addEventListener("click", function () {
+      raidBtn.disabled = true; raidLayer.innerHTML = "";
+      var plan = [200, 200, 200, 200, 200, 200, 200, 200, 200, 148, 148, 96], c = { 200: 0, 148: 0, 96: 0 };
+      var ps = plan.map(function (stop, i) {
+        var el = document.createElementNS(NS, "circle"); el.setAttribute("r", "4"); el.setAttribute("class", "raider"); el.setAttribute("opacity", "0");
+        raidLayer.appendChild(el);
+        return { a: Math.random() * 6.283, stop: stop, delay: reduce ? 0 : i * 110 + Math.random() * 150, done: false, el: el };
+      });
+      raidLog.textContent = "Raid incoming…";
+      var t0 = performance.now();
+      (function step(now) {
+        var all = true;
+        ps.forEach(function (p) {
+          if (p.done) return;
+          var t = now - t0 - p.delay; if (t < 0) { all = false; return; }
+          var r = reduce ? p.stop : Math.max(p.stop, 250 - t / 1000 * 110);
+          p.el.setAttribute("opacity", "1");
+          p.el.setAttribute("cx", (230 + Math.cos(p.a) * r).toFixed(1));
+          p.el.setAttribute("cy", (220 + Math.sin(p.a) * r).toFixed(1));
+          if (r <= p.stop) { p.done = true; c[p.stop]++; p.el.setAttribute("class", "raider hit"); } else all = false;
+        });
+        raidLog.textContent = "Anti-nuke stopped " + c[200] + " · automod caught " + c[148] + " · JailBot contained " + c[96];
+        if (!all) requestAnimationFrame(step);
+        else setTimeout(function () {
+          raidLog.textContent = "Raid over: 12 attackers stopped. Vault ownership untouched ✓";
+          raidBtn.disabled = false; raidBtn.textContent = "Run it again";
+        }, 500);
+      })(t0);
+    });
+  } catch (e) {}
+
+  // Beat timeline
+  try {
+    var wave = document.getElementById("wave"), track = document.getElementById("track"), ph = document.getElementById("playhead");
+    var clipsEl = document.getElementById("clips"), beatTime = document.getElementById("beatTime");
+    var BARS = 64, SEG = 8, names = ["Build-up", "Dribble", "Skill move", "Through ball", "Shot", "Goal", "Celebration", "Replay"];
+    var bars = [], marks = [], clips = [];
+    for (var i = 0; i < BARS; i++) {
+      var k = i % SEG, h = 18 + 70 * Math.abs(Math.sin(i * 1.7)) * (k === 0 ? 1 : 0.35 + k / SEG * 0.5);
+      var b = document.createElement("i"); b.style.height = Math.min(100, h).toFixed(0) + "%"; wave.appendChild(b); bars.push(b);
+    }
+    for (var m = 1; m < SEG; m++) {
+      var mk = document.createElement("div"); mk.className = "marker"; mk.style.left = (m / SEG * 100) + "%"; track.appendChild(mk); marks.push(mk);
+    }
+    names.forEach(function (n) { var sp = document.createElement("span"); sp.textContent = n; clipsEl.appendChild(sp); clips.push(sp); });
+    clips[0].classList.add("on");
+    var DUR = 8000, bVisible = false, bRunning = false, bStart = 0, lastSeg = 0;
+    function frame(now) {
+      if (!bVisible) { bRunning = false; return; }
+      var p = (Math.max(0, now - bStart) % DUR) / DUR, seg = Math.floor(p * SEG), bi = Math.floor(p * BARS);
+      ph.style.transform = "translateX(" + (p * track.clientWidth) + "px)";
+      beatTime.textContent = "00:0" + (p * 8).toFixed(1);
+      for (var j = 0; j < BARS; j++) bars[j].classList.toggle("past", j <= bi);
+      if (seg !== lastSeg) {
+        clips[lastSeg].classList.remove("on"); clips[seg].classList.add("on");
+        if (seg > 0) { var mk = marks[seg - 1]; mk.classList.remove("hit"); void mk.offsetWidth; mk.classList.add("hit"); }
+        lastSeg = seg;
+      }
+      requestAnimationFrame(frame);
+    }
+    if (!reduce) onVisible(track, function (v) {
+      bVisible = v;
+      if (v && !bRunning) { bRunning = true; bStart = performance.now(); lastSeg = 0; clips.forEach(function (c, i) { c.classList.toggle("on", i === 0); }); requestAnimationFrame(frame); }
+    });
+  } catch (e) {}
+
+  // Skills: constellation + filters + tiles
+  try {
+    var CATS = [
+      { id: "ai", code: "AI", name: "AI product", skills: ["Health AI product design", "Structured wellness workflows", "Clinical safety guardrails", "AI-assisted prototyping", "Prompting with Claude Pro"] },
+      { id: "dev", code: "DEV", name: "Engineering", skills: ["Python", "Discord bot development", "Interactive button views", "Leveling & XP systems", "Anti-spam logic", "AFK tracking", "UI architecture"] },
+      { id: "tools", code: "TLS", name: "AI builder tools", skills: ["Bolt.new", "Manus.space", "Base44", "Lovable", "Replit Agent", "Google AI Studio", "Claude Pro"] },
+      { id: "ops", code: "OPS", name: "Deploy & monitor", skills: ["Render deployments", "UptimeRobot monitoring", "Uptime & latency alerts", "Live service upkeep", "Multi-device dev workflow"] },
+      { id: "lead", code: "LDR", name: "Leadership", skills: ["Founding communities", "Multi-brand network management", "Governance frameworks", "Mergers & treaty drafting", "Partnerships", "Staff leadership"] },
+      { id: "sec", code: "SEC", name: "Moderation & security", skills: ["Large-scale moderation", "Server administration", "Anti-nuke & raid defense", "Permission architecture", "Vault Account isolation", "Wick", "Bravers", "Security Bot", "Krypton", "Dyno", "Carl-bot", "Sapphire", "JailBot", "Bot testing in sandbox servers", "Raid & spam simulation", "Automod rule tuning", "Case logs & appeals"] },
+      { id: "art", code: "ART", name: "Creative", skills: ["Football highlight editing", "Match footage sourcing", "Beat-synced cutting", "Velocity curves", "Soundtrack composition", "Google Flow Music"] },
+      { id: "game", code: "GMG", name: "Gaming", skills: ["Minecraft SMP admin", "Cross-platform servers", "Blox Fruits endgame", "High-tier PvP", "Sea Events", "Trading & middleman"] }
+    ];
+    var TOTAL = CATS.reduce(function (n, c) { return n + c.skills.length; }, 0);
+    var svgNS = "http://www.w3.org/2000/svg", cSvg = document.getElementById("cSvg");
+    var filtersEl = document.getElementById("filters"), tilesEl = document.getElementById("tiles"), countEl = document.getElementById("skillCount");
+    var CX = 260, CY = 250, RAD = 170, nodes = {}, fbtns = {}, tiles = [];
+    cSvg.innerHTML = ""; filtersEl.innerHTML = ""; tilesEl.innerHTML = "";
+    function el(tag, attrs, parent) { var e = document.createElementNS(svgNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+
+    var pts = CATS.map(function (c, i) { var a = -Math.PI / 2 + i * Math.PI * 2 / CATS.length; return { x: CX + Math.cos(a) * RAD, y: CY + Math.sin(a) * RAD }; });
+    el("polygon", { points: pts.map(function (p) { return p.x.toFixed(1) + "," + p.y.toFixed(1); }).join(" "), class: "edge dashed" }, cSvg);
+    pts.forEach(function (p) { el("line", { x1: CX, y1: CY, x2: p.x.toFixed(1), y2: p.y.toFixed(1), class: "edge flow" }, cSvg); });
+    el("circle", { cx: CX, cy: CY, r: 44, style: "fill: var(--surface)" }, cSvg);
+    el("circle", { cx: CX, cy: CY, r: 44, class: "hub" }, cSvg);
+    var t1 = el("text", { x: CX, y: CY - 2, "text-anchor": "middle", class: "t-title" }, cSvg); t1.textContent = "Vini";
+    var t2 = el("text", { x: CX, y: CY + 16, "text-anchor": "middle", class: "t-sub" }, cSvg); t2.textContent = TOTAL + " skills";
+
+    CATS.forEach(function (c, i) {
+      var p = pts[i], r = 17 + c.skills.length * 1.4;
+      var g = el("g", { class: "cnode", tabindex: "0", role: "button", "aria-label": c.name + ", " + c.skills.length + " skills" }, cSvg);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r + 6, class: "halo" }, g);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, style: "fill: var(--surface)" }, g);
+      el("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: r, class: "dot" }, g);
+      var n = el("text", { x: p.x.toFixed(1), y: (p.y + 2).toFixed(1), "text-anchor": "middle", class: "num" }, g); n.textContent = c.skills.length;
+      var cd = el("text", { x: p.x.toFixed(1), y: (p.y + 15).toFixed(1), "text-anchor": "middle", class: "code" }, g); cd.textContent = c.code;
+      var below = p.y >= CY - 1;
+      var lb = el("text", { x: p.x.toFixed(1), y: (below ? p.y + r + 16 : p.y - r - 9).toFixed(1), "text-anchor": "middle", class: "lbl" }, g); lb.textContent = c.name;
+      g.addEventListener("click", function () { setCat(current === c.id ? "all" : c.id); });
+      g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setCat(current === c.id ? "all" : c.id); } });
+      nodes[c.id] = g;
+    });
+
+    function addFilter(id, label, count) {
+      var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "false");
+      b.innerHTML = label + "<b>" + count + "</b>";
+      b.addEventListener("click", function () { setCat(id); });
+      filtersEl.appendChild(b); fbtns[id] = b;
+    }
+    addFilter("all", "All", TOTAL);
+    CATS.forEach(function (c) { addFilter(c.id, c.name, c.skills.length); });
+
+    CATS.forEach(function (c, ci) {
+      c.skills.forEach(function (sk) {
+        var d = document.createElement("div"); d.className = "tile" + (ci % 2 ? " alt" : ""); d.setAttribute("data-cat", c.id);
+        var code = document.createElement("code"); code.textContent = c.code;
+        var sp = document.createElement("span"); sp.textContent = sk;
+        d.appendChild(code); d.appendChild(sp); tilesEl.appendChild(d); tiles.push(d);
+      });
+    });
+
+    var current = "all";
+    function setCat(id) {
+      current = id;
+      Object.keys(fbtns).forEach(function (k) { fbtns[k].setAttribute("aria-pressed", k === id ? "true" : "false"); });
+      Object.keys(nodes).forEach(function (k) { nodes[k].classList.toggle("on", k === id); });
+      var shown = 0;
+      tiles.forEach(function (t) {
+        var show = id === "all" || t.getAttribute("data-cat") === id;
+        t.hidden = !show;
+        t.classList.remove("pop");
+        if (show) {
+          if (!reduce) { void t.offsetWidth; t.style.animationDelay = Math.min(shown, 20) * 0.025 + "s"; t.classList.add("pop"); }
+          shown++;
+        }
+      });
+      var cat = CATS.filter(function (c) { return c.id === id; })[0];
+      countEl.textContent = cat ? "Showing " + shown + " of " + TOTAL + " skills · " + cat.name : "Showing all " + TOTAL + " skills";
+    }
+    setCat("all");
+    window.__skillCats = CATS; window.__setSkillCat = setCat;
+    tiles.forEach(function (t) { t.classList.remove("pop"); });
+  } catch (e) {}
 
   // Heading scramble
   var GLYPHS = "✦✧★·+*#<>/\\=ABCDEFGHJKLMNPRSTUVWXYZ0123456789";
@@ -3309,7 +3650,7 @@
 
   // Skills: grouped boxes (data for search)
   try {
-    window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}];
+    window.__skillCats = [{"id": "community", "code": "MOD", "name": "Community skills", "skills": ["Large-scale moderation", "Staff leadership", "Governance & treaties", "Multi-brand network"]}, {"id": "security", "code": "SEC", "name": "Security skills", "skills": ["Anti-nuke & raid defense", "Permission architecture", "Vault Account", "Raid simulation"]}, {"id": "process", "code": "AUT", "name": "Process skills", "skills": ["Automod tuning", "Case logs & appeals", "Bot testing"]}, {"id": "ai", "code": "PY", "name": "Bot & AI skills", "skills": ["Python Discord bots", "Button views & leveling", "Health AI design", "AI prototyping"]}, {"id": "creative", "code": "CUT", "name": "Creative skills", "skills": ["Highlight editing", "Beat-synced cutting", "Velocity curves", "Original soundtracks"]}, {"id": "gaming", "code": "MC", "name": "Gaming skills", "skills": ["Minecraft SMP admin", "Blox Fruits endgame", "PvP & Sea Events", "Trading & middleman"]}];
     window.__setSkillCat = function (id) { return document.querySelector('.skillrow[data-skill-box="' + id + '"]'); };
   } catch (e) {}
 
