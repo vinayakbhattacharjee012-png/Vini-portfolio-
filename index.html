@@ -306,7 +306,7 @@
   .hero .wrap { z-index: 1; }
   .hero #sky { z-index: 0; opacity: .5; }
   .reveal.in { animation: riseIn .8s cubic-bezier(.2,.7,.2,1) both; }
-  @keyframes riseIn { from { opacity: 0; transform: translateY(26px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
   .grid > .reveal.in:nth-child(2) { animation-delay: .08s; } .grid > .reveal.in:nth-child(3) { animation-delay: .16s; }
   .grid > .reveal.in:nth-child(4) { animation-delay: .24s; } .grid > .reveal.in:nth-child(5) { animation-delay: .32s; }
   .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 22px 0 0; padding: 0; }
@@ -1649,6 +1649,11 @@
   footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 </style>
 <script>if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) document.documentElement.classList.add("loading");</script>
+<script>(function () { var r = document.documentElement, m = "auto"; try { m = localStorage.getItem("perf") || "auto"; } catch (e) {}
+  var n = navigator, weak = (n.hardwareConcurrency && n.hardwareConcurrency <= 4) || (n.deviceMemory && n.deviceMemory <= 4) || (n.connection && n.connection.saveData) ||
+    (window.matchMedia && matchMedia("(pointer: coarse)").matches && innerWidth < 900);
+  if (m === "lite" || (m === "auto" && weak)) r.classList.add("lite");
+  r.setAttribute("data-perf", m); })();</script>
 </head>
 <body>
 <div class="loader arena" id="loader" role="status" aria-label="Loading Vini's portfolio">
@@ -2921,7 +2926,7 @@
     <span>© <span id="yr">2026</span> Vini</span>
     <span class="hint">Psst: type <kbd>galaxy</kbd> anywhere</span>
     <span class="hint">vini.official.netops@gmail.com</span>
-    <span class="foot-links"><a class="linkish" href="#/lab">Lab</a><a class="linkish" href="#/arena">Arena</a><a class="linkish" href="#/vault">Vault</a><a class="linkish" href="#/logs">Logs</a><a class="linkish" href="#/dossier">Dossier</a><a class="linkish" href="#/explore">All pages</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" id="themesBtn">Themes</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
+    <span class="foot-links"><a class="linkish" href="#/lab">Lab</a><a class="linkish" href="#/arena">Arena</a><a class="linkish" href="#/vault">Vault</a><a class="linkish" href="#/logs">Logs</a><a class="linkish" href="#/dossier">Dossier</a><a class="linkish" href="#/explore">All pages</a><button class="linkish" type="button" data-open="resume">Résumé</button><button class="linkish" type="button" id="shareBtn">Share</button><button class="linkish" type="button" id="themesBtn">Themes</button><button class="linkish" type="button" id="perfBtn" aria-live="polite">Performance: Auto</button><button class="linkish" type="button" data-keys>Shortcuts<kbd>?</kbd></button></span>
     <a href="#top">Back to top ↑</a>
   </div>
 </footer>
@@ -3314,8 +3319,8 @@
       }
       bctx.globalAlpha = 1;
     }
-    function bloop(t) { if (root.classList.contains("loading")) { requestAnimationFrame(bloop); return; } if (document.hidden) { brun = false; return; } if (t - blast > 42) { bpaint(t); blast = t; } requestAnimationFrame(bloop); }
-    var brun = false; function bstart() { if (reduce) { bpaint(0); return; } if (!brun) { brun = true; requestAnimationFrame(bloop); } }
+    function bloop(t) { if (root.classList.contains("lite")) { brun = false; return; } if (root.classList.contains("loading")) { requestAnimationFrame(bloop); return; } if (document.hidden) { brun = false; return; } if (t - blast > 42) { bpaint(t); blast = t; } requestAnimationFrame(bloop); }
+    var brun = false; function bstart() { if (reduce || root.classList.contains("lite")) { bpaint(0); return; } if (!brun) { brun = true; requestAnimationFrame(bloop); } }
     bcolors(); bsize(); bstart();
     document.addEventListener("visibilitychange", function () { if (!document.hidden) bstart(); });
     new MutationObserver(function () { bcolors(); if (reduce) bpaint(0); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
@@ -3472,6 +3477,7 @@
     }
     function nframe(t) {
       if (!nalive) return;
+      if (root.classList.contains("lite")) { nalive = false; return; }
       if (t - nlast < 33) { requestAnimationFrame(nframe); return; } nlast = t;
       nx.clearRect(0, 0, NW, NH);
       for (var i = 0; i < stars.length; i++) {
@@ -3784,11 +3790,11 @@
       }
     }
     function loop(t) {
-      if (!heroVisible || document.hidden) { running = false; return; }
+      if (!heroVisible || document.hidden || root.classList.contains("lite")) { running = false; return; }
       if (t - last > 33 && !root.classList.contains("loading")) { paint(t); last = t; }
       requestAnimationFrame(loop);
     }
-    function start() { if (!reduce && !running) { running = true; requestAnimationFrame(loop); } }
+    function start() { if (!reduce && !running && !root.classList.contains("lite")) { running = true; requestAnimationFrame(loop); } }
     readColors(); size(); paint(0); start();
     if (!reduce) {
       hero.addEventListener("pointermove", function (e) { var r = cv.getBoundingClientRect(); ptr = { x: e.clientX - r.left, y: e.clientY - r.top }; }, { passive: true });
@@ -5445,6 +5451,7 @@
 })();
 </script>
 <script src="labs.js"></script>
+<script src="perf.js"></script>
 </body>
 </html>
 

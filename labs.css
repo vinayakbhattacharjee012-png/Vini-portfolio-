@@ -140,3 +140,11 @@ body.route-view nav { background: rgba(6, 7, 10, .92); border-bottom-color: var(
 /* hero themes button */
 .theme-dots { width: 16px; height: 16px; border-radius: 50%; margin-right: 8px; display: inline-block; flex: none;
   background: conic-gradient(var(--star), var(--nebula), var(--ink), var(--star)); box-shadow: 0 0 0 1px var(--line); }
+
+/* ---------- Lite mode: smoother on phones and slow devices ---------- */
+html.lite *, html.lite *::before, html.lite *::after { animation: none !important; }
+html.lite .night, html.lite .bg-fx, html.lite #sky, html.lite #meteorSky, html.lite #bgStars, html.lite .fx-orbs, html.lite .clouds, html.lite .holo-foil { display: none !important; }
+html.lite nav, html.lite .tele, html.lite .fab, html.lite .holo-fab, html.lite .search-panel, html.lite .tp-in, html.lite .holo-focus,
+html.lite dialog::backdrop { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.lite .card, html.lite .reveal, html.lite .hero-copy, html.lite .orbit { will-change: auto !important; }
+html.lite .botroll-track { animation: none !important; flex-wrap: wrap; width: auto; justify-content: center; }
