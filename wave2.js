@@ -122,6 +122,17 @@
   var hw = $(".wrap", hud), sfxHud = el('<button class="w2-sfx in-hud" type="button" aria-pressed="false" title="Toggle interface sound effects">[SFX: OFF]</button>'); if (hw) hw.insertBefore(sfxHud, hw.querySelector(".w2-note"));
   function paintSfx() { var on = window.SFX && SFX.on, t = "[SFX: " + (on ? "ON" : "OFF") + "]"; [sfxBtn, sfxHud].forEach(function (b) { b.textContent = t; b.setAttribute("aria-pressed", !!on); }); }
   [sfxBtn, sfxHud].forEach(function (b) { b.addEventListener("click", function () { if (window.SFX) SFX.toggle(); }); });
+  /* ---------- background music (synthesized light rock, off until you press play) ---------- */
+  var musBtn = el('<button class="w2-sfx w2-mus" type="button" aria-pressed="false" title="Background music (Alt+Shift+M)">♪ Music: OFF</button>'); if (hw) hw.insertBefore(musBtn, hw.querySelector(".w2-note"));
+  function musPaint(on) { musBtn.textContent = "♪ Music: " + (on ? "ON" : "OFF"); musBtn.setAttribute("aria-pressed", !!on); }
+  function musToggle() {
+    var hub = window.FeatureHub; if (!hub) return;
+    musBtn.disabled = true; hub.load("src/engine/music.js").then(function () { musBtn.disabled = false; Music.toggle(); if (Music.on) toast("Music on. Press again to stop"); }).catch(function () { musBtn.disabled = false; toast("Couldn't load the music engine"); });
+  }
+  musBtn.addEventListener("click", musToggle); document.addEventListener("music:change", function (e) { musPaint(e.detail); });
+  window.addEventListener("keydown", function (e) { if (e.altKey && e.shiftKey && (e.key === "M" || e.key === "m")) { e.preventDefault(); musToggle(); } });
+  (window.__cmds = window.__cmds || []).push({ t: "Background music", d: "Toggle the synthesized light rock loop", k: "music background rock sound audio play", run: musToggle });
+  if (window.__fx && __fx.cmds && __fx.print) __fx.cmds.music = function () { musToggle(); __fx.print("g", "music toggled (Alt+Shift+M)"); };
   document.addEventListener("sfx:change", paintSfx); paintSfx();
 
   /* ---------- 3. achievements ---------- */
