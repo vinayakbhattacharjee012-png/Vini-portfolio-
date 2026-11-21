@@ -107,8 +107,8 @@
     ".tp button{font:600 .8rem 'JetBrains Mono',ui-monospace,monospace;color:#e8ecf4;background:#141823;border:1px solid #2a3142;border-radius:9px;padding:8px 12px;cursor:pointer;min-height:36px}" +
     ".tp button:hover{border-color:#06b6d4}.tp button:focus-visible,.tp input:focus-visible{outline:2px solid #06b6d4;outline-offset:2px}" +
     ".tp input{flex:1;min-width:140px;font:500 .9rem 'JetBrains Mono',ui-monospace,monospace;color:#e8ecf4;background:#06070a;border:1px solid #2a3142;border-radius:9px;padding:9px 11px;min-height:38px}" +
-    ".tp-grid{overflow:auto;padding:12px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;align-content:start}" +
-    ".tp-card{text-align:left;padding:8px;border-radius:12px;border:1px solid #2a3142;background:#0c0e14;color:#e8ecf4;cursor:pointer;min-height:0}" +
+    ".tp-grid{overflow:auto;padding:12px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:max-content;gap:10px;align-content:start}" +
+    ".tp-card{text-align:left;padding:8px;border-radius:12px;border:1px solid #2a3142;background:#0c0e14;color:#e8ecf4;cursor:pointer;height:auto}" +
     ".tp-card[aria-pressed=true]{border-color:#8b5cf6;box-shadow:0 0 0 2px rgba(139,92,246,.4)}" +
     ".tp-sw{display:flex;height:34px;border-radius:7px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}.tp-sw i{flex:1}" +
     ".tp-card b{display:block;margin-top:6px;font:600 .78rem 'JetBrains Mono',ui-monospace,monospace}.tp-card span{font-size:.7rem;color:#9aa7b8}" +
@@ -121,7 +121,7 @@
     if (dlg) return;
     dlg = document.createElement("dialog"); dlg.className = "tp"; dlg.setAttribute("aria-labelledby", "tpTitle");
     dlg.innerHTML = '<div class="tp-in"><div class="tp-head"><h2 id="tpTitle">Themes · 1000 generated</h2><button type="button" data-x aria-label="Close themes">Close</button></div>' +
-      '<div class="tp-ctl"><input type="search" id="tpQ" placeholder="Search: a number (1-1000), a family like Aurora, or a name" aria-label="Search themes" autocomplete="off" spellcheck="false" />' +
+      '<div class="tp-ctl"><input type="search" id="tpQ" placeholder="Number 1-1000 or family" aria-label="Search themes" autocomplete="off" spellcheck="false" />' +
       '<button type="button" data-shuffle>Random</button><button type="button" data-reset>Default</button></div>' +
       '<div class="tp-grid" id="tpGrid" role="list" aria-label="Themes"></div>' +
       '<div class="tp-foot"><span class="tp-status" id="tpStatus" aria-live="polite"></span><button type="button" data-prev>Prev</button><span id="tpPage" class="tp-status"></span><button type="button" data-next>Next</button></div></div>';
@@ -183,6 +183,8 @@
   var fb = document.getElementById("themesBtn");
   if (fb) fb.addEventListener("click", function () { open(fb); });
   document.addEventListener("DOMContentLoaded", function () {
-    var b = document.getElementById("themesBtn"); if (b && !b._bound) { b._bound = 1; b.addEventListener("click", function () { open(b); }); }
+    ["themesBtn", "themesNavBtn"].forEach(function (id) {
+      var b = document.getElementById(id); if (b && !b._bound) { b._bound = 1; b.addEventListener("click", function () { open(b); }); }
+    });
   });
 })();
