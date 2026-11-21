@@ -36,6 +36,7 @@
   var JN = window.JOURNEY_NAMES = ["Creator", "Moderation", "Bots", "Security", "Testing", "Leadership", "Now"];
   window.openJourney = function (i) { try { sessionStorage.setItem("ecStage", i); } catch (e) {} if (location.hash === "#/earth-core") window.dispatchEvent(new HashChangeEvent("hashchange")); else location.hash = "#/earth-core"; };
   JN.forEach(function (n, i) { cm.push({ t: "Journey stage " + (i + 1) + ": " + n, d: "Drill to this stage of my journey", k: "journey earth core stage drill " + n.toLowerCase(), run: function () { window.openJourney(i); } }); });
+  cm.push({ t: "Open the Library", d: "400 standalone pages: tools, code patterns, planets, astronomy", k: "library pages tools patterns planets astronomy calculators", run: function () { location.href = "library/"; } });
   cm.push({ t: "Go to Cosmos", d: "Magnetosphere, solar wind, satellite orbits", k: "cosmos orbit satellite magnetosphere solar wind space", run: function () { location.hash = "#/cosmos"; } });
   document.addEventListener("click", function (e) { var b = e.target.closest && e.target.closest("[data-fm-open]"); if (b) { e.preventDefault(); hub.open(); } });
   // Warm the registries when idle (skipped on Lite/save-data) and whenever the terminal is first used.
