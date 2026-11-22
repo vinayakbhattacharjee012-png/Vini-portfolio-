@@ -5199,7 +5199,7 @@
         var snippet = hit.body.length > 220 ? hit.body.slice(0, 220).replace(/\s\S*$/, "") + "…" : hit.body;
         r = { text: "From " + secName.toLowerCase() + ": " + (hit.head ? hit.head + ". " : "") + snippet,
           offer: { label: "Show me", run: function () { closeHolo(true, true); setTimeout(function () { hit.el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }); hit.el.classList.remove("flash"); void hit.el.offsetWidth; hit.el.classList.add("flash"); }, 60); } } };
-      } else r = { text: "I don't have that on record. I only know what's on this site. Try asking about projects, skills, security, or how to contact Vini." };
+      } else r = { text: "I can answer general questions too, using Gemini. Press the Gemini button under the chat to turn it on. Or ask me about Vini's projects, skills, security or how to get in touch." };
     }
     return r;
   }
