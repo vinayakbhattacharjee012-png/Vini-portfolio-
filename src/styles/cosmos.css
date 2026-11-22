@@ -103,3 +103,8 @@ html[style*="--fx-hud"] .w2-badge, html[style*="--fx-hud"] .tele, html[style*="-
   .w2-asrail:not(.on) { padding: 3px; }
   .w2-asrail:not(.on) > :not(#w2AsBtn) { display: none; }
 }
+/* VEGA thinking indicator: animated dots, no motion for reduced-motion users */
+.think-dots { display: inline-block; }
+.think-dots::after { content: ""; display: inline-block; width: 1.4em; text-align: left; animation: thinkDots 1.2s steps(4, end) infinite; }
+@keyframes thinkDots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+@media (prefers-reduced-motion: reduce) { .think-dots::after { animation: none; content: "..."; } }

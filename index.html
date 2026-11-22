@@ -5183,12 +5183,23 @@
   }
   // Gemini mode (bring-your-own-key, see src/engine/vegaGemini.js). Any failure falls back to the on-page answer.
   var aiHistory = [];
+  // A "Thinking…" bubble shows while the answer is prepared, then is replaced by the answer.
+  function thinkBubble() {
+    var m = mk("div", "holo-msg vega holo-think"); m.appendChild(mk("b", null, "VEGA"));
+    var p = mk("p"); p.setAttribute("aria-label", "Thinking"); p.appendChild(mk("span", "think-dots", "Thinking")); m.appendChild(p);
+    logEl.appendChild(m); scrollLog();
+    return { remove: function () { if (m.parentNode) m.parentNode.removeChild(m); } };
+  }
   function askAI(raw, q, local) {
-    reply({ text: "One sec, asking Gemini…", silent: true });
+    var bubble = thinkBubble();
     VegaAI.ask(raw, K, aiHistory.slice(-6)).then(function (t) {
+      bubble.remove();
       aiHistory.push({ role: "user", parts: [{ text: raw }] }, { role: "model", parts: [{ text: t }] });
       reply(local ? { text: t, focus: local.focus, offer: local.offer, group: local.group } : { text: t });
-    }).catch(function (e) { var r = local || localAnswer(q); reply({ text: e.message + " Here's what I have on the page instead. " + r.text, focus: r.focus, offer: r.offer, group: r.group }); });
+    }).catch(function (e) {
+      bubble.remove(); var r = local || localAnswer(q);
+      reply({ text: (e && e.message ? e.message : "I can't answer right now.") + " " + r.text, focus: r.focus, offer: r.offer, group: r.group });
+    });
   }
   function localAnswer(q) {
     var r = null;

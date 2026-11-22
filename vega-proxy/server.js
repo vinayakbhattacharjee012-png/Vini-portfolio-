@@ -87,12 +87,14 @@ function capReached() { const d = new Date().toISOString().slice(0, 10); if (day
 /* ---------- Gemini (OpenAI-compatible endpoint, Bearer = the AI Studio key) ---------- */
 const NATIVE = process.env.GEMINI_NATIVE_URL || "https://generativelanguage.googleapis.com/v1beta/models/";
 const GROUNDING = (process.env.GROUNDING || "on") !== "off";
+const GROUND_MODELS = (process.env.GROUND_MODELS || "gemini-flash-latest,gemini-3.5-flash,gemini-3.5-flash-lite").split(",").map((x) => x.trim());
+let lastPath = "";
 // Google Search grounding through the native endpoint. Any failure returns null and the plain endpoint answers instead.
 async function grounded(messages) {
   if (!GROUNDING) return null;
   const sys = messages.find((m) => m.role === "system");
   const contents = messages.filter((m) => m.role !== "system").map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
-  for (const model of MODELS) {
+  for (const model of GROUND_MODELS) {
     try {
       const r = await fetch(NATIVE + model + ":generateContent", {
         method: "POST", headers: { "content-type": "application/json", "x-goog-api-key": KEY },
@@ -102,7 +104,7 @@ async function grounded(messages) {
       if (!r.ok) continue;
       const j = await r.json().catch(() => null), c = j && j.candidates && j.candidates[0];
       const t = c && c.content && c.content.parts && c.content.parts.map((p) => p.text || "").join("").trim();
-      if (t) return { answer: t };
+      if (t) { lastPath = "web:" + model; return { answer: t }; }
     } catch (e) { /* try the next model, then the plain endpoint */ }
   }
   return null;
@@ -124,7 +126,7 @@ async function gemini(messages) {
   }
   return { error: last };
 }
-const ERR = { key: ["The server's Gemini key was rejected.", 502], rate: ["Gemini is rate-limiting right now. Try again in a minute.", 503], timeout: ["Gemini took too long.", 504], busy: ["Gemini is busy right now.", 503], empty: ["Gemini sent an empty answer.", 502] };
+const ERR = { key: ["I can't answer right now.", 502], rate: ["I'm getting a lot of questions right now. Try again in a minute.", 503], timeout: ["That took too long. Try again.", 504], busy: ["I'm busy right now. Try again in a moment.", 503], empty: ["I didn't get an answer to that. Try rephrasing it.", 502] };
 
 /* ---------- HTTP ---------- */
 function send(res, code, obj, origin) {
@@ -143,10 +145,10 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && path === "/health") return send(res, 200, { ok: true, configured: Boolean(KEY) }, origin);
   if (req.method !== "POST" || path !== "/ask") return send(res, 404, { error: "Not found." }, origin);
   if (!origin) return send(res, 403, { error: "This endpoint only answers Vini's portfolio." });
-  if (!KEY) return send(res, 503, { error: "Gemini isn't set up on the server yet." }, origin);
+  if (!KEY) return send(res, 503, { error: "I can't answer right now." }, origin);
   const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
   if (limited(ip)) return send(res, 429, { error: "That's a lot of questions. Give it a few minutes." }, origin);
-  if (capReached()) return send(res, 429, { error: "Jarvis has used today's Gemini allowance. It'll be back tomorrow." }, origin);
+  if (capReached()) return send(res, 429, { error: "I've reached today's limit. I'll be back tomorrow." }, origin);
   let raw = "";
   for await (const chunk of req) { raw += chunk; if (raw.length > 16000) return send(res, 413, { error: "That message is too long." }, origin); }
   let body; try { body = JSON.parse(raw); } catch (e) { return send(res, 400, { error: "Bad request." }, origin); }
@@ -161,7 +163,7 @@ const server = http.createServer(async (req, res) => {
   const convo = [...history, { role: "user", content: q }];
   // search first (its own instructions say so); if that fails, answer without search and say so
   const out = (await grounded([sysFor(true), ...convo])) || (await gemini([sysFor(false), ...convo]));
-  console.log("ask", out.error || "ok", "day", day.n); // no question text in logs
+  console.log("ask", out.error || "ok", out.answer ? (lastPath.startsWith("web:") && out.answer ? lastPath : "plain") : "", "day", day.n); // path only, never the question
   if (out.answer) return send(res, 200, { answer: out.answer }, origin);
   const e = ERR[out.error] || ERR.busy;
   return send(res, e[1], { error: e[0] }, origin);

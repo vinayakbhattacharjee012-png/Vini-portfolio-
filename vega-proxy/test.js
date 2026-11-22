@@ -36,7 +36,7 @@ fake.listen(0, async () => {
       assert.ok(!s.messages[0].content.includes("secret") && !s.messages[0].content.includes("VEGA UI"), "scripts and VEGA UI stripped");
       assert.deepStrictEqual(s.messages.slice(1).map((m) => m.role), ["user", "assistant", "user"], "history mapped, bad roles dropped");
       mode = "fallback"; j = await (await ask({ question: "x" })).json(); assert.strictEqual(j.answer, "answer from m2", "falls back to next model on 429");
-      mode = "key"; r = await ask({ question: "x" }); assert.strictEqual(r.status, 502); assert.match((await r.json()).error, /key/);
+      mode = "key"; r = await ask({ question: "x" }); assert.strictEqual(r.status, 502); assert.match((await r.json()).error, /right now/);
       // search path: Google answers through the native endpoint with the search tool and the search instructions
       mode = "grounded"; j = await (await ask({ question: "Who is the current UK prime minister?" })).json();
       assert.strictEqual(j.answer, "grounded answer", "uses the search answer when it works");

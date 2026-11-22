@@ -26,7 +26,7 @@
     var h = (history || []).map(function (m) { return { role: m.role === "model" ? "model" : "user", text: (m.parts && m.parts[0] && m.parts[0].text) || "" }; });
     return fetch(PROXY + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: question, history: h }), signal: timeout(30000) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (r.ok && j.answer) return j.answer; throw new Error(j.error || "Gemini is busy right now."); }); },
-        function (e) { throw new Error(e && e.name === "AbortError" ? "Gemini took too long." : "Couldn't reach Gemini."); });
+        function (e) { throw new Error(e && e.name === "AbortError" ? "That took too long. Try again." : "I can't answer right now."); });
   }
 
   /* ---- visitor's own key (direct to Google) ---- */
@@ -71,12 +71,12 @@
     var b = $("holoAi"), kb = $("holoAiCfg"), p = $("holoPrivacy");
     if (b) {
       var label = st.on && st.key ? "your key" : sh.state === "ready" ? (sh.on ? "on" : "off") : sh.state === "waking" ? "waking…" : "off";
-      b.textContent = "Gemini: " + label; b.setAttribute("aria-pressed", String((st.on && !!st.key) || sharedOn()));
+      b.textContent = "AI answers: " + label; b.setAttribute("aria-pressed", String((st.on && !!st.key) || sharedOn()));
     }
     if (kb) kb.hidden = !(st.key || sh.state === "down");
-    if (p) p.textContent = st.on && st.key ? "Gemini is using your own key: your questions and a short summary of this site go to Google. The key stays in this tab only."
-      : sharedOn() ? "Jarvis answers with Google Gemini: your questions go to Google through Vini's server, with the site's own text as the only facts. Don't share personal details."
-      : sh.state === "waking" ? "Connecting to Gemini… Until it's ready, Jarvis answers from the page."
+    if (p) p.textContent = st.on && st.key ? "Answers use your own key. Your questions go to the answer service, and the key stays in this tab only."
+      : sharedOn() ? "Answers come from an AI service with live search. Your questions are sent to it, so don't share personal details."
+      : sh.state === "waking" ? "Connecting the answer service… Until then, I answer from the page."
       : "Voice is turned into text by your browser's speech service (in Chrome, that's Google). This site doesn't store anything you say or type.";
   }
   function build() {
