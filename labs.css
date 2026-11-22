@@ -142,7 +142,8 @@ body.route-view nav { background: rgba(6, 7, 10, .92); border-bottom-color: var(
   background: conic-gradient(var(--star), var(--nebula), var(--ink), var(--star)); box-shadow: 0 0 0 1px var(--line); }
 
 /* ---------- Lite mode: smoother on phones and slow devices ---------- */
-html.lite *, html.lite *::before, html.lite *::after { animation: none !important; }
+/* Lite: no animation except the cheap transform/opacity ones marked calm-ok (dots, orbits, equaliser, marquees). */
+html.lite *:not(.calm-ok):not(.calm-ok *), html.lite *:not(.calm-ok):not(.calm-ok *)::before, html.lite *:not(.calm-ok):not(.calm-ok *)::after { animation: none !important; }
 html.lite .night, html.lite .bg-fx, html.lite #sky, html.lite #meteorSky, html.lite #bgStars, html.lite .fx-orbs, html.lite .clouds, html.lite .holo-foil { display: none !important; }
 html.lite nav, html.lite .tele, html.lite .fab, html.lite .holo-fab, html.lite .search-panel, html.lite .tp-in, html.lite .holo-focus,
 html.lite dialog::backdrop { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }

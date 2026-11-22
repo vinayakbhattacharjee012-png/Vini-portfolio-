@@ -18,15 +18,8 @@
     $$("svg, .botroll-track, #about, #skills, #community, #security, #process, #ai, #engineering, #creative, #advertise, #contact, body > footer").forEach(function (n) { io.observe(n); });
   }
 
-  /* Rotating conic/blurred decorations are the most expensive paints on the page. Freeze them (they stay as static art). */
-  function calmDecor() {
-    if (!document.getAnimations) return;
-    document.getAnimations().forEach(function (a) {
-      var n = a.animationName, t = a.effect && a.effect.target; if (!t || (n !== "spin" && n !== "holoSweep" && n !== "emitter") || a.playState !== "running") return;
-      if (t.closest && t.closest(".loader, svg, .holo")) return; a.pause();
-    });
-  }
-  setTimeout(calmDecor, 1800); setTimeout(calmDecor, 5000); window.addEventListener("hashchange", function () { setTimeout(calmDecor, 500); });
+  /* Light motion stays on everywhere. In Lite mode only transform/opacity motion is kept (see labs.css), marked calm-ok here. */
+  document.querySelectorAll(".orb, .status-dot, .eq i, .orbit-fx, .botroll-track, .ticker-track, .holo-fab .reactor i").forEach(function (n) { n.classList.add("calm-ok"); });
 
   /* ---------- 1. persona switcher ---------- */
   var PERSONAS = {
