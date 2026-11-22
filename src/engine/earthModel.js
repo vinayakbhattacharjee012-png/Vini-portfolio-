@@ -8,10 +8,10 @@
     [2890, 3700, 135.8, 9.9, 8.06, 0], [3500, 4100, 190, 10.9, 9.2, 0], [4500, 4900, 270, 11.9, 10.0, 0], [5150, 5400, 328.9, 12.17, 10.36, 0],
     [5150, 5400, 328.9, 12.76, 11.03, 3.5], [5800, 5500, 350, 13.0, 11.2, 3.6], [6371, 5500, 363.9, 13.09, 11.26, 3.67]];
   var LAYERS = [
-    { id: "crust", name: "Crust", from: 0, to: 70, col: "#fbbf24", state: "Solid", mineral: "Granite and basalt: quartz, feldspar, pyroxene, olivine", note: "Continental crust averages about 35 km, up to about 70 km under mountains; oceanic crust is 5-10 km." },
-    { id: "mantle", name: "Mantle", from: 70, to: 2890, col: "#8b5cf6", state: "Plastic flow", mineral: "Peridotite: olivine, pyroxene, then bridgmanite and ferropericlase in the lower mantle", note: "Solid rock that creeps over geological time. Convection here drives plate tectonics." },
-    { id: "outer", name: "Outer core", from: 2890, to: 5150, col: "#f97316", state: "Liquid metal", mineral: "Liquid iron-nickel alloy with some sulfur and oxygen", note: "Its flow drives the geodynamo that makes Earth's magnetic field. S-waves cannot cross it." },
-    { id: "inner", name: "Inner core", from: 5150, to: 6371, col: "#06b6d4", state: "Solid (high pressure)", mineral: "Crystalline iron-nickel alloy", note: "Solid because of the enormous pressure, even though it is about as hot as the Sun's surface." }
+    { id: "crust", name: "Crust", from: 0, to: 70, col: ACC.v.hex, state: "Solid", mineral: "Granite and basalt: quartz, feldspar, pyroxene, olivine", note: "Continental crust averages about 35 km, up to about 70 km under mountains; oceanic crust is 5-10 km." },
+    { id: "mantle", name: "Mantle", from: 70, to: 2890, col: ACC.v.hex, state: "Plastic flow", mineral: "Peridotite: olivine, pyroxene, then bridgmanite and ferropericlase in the lower mantle", note: "Solid rock that creeps over geological time. Convection here drives plate tectonics." },
+    { id: "outer", name: "Outer core", from: 2890, to: 5150, col: ACC.v.hex, state: "Liquid metal", mineral: "Liquid iron-nickel alloy with some sulfur and oxygen", note: "Its flow drives the geodynamo that makes Earth's magnetic field. S-waves cannot cross it." },
+    { id: "inner", name: "Inner core", from: 5150, to: 6371, col: ACC.s.hex, state: "Solid (high pressure)", mineral: "Crystalline iron-nickel alloy", note: "Solid because of the enormous pressure, even though it is about as hot as the Sun's surface." }
   ];
   function at(d) {
     d = Math.max(0, Math.min(R, d));

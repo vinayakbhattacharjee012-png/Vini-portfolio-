@@ -78,7 +78,7 @@
       $("lab-rec").textContent = tRec == null ? "> 2 min" : tRec + " s";
       $("lab-line").setAttribute("points", pts.join(" "));
       $("lab-end").setAttribute("x1", x(D)); $("lab-end").setAttribute("x2", x(D));
-      var bands = "", cols = ["#0e7490", "#0891b2", "#06b6d4", "#8b5cf6", "#c4b5fd"];
+      var bands = "", cols = [ACC.s.hex, "#0891b2", ACC.s.hex, ACC.v.hex, ACC.v.hex];
       for (var z = 0; z < 5; z++) {
         var lo = hrmax * (0.5 + z * 0.1), hi = hrmax * (0.6 + z * 0.1);
         bands += '<rect x="' + pad + '" y="' + y(hi).toFixed(1) + '" width="' + (W - pad * 2) + '" height="' + (y(lo) - y(hi)).toFixed(1) + '" fill="' + cols[z] + '" opacity=".12"/>';

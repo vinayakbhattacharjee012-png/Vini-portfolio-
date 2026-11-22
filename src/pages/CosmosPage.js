@@ -47,7 +47,7 @@
     $("csOrb").innerHTML = "<dt>LEO " + f(S.leoAlt) + " km</dt><dd>" + f(L.v, 2) + " km/s · " + dur(L.T) + "</dd><dt>MEO " + f(S.meoAlt) + " km</dt><dd>" + f(Me.v, 2) + " km/s · " + dur(Me.T) + "</dd><dt>GEO 35,786 km</dt><dd>" + f(GEO.v, 2) + " km/s · " + dur(GEO.T) + "</dd>";
     $("csMag").innerHTML = "<dt>Dynamic pressure</dt><dd>" + f(M.pd, 2) + " nPa</dd><dt>Magnetopause</dt><dd>" + f(M.r0, 1) + " Re (~" + f(M.r0 * RE) + " km)</dd><dt>Bow shock (approx.)</dt><dd>" + f(M.bs, 1) + " Re</dd><dt>GEO inside?</dt><dd>" + (M.r0 < GEO.re ? "NO: GEO exposed to solar wind" : "yes (" + GEO.re.toFixed(1) + " Re)") + "</dd>";
     var g = '<g fill="none" stroke-dasharray="3 5" stroke-width="1">';
-    [[L, "LEO", "#06b6d4"], [Me, "MEO", "#8b5cf6"], [GEO, "GEO", "#e8f7fb"]].forEach(function (o) { var p = px(o[0].re); g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + p.toFixed(1) + '" stroke="' + o[2] + '" opacity=".45"/><text x="' + (cx + p * 0.71 + 4).toFixed(0) + '" y="' + (cy + p * 0.71 + 12).toFixed(0) + '" fill="' + o[2] + '" font-size="11" font-family="monospace" stroke="none">' + o[1] + "</text>"; });
+    [[L, "LEO", ACC.s.hex], [Me, "MEO", ACC.v.hex], [GEO, "GEO", "#e8f7fb"]].forEach(function (o) { var p = px(o[0].re); g += '<circle cx="' + cx + '" cy="' + cy + '" r="' + p.toFixed(1) + '" stroke="' + o[2] + '" opacity=".45"/><text x="' + (cx + p * 0.71 + 4).toFixed(0) + '" y="' + (cy + p * 0.71 + 12).toFixed(0) + '" fill="' + o[2] + '" font-size="11" font-family="monospace" stroke="none">' + o[1] + "</text>"; });
     g += '</g><text x="16" y="28" fill="#9aa7b8" font-size="11" font-family="monospace">SUN ←  solar wind ' + S.vsw + " km/s</text>";
     $("csHud").innerHTML = g;
   }
@@ -58,12 +58,12 @@
     // dipole field lines r = L sin^2(theta), compressed by the same px() map
     c.lineWidth = 1; c.setLineDash([5, 7]); c.lineDashOffset = -tp * 10;
     [2, 3, 4.5, 6].forEach(function (Ls, n) {
-      if (Ls > M.r0 - 0.5) return; c.strokeStyle = n % 2 ? "rgba(139,92,246,.5)" : "rgba(6,182,212,.5)";
+      if (Ls > M.r0 - 0.5) return; c.strokeStyle = n % 2 ? "rgba(" + ACC.v.rgb + ",.5)" : "rgba(" + ACC.s.rgb + ",.5)";
       [-1, 1].forEach(function (sg) { c.beginPath(); for (var a = 0.12; a < Math.PI - 0.1; a += 0.06) { var r = Ls * Math.sin(a) * Math.sin(a); if (r < 1.02) continue; var q = px(r); var xx = cx + sg * q * Math.sin(a), yy = cy - q * Math.cos(a); c.lineTo(xx, yy); } c.stroke(); });
     });
     c.setLineDash([]);
     // magnetopause + bow shock curves (sun on the left, theta measured from the sun line)
-    [[1, "rgba(6,182,212,.9)"], [1.3, "rgba(139,92,246,.7)"]].forEach(function (cfg) {
+    [[1, "rgba(" + ACC.s.rgb + ",.9)"], [1.3, "rgba(" + ACC.v.rgb + ",.7)"]].forEach(function (cfg) {
       c.strokeStyle = cfg[1]; c.lineWidth = 1.6; c.beginPath(); var first = true;
       for (var th = 0; th < 2.5; th += 0.05) { var r = rmp(M, th) * cfg[0], q = px(r); var xx = cx - q * Math.cos(th), yy = cy - q * Math.sin(th); first ? c.moveTo(xx, yy) : c.lineTo(xx, yy); first = false; }
       c.stroke(); c.beginPath(); first = true;
@@ -71,8 +71,8 @@
       c.stroke();
     });
     // Earth + dynamo core glow
-    var g = c.createRadialGradient(cx - 6, cy - 6, 2, cx, cy, RPX); g.addColorStop(0, "#9be8ff"); g.addColorStop(0.6, "#0b3b57"); g.addColorStop(1, "#06b6d4"); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, RPX, 0, 6.2832); c.fill();
-    c.fillStyle = "rgba(249,115,22,.9)"; c.beginPath(); c.arc(cx, cy, 5, 0, 6.2832); c.fill();
+    var g = c.createRadialGradient(cx - 6, cy - 6, 2, cx, cy, RPX); g.addColorStop(0, "#9be8ff"); g.addColorStop(0.6, "#0b3b57"); g.addColorStop(1, ACC.s.hex); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, RPX, 0, 6.2832); c.fill();
+    c.fillStyle = "rgba(" + ACC.v.rgb + ",.9)"; c.beginPath(); c.arc(cx, cy, 5, 0, 6.2832); c.fill();
     // solar wind particles: advected rightwards, pushed around the bow shock
     var sp = S.vsw / 400 * 55;
     for (i = 0; i < S.parts.length; i++) {
@@ -81,14 +81,14 @@
       if (dx < 40 && re < lim + 1.2 && re > 0.2) { var push = (lim + 1.2 - re) / 1.2; vx = sp * p.v * (0.35 + 0.1 * push) + dx / rr * 20 * push; vy = (dy >= 0 ? 1 : -1) * 55 * push + dy / rr * 30 * push; }
       p.x += vx * dt; p.y += vy * dt;
       if (p.x > W + 4 || p.y < -4 || p.y > H + 4 || rr < RPX) { p.x = -4; p.y = Math.random() * H; p.v = 0.6 + Math.random() * 0.8; }
-      c.fillStyle = p.k === 0 ? "rgba(6,182,212,.8)" : p.k === 1 ? "rgba(139,92,246,.8)" : "rgba(232,247,251,.5)"; c.fillRect(p.x, p.y, 2, 2);
+      c.fillStyle = p.k === 0 ? "rgba(" + ACC.s.rgb + ",.8)" : p.k === 1 ? "rgba(" + ACC.v.rgb + ",.8)" : "rgba(232,247,251,.5)"; c.fillRect(p.x, p.y, 2, 2);
     }
     // constellations at Keplerian angular velocity w = sqrt(GM/r^3)
-    var ts = S.tsim, rings = [[orbit(S.leoAlt), S.leoN, "#06b6d4", 2.2, true], [orbit(S.meoAlt), S.meoN, "#8b5cf6", 2.6, false], [GEO, S.geoN, "#e8f7fb", 3.2, false]];
+    var ts = S.tsim, rings = [[orbit(S.leoAlt), S.leoN, ACC.s.hex, 2.2, true], [orbit(S.meoAlt), S.meoN, ACC.v.hex, 2.6, false], [GEO, S.geoN, "#e8f7fb", 3.2, false]];
     rings.forEach(function (rg, ri) {
       var o = rg[0], pr = px(o.re), n = rg[1], j, pos = [];
       for (j = 0; j < n; j++) { var a = j / n * 6.2832 + o.w * ts + ri; pos.push([cx + pr * Math.cos(a), cy + pr * Math.sin(a)]); }
-      if (rg[4]) { c.strokeStyle = "rgba(6,182,212,.22)"; c.lineWidth = 0.7; c.beginPath(); for (j = 0; j < n; j++) { c.moveTo(pos[j][0], pos[j][1]); c.lineTo(pos[(j + 1) % n][0], pos[(j + 1) % n][1]); c.moveTo(pos[j][0], pos[j][1]); c.lineTo(pos[(j + 3) % n][0], pos[(j + 3) % n][1]); } c.stroke(); }
+      if (rg[4]) { c.strokeStyle = "rgba(" + ACC.s.rgb + ",.22)"; c.lineWidth = 0.7; c.beginPath(); for (j = 0; j < n; j++) { c.moveTo(pos[j][0], pos[j][1]); c.lineTo(pos[(j + 1) % n][0], pos[(j + 1) % n][1]); c.moveTo(pos[j][0], pos[j][1]); c.lineTo(pos[(j + 3) % n][0], pos[(j + 3) % n][1]); } c.stroke(); }
       c.fillStyle = rg[2]; pos.forEach(function (q) { c.beginPath(); c.arc(q[0], q[1], rg[3], 0, 6.2832); c.fill(); });
     });
   }

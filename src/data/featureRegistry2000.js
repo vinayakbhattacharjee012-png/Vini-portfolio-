@@ -1,5 +1,7 @@
 /* Registry 2 of 2: ten cosmic/planetary engines x 100 features = 1,000 more. Built by factories, lazily. window.FR2000 = { engines, list }. */
 (function () {
+  // Colour samples read the live theme in the browser; the build script (Node) uses these fallbacks.
+  var ACC = (typeof window !== "undefined" && window.ACC) || { s: { hex: "#2b2f38", rgb: "43, 47, 56" }, v: { hex: "#6b7280", rgb: "107, 114, 128" } };
   "use strict";
   var L = [], ENG = ["Orbital mechanics calculators", "Planet & moon comparators", "Space-weather scenarios", "Satellite constellation presets", "Astronomy utilities", "Rocket delta-v lab", "Cosmic terminal commands", "Cosmic visual presets", "Earth depth probes", "Cosmic achievements"].map(function (n, i) { return { r: 2, id: i + 1, n: n }; });
   var seq = {};
@@ -78,15 +80,15 @@
   /* ---- E08: 100 cosmic visual presets ---- */
   var VP = [
     ["Stage tint", ["#0c1320|#06070a", "#14102a|#06070a", "#0a1f26|#06070a", "#1a0f1e|#06070a", "#102018|#06070a", "#1f1608|#06070a", "#0b0b16|#000", "#10162a|#05060d", "#1b1212|#060606", "#0d1d2e|#050a12"], function (v) { var a = v.split("|"); return { "--ec-bg": "radial-gradient(80% 80% at 50% 45%," + a[0] + "," + a[1] + ")" }; }],
-    ["Stage border", ["#1d2433", "#06b6d4", "#8b5cf6", "#34d399", "#fbbf24", "#f472b6", "#60a5fa", "#f87171", "#e8f7fb", "transparent"], function (v) { return { "--ec-bd": v }; }],
+    ["Stage border", ["#1d2433", ACC.s.hex, ACC.v.hex, ACC.v.hex, ACC.v.hex, "#f472b6", "#60a5fa", ACC.s.hex, "#e8f7fb", "transparent"], function (v) { return { "--ec-bd": v }; }],
     ["Stage radius", [0, 4, 8, 12, 16, 20, 24, 28, 32, 36], function (v) { return { "--ec-r": v + "px" }; }],
     ["Card text size", [.72, .76, .8, .84, .88, .92, .96, 1, 1.05, 1.1], function (v) { return { "--ec-fs": v + "rem" }; }],
     ["Card opacity", [.5, .6, .7, .8, .9, .95, 1, .85, .75, .65], function (v) { return { "--ec-card": "rgba(12,14,20," + v + ")" }; }],
-    ["Stage glow", [0, 8, 14, 20, 26, 32, 40, 48, 56, 64], function (v) { return { "--ec-sh": v ? "0 0 " + v + "px rgba(6,182,212,.25)" : "none" }; }],
+    ["Stage glow", [0, 8, 14, 20, 26, 32, 40, 48, 56, 64], function (v) { return { "--ec-sh": v ? "0 0 " + v + "px rgba(" + ACC.s.rgb + ",.25)" : "none" }; }],
     ["Canvas hue", [0, 20, 40, 60, 90, 120, 180, 240, 300, 330], function (v) { return { "--ec-f": v ? "hue-rotate(" + v + "deg)" : "none" }; }],
-    ["Card border", ["#1d2433", "#06b6d433", "#8b5cf633", "#06b6d4", "#8b5cf6", "#34d39944", "#fbbf2444", "#f472b644", "#e8f7fb33", "transparent"], function (v) { return { "--ec-cb": v }; }],
-    ["Hint colour", ["#9aa7b8", "#06b6d4", "#8b5cf6", "#34d399", "#fbbf24", "#f472b6", "#60a5fa", "#e8f7fb", "#f87171", "#a3e635"], function (v) { return { "--ec-hint": v }; }],
-    ["Heading colour", ["#06b6d4", "#8b5cf6", "#22d3ee", "#a78bfa", "#34d399", "#fbbf24", "#f472b6", "#60a5fa", "#e8f7fb", "#f97316"], function (v) { return { "--ec-h": v }; }]
+    ["Card border", ["#1d2433", "#06b6d433", "#8b5cf633", ACC.s.hex, ACC.v.hex, "#34d39944", "#fbbf2444", "#f472b644", "#e8f7fb33", "transparent"], function (v) { return { "--ec-cb": v }; }],
+    ["Hint colour", ["#9aa7b8", ACC.s.hex, ACC.v.hex, ACC.v.hex, ACC.v.hex, "#f472b6", "#60a5fa", "#e8f7fb", ACC.s.hex, "#a3e635"], function (v) { return { "--ec-hint": v }; }],
+    ["Heading colour", [ACC.s.hex, ACC.v.hex, ACC.s.hex, ACC.v.hex, ACC.v.hex, ACC.v.hex, "#f472b6", "#60a5fa", "#e8f7fb", ACC.v.hex], function (v) { return { "--ec-h": v }; }]
   ];
   VP.forEach(function (c, ci) { c[1].forEach(function (v, i) { mk(8, c[0] + ": " + (typeof v === "string" && v.indexOf("|") > -1 ? "tint " + (i + 1) : v), "vis", { cat: "k" + ci, catName: c[0], i: i, set: c[2](v) }, "Style the Earth core and Cosmos pages. Persists in localStorage.", "cosmic visual preset stage hud " + c[0]); }); });
 

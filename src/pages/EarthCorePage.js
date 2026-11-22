@@ -79,7 +79,7 @@
     // dipole field lines (outer core dynamo)
     c.lineWidth = 1; c.setLineDash([6, 8]); c.lineDashOffset = -tp * 14;
     [1.45, 1.75, 2.1].forEach(function (Lv, n) {
-      c.strokeStyle = n % 2 ? "rgba(139,92,246," + (0.55 * Math.abs(st.pol)) + ")" : "rgba(6,182,212," + (0.55 * Math.abs(st.pol)) + ")";
+      c.strokeStyle = n % 2 ? "rgba(" + ACC.v.rgb + "," + (0.55 * Math.abs(st.pol)) + ")" : "rgba(" + ACC.s.rgb + "," + (0.55 * Math.abs(st.pol)) + ")";
       [-1, 1].forEach(function (sg) {
         c.beginPath(); var on = false;
         for (var a = 0.05; a < Math.PI - 0.04; a += 0.05) { var r = Lv * RP * Math.sin(a) * Math.sin(a); if (r < RP * 0.99) { on = false; continue; } var x = cx + sg * r * Math.sin(a), y = cy - r * Math.cos(a) * st.pol; if (!on) { c.moveTo(x, y); on = true; } else c.lineTo(x, y); }
@@ -91,7 +91,7 @@
     for (k = 0; k < 4; k++) { var b = band(k, ex); ring(b.ro, b.ri, 0, 6.2832, M.LAYERS[k].col, st.hover === k ? 0.3 : 0.12); c.strokeStyle = "rgba(232,247,251,.18)"; c.beginPath(); c.arc(cx, cy, b.ro, 0, 6.2832); c.stroke(); }
     // surface hologram grid (outside the cutaway quadrant)
     c.save(); c.beginPath(); c.rect(0, 0, W, H); c.moveTo(cx, cy); c.lineTo(cx, cy - 400); c.lineTo(cx + 400, cy - 400); c.lineTo(cx + 400, cy); c.closePath(); c.clip("evenodd");
-    var Rs = band(0, ex).ro, phi = tp * 0.25; c.strokeStyle = "rgba(6,182,212,.28)";
+    var Rs = band(0, ex).ro, phi = tp * 0.25; c.strokeStyle = "rgba(" + ACC.s.rgb + ",.28)";
     for (i = 0; i < 12; i++) {
       var lon = i * Math.PI / 6 + phi; if (Math.cos(lon) <= 0) continue; c.beginPath();
       for (var la = -90; la <= 90; la += 10) { var lr = la * Math.PI / 180, x = cx + Rs * Math.cos(lr) * Math.sin(lon), y = cy - Rs * Math.sin(lr); la === -90 ? c.moveTo(x, y) : c.lineTo(x, y); } c.stroke();
@@ -120,11 +120,11 @@
     c.restore();
     // plume preset
     if (st.plume) {
-      var pa = st.plume.ang * Math.PI / 180, r0 = band(1, ex).ri, r1 = band(0, ex).ro; c.strokeStyle = "#fbbf24"; c.lineWidth = 3; c.beginPath();
+      var pa = st.plume.ang * Math.PI / 180, r0 = band(1, ex).ri, r1 = band(0, ex).ro; c.strokeStyle = ACC.v.hex; c.lineWidth = 3; c.beginPath();
       for (i = 0; i <= 24; i++) { var u = i / 24, rr2 = r0 + (r1 - r0) * u, w = Math.sin(u * 9 + tp * 3) * 5 * (1 - u * 0.4); c.lineTo(cx + rr2 * Math.cos(pa) - w * Math.sin(pa), cy + rr2 * Math.sin(pa) + w * Math.cos(pa)); } c.stroke();
     }
     // cut edges + drill probe
-    c.strokeStyle = "rgba(6,182,212,.9)"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - band(0, ex).ro); c.moveTo(cx, cy); c.lineTo(cx + band(0, ex).ro, cy); c.stroke();
+    c.strokeStyle = "rgba(" + ACC.s.rgb + ",.9)"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx, cy - band(0, ex).ro); c.moveTo(cx, cy); c.lineTo(cx + band(0, ex).ro, cy); c.stroke();
     var dy = rOfDepth(st.depth, ex); c.strokeStyle = "#e8f7fb"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(cx, cy - band(0, ex).ro); c.lineTo(cx, cy - dy); c.stroke();
     c.fillStyle = "#06070a"; c.strokeStyle = "#e8f7fb"; c.beginPath(); c.arc(cx, cy - dy, 5, 0, 6.2832); c.fill(); c.stroke();
     // journey stage markers along the drill axis
@@ -142,17 +142,17 @@
     if (q) {
       var speed = reduce ? 1e6 : 170, tt = (now - st.t0) / 1000 * speed, alive = false, sg, base = function (d) { return rOfDepth(d, 0); };
       var Rb = base(0); var sx = cx + Rb * Math.cos(q.a), sy = cy + Rb * Math.sin(q.a), pulse = (tt % 220) / 220;
-      c.strokeStyle = "rgba(251,191,36," + (1 - pulse) + ")"; c.lineWidth = 2; c.beginPath(); c.arc(sx, sy, 6 + pulse * (14 + (q.mag - 5) * 6), 0, 6.2832); c.stroke();
+      c.strokeStyle = "rgba(" + ACC.v.rgb + "," + (1 - pulse) + ")"; c.lineWidth = 2; c.beginPath(); c.arc(sx, sy, 6 + pulse * (14 + (q.mag - 5) * 6), 0, 6.2832); c.stroke();
       [1, -1].forEach(function (sgn) {
         q.rays.forEach(function (ry) {
-          var pts = ry.r.pts, n = pts.length, j = 0; c.beginPath(); c.lineWidth = ry.w === "P" ? 1.3 : 1.1; c.strokeStyle = ry.w === "P" ? "rgba(6,182,212,.85)" : "rgba(139,92,246,.9)"; c.setLineDash(ry.w === "S" ? [4, 3] : []);
+          var pts = ry.r.pts, n = pts.length, j = 0; c.beginPath(); c.lineWidth = ry.w === "P" ? 1.3 : 1.1; c.strokeStyle = ry.w === "P" ? "rgba(" + ACC.s.rgb + ",.85)" : "rgba(" + ACC.v.rgb + ",.9)"; c.setLineDash(ry.w === "S" ? [4, 3] : []);
           while (j < n && pts[j][2] <= tt) { var pr = base(pts[j][1]), an = q.a + sgn * pts[j][0]; j === 0 ? c.moveTo(cx + pr * Math.cos(an), cy + pr * Math.sin(an)) : c.lineTo(cx + pr * Math.cos(an), cy + pr * Math.sin(an)); j++; }
           c.stroke(); if (j < n) alive = true;
-          if (j > 0 && j < n) { var hr = base(pts[j - 1][1]), ha = q.a + sgn * pts[j - 1][0]; c.fillStyle = ry.w === "P" ? "#06b6d4" : "#8b5cf6"; c.beginPath(); c.arc(cx + hr * Math.cos(ha), cy + hr * Math.sin(ha), 2.2, 0, 6.2832); c.fill(); }
+          if (j > 0 && j < n) { var hr = base(pts[j - 1][1]), ha = q.a + sgn * pts[j - 1][0]; c.fillStyle = ry.w === "P" ? ACC.s.hex : ACC.v.hex; c.beginPath(); c.arc(cx + hr * Math.cos(ha), cy + hr * Math.sin(ha), 2.2, 0, 6.2832); c.fill(); }
         });
         c.setLineDash([]); var rr3 = Rb + 10;
-        c.lineWidth = 6; c.strokeStyle = "rgba(139,92,246,.55)"; c.beginPath(); c.arc(cx, cy, rr3 + 7, q.a + sgn * 1.8157, q.a + sgn * Math.PI, sgn < 0); c.stroke();
-        c.strokeStyle = "rgba(251,191,36,.85)"; c.beginPath(); c.arc(cx, cy, rr3, q.a + sgn * 1.8151, q.a + sgn * 2.4435, sgn < 0); c.stroke();
+        c.lineWidth = 6; c.strokeStyle = "rgba(" + ACC.v.rgb + ",.55)"; c.beginPath(); c.arc(cx, cy, rr3 + 7, q.a + sgn * 1.8157, q.a + sgn * Math.PI, sgn < 0); c.stroke();
+        c.strokeStyle = "rgba(" + ACC.v.rgb + ",.85)"; c.beginPath(); c.arc(cx, cy, rr3, q.a + sgn * 1.8151, q.a + sgn * 2.4435, sgn < 0); c.stroke();
       });
       if (!alive && tt > 2000) { /* leave the final frame; shadow zones stay on screen */ }
     }
@@ -237,7 +237,7 @@
   // shareable PNG of the whole journey (canvas, no network)
   $("ecJc").addEventListener("click", function () {
     var cc = document.createElement("canvas"); cc.width = 1000; cc.height = 640; var x = cc.getContext("2d"), g = x.createLinearGradient(0, 0, 1000, 640);
-    x.fillStyle = "#06070a"; x.fillRect(0, 0, 1000, 640); g.addColorStop(0, "rgba(6,182,212,.35)"); g.addColorStop(1, "rgba(139,92,246,.35)"); x.fillStyle = g; x.fillRect(0, 0, 1000, 640);
+    x.fillStyle = "#06070a"; x.fillRect(0, 0, 1000, 640); g.addColorStop(0, "rgba(" + ACC.s.rgb + ",.35)"); g.addColorStop(1, "rgba(" + ACC.v.rgb + ",.35)"); x.fillStyle = g; x.fillRect(0, 0, 1000, 640);
     x.fillStyle = "#e8f7fb"; x.font = '700 40px "Space Grotesk", system-ui, sans-serif'; x.fillText("Vini: surface to core", 50, 80);
     x.fillStyle = "#9aa7b8"; x.font = '500 16px ui-monospace, Menlo, monospace'; x.fillText("A journey drilled through seven layers · simplified PREM-style model", 50, 112);
     JOURNEY.forEach(function (j, i) {

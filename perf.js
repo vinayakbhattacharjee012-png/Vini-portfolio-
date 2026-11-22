@@ -49,7 +49,7 @@
       if (on === undefined) on = !hud;
       if (!on) { if (hud) { hud.remove(); hud = null; clearInterval(hudT); } return; }
       if (hud) return; hud = document.createElement("pre"); hud.setAttribute("aria-hidden", "true");
-      hud.style.cssText = "position:fixed;right:8px;top:8px;z-index:200;margin:0;padding:8px 10px;font:600 11px/1.5 ui-monospace,monospace;color:#06b6d4;background:rgba(6,7,10,.88);border:1px solid #1d2433;border-radius:8px;pointer-events:none;white-space:pre";
+      hud.style.cssText = "position:fixed;right:8px;top:8px;z-index:200;margin:0;padding:8px 10px;font:600 11px/1.5 ui-monospace,monospace;color:" + ACC.s.hex + ";background:rgba(6,7,10,.88);border:1px solid #1d2433;border-radius:8px;pointer-events:none;white-space:pre";
       document.body.appendChild(hud); var n = 0, t0 = performance.now(), prev = {};
       (function f(t) { n++; if (hud) requestAnimationFrame(f); })(0);
       hudT = setInterval(function () {

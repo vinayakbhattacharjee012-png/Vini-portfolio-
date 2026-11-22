@@ -1,5 +1,7 @@
 /* Registry 1 of 2: 10 engines x 100 features = 1,000. Built by factories, lazily, on first use. window.FR1000 = { engines, list }. */
 (function () {
+  // Colour samples read the live theme in the browser; the build script (Node) uses these fallbacks.
+  var ACC = (typeof window !== "undefined" && window.ACC) || { s: { hex: "#2b2f38", rgb: "43, 47, 56" }, v: { hex: "#6b7280", rgb: "107, 114, 128" } };
   "use strict";
   var L = [], ENG = [
     "Command palette actions", "Micro-widgets & calculators", "Guardrail & security scenarios", "Architecture blueprints & patterns", "Skill & concept nodes",
@@ -52,20 +54,20 @@
   [["100 per minute", { lim: 100, sec: 60 }], ["5 per 10 seconds", { lim: 5, sec: 10 }]].forEach(function (t) { mk(2, "Rate limiter: window " + t[0], "calc", { c: "window", v: t[1] }, "Fixed-window math.", "rate limiter window"); });
   mk(2, "Rate limiter: exponential backoff", "calc", { c: "backoff", v: { base: 200, f: 2, n: 6 } }, "Retry delays.", "rate limiter backoff retry");
   mk(2, "Rate limiter: M/M/1 queue", "calc", { c: "mm1", v: { l: 8, m: 10 } }, "Utilisation and wait.", "queue rate limiter latency");
-  [["Email", "^[\\w.+-]+@[\\w-]+\\.[a-z]{2,}$", "ada@example.com bob@site.org nope@"], ["Hex colour", "#[0-9a-fA-F]{6}\\b", "#06b6d4 #8b5cf6 #xyz123"], ["Semver", "\\bv?\\d+\\.\\d+\\.\\d+\\b", "v1.2.3 and 10.0.1 but not 1.2"], ["ISO date", "\\d{4}-\\d{2}-\\d{2}", "2026-11-21 and 99-1-1"], ["IPv4", "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b", "10.0.0.1 and 192.168.1.254"]].forEach(function (r) { mk(2, "Regex tester: " + r[0], "calc", { c: "regex", v: { re: r[1], tx: r[2] } }, "Edit the pattern or text.", "regex validator"); });
+  [["Email", "^[\\w.+-]+@[\\w-]+\\.[a-z]{2,}$", "ada@example.com bob@site.org nope@"], ["Hex colour", "#[0-9a-fA-F]{6}\\b", "#2b2f38 #6b7280 #xyz123"], ["Semver", "\\bv?\\d+\\.\\d+\\.\\d+\\b", "v1.2.3 and 10.0.1 but not 1.2"], ["ISO date", "\\d{4}-\\d{2}-\\d{2}", "2026-11-21 and 99-1-1"], ["IPv4", "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b", "10.0.0.1 and 192.168.1.254"]].forEach(function (r) { mk(2, "Regex tester: " + r[0], "calc", { c: "regex", v: { re: r[1], tx: r[2] } }, "Edit the pattern or text.", "regex validator"); });
   mk(2, "JSON validator", "calc", { c: "json", v: { tx: '{"name": "vini", "tags": ["ai", "bots"]}' } }, "Valid or where it breaks.", "json validator");
   mk(2, "Base64 encode", "calc", { c: "b64", m: "enc", v: { tx: "hello vini" } }, "Encode text.", "base64 encode");
   mk(2, "Base64 decode", "calc", { c: "b64", m: "dec", v: { tx: "aGVsbG8gdmluaQ==" } }, "Decode text.", "base64 decode");
   mk(2, "URL parser", "calc", { c: "url", v: {} }, "Split a URL into parts.", "url parser");
   mk(2, "JWT decoder (no verify)", "calc", { c: "jwt", v: {} }, "Inspect a token locally. Never paste real secrets.", "jwt token decoder");
-  mk(2, "Contrast: cyan on obsidian", "calc", { c: "contrast", v: { fg: "#06b6d4", bg: "#06070a" } }, "WCAG ratio.", "color contrast wcag");
-  mk(2, "Contrast: violet on obsidian", "calc", { c: "contrast", v: { fg: "#8b5cf6", bg: "#06070a" } }, "WCAG ratio.", "color contrast wcag");
-  mk(2, "Contrast: obsidian on cyan", "calc", { c: "contrast", v: { fg: "#06070a", bg: "#06b6d4" } }, "WCAG ratio.", "color contrast wcag");
-  mk(2, "Colour: hex to RGB and HSL", "calc", { c: "hexrgb", v: { h: "#06b6d4" } }, "Convert a hex colour.", "color hex rgb hsl");
-  mk(2, "Colour: violet to RGB and HSL", "calc", { c: "hexrgb", v: { h: "#8b5cf6" } }, "Convert a hex colour.", "color hex rgb hsl");
-  mk(2, "Colour: mix two colours", "calc", { c: "mix", v: { a: "#06b6d4", b: "#8b5cf6", t: 50 } }, "Blend.", "color mix gradient");
-  mk(2, "Colour: lighten", "calc", { c: "shade", m: "lighten", v: { h: "#06b6d4", p: 20 } }, "Lighten a colour.", "color lighten");
-  mk(2, "Colour: darken", "calc", { c: "shade", m: "darken", v: { h: "#8b5cf6", p: 30 } }, "Darken a colour.", "color darken");
+  mk(2, "Contrast: cyan on obsidian", "calc", { c: "contrast", v: { fg: ACC.s.hex, bg: "#06070a" } }, "WCAG ratio.", "color contrast wcag");
+  mk(2, "Contrast: violet on obsidian", "calc", { c: "contrast", v: { fg: ACC.v.hex, bg: "#06070a" } }, "WCAG ratio.", "color contrast wcag");
+  mk(2, "Contrast: obsidian on cyan", "calc", { c: "contrast", v: { fg: "#06070a", bg: ACC.s.hex } }, "WCAG ratio.", "color contrast wcag");
+  mk(2, "Colour: hex to RGB and HSL", "calc", { c: "hexrgb", v: { h: ACC.s.hex } }, "Convert a hex colour.", "color hex rgb hsl");
+  mk(2, "Colour: violet to RGB and HSL", "calc", { c: "hexrgb", v: { h: ACC.v.hex } }, "Convert a hex colour.", "color hex rgb hsl");
+  mk(2, "Colour: mix two colours", "calc", { c: "mix", v: { a: ACC.s.hex, b: ACC.v.hex, t: 50 } }, "Blend.", "color mix gradient");
+  mk(2, "Colour: lighten", "calc", { c: "shade", m: "lighten", v: { h: ACC.s.hex, p: 20 } }, "Lighten a colour.", "color lighten");
+  mk(2, "Colour: darken", "calc", { c: "shade", m: "darken", v: { h: ACC.v.hex, p: 30 } }, "Darken a colour.", "color darken");
   ["wc", "slug", "upper", "lower", "title", "camel", "snake", "rev", "sort", "uniq", "hash", "fnv"].forEach(function (m) { mk(2, "Text tool: " + ({ wc: "word count", slug: "slugify", upper: "UPPERCASE", lower: "lowercase", title: "Title Case", camel: "camelCase", snake: "snake_case", rev: "reverse", sort: "sort lines", uniq: "unique lines", hash: "djb2 hash", fnv: "FNV-1a hash" })[m], "calc", { c: "text", m: m, v: { tx: m === "sort" || m === "uniq" ? "pear\napple\npear\nfig" : "The quick brown fox jumps over the lazy dog" } }, "Quick text utility.", "text tool " + m); });
 
   /* ---- E03: 100 guardrail scenarios ---- */
@@ -107,7 +109,7 @@
     ["Keep-alive health endpoint", [8080, 8000, 10000, 3000], function (n) { return { lang: "py", nodes: ["Monitor", "aiohttp", "Bot"], code: ["from aiohttp import web", "async def health(_): return web.json_response({'ok': True})", "app = web.Application(); app.add_routes([web.get('/health', health)])", "web.run_app(app, port=" + n + ")"].join("\n") }; }],
     ["Service worker cache-first", ["v1", "v2", "v3", "v4"], function (v) { return { lang: "js", nodes: ["Fetch", "Cache", "Network"], code: ["const C = 'site-" + v + "';", "self.addEventListener('install', (e) => e.waitUntil(caches.open(C).then((c) => c.addAll(['/', '/index.html']))));", "self.addEventListener('fetch', (e) => e.respondWith(caches.match(e.request).then((r) => r || fetch(e.request))));"].join("\n") }; }],
     ["Lazy-load with IntersectionObserver", ["0px", "100px", "200px", "400px"], function (m) { return { lang: "js", nodes: ["Scroll", "Observer", "Load"], code: ["const io = new IntersectionObserver((es) => es.forEach((e) => {", "  if (e.isIntersecting) { e.target.src = e.target.dataset.src; io.unobserve(e.target); }", "}), { rootMargin: '" + m + "' });", "document.querySelectorAll('img[data-src]').forEach((i) => io.observe(i));"].join("\n") }; }],
-    ["CSS custom-property theming", ["#06b6d4", "#8b5cf6", "#34d399", "#f97316"], function (c) { return { lang: "css", nodes: ["Tokens", "Theme", "Components"], code: [":root { --bg: #06070a; --accent: " + c + "; }", "@media (prefers-color-scheme: light) { :root { --bg: #f5f5f7; } }", ".btn { background: var(--accent); color: var(--bg); }"].join("\n") }; }],
+    ["CSS custom-property theming", [ACC.s.hex, ACC.v.hex, ACC.v.hex, ACC.v.hex], function (c) { return { lang: "css", nodes: ["Tokens", "Theme", "Components"], code: [":root { --bg: #06070a; --accent: " + c + "; }", "@media (prefers-color-scheme: light) { :root { --bg: #f5f5f7; } }", ".btn { background: var(--accent); color: var(--bg); }"].join("\n") }; }],
     ["rAF loop that pauses when hidden", [30, 45, 60, 24], function (f) { return { lang: "js", nodes: ["rAF", "Gate", "Draw"], code: ["let raf = 0, last = 0; const gap = 1000 / " + f + ";", "function tick(t) {", "  raf = 0; if (document.hidden) return;", "  if (t - last >= gap) { last = t; draw(t); }", "  raf = requestAnimationFrame(tick);", "}", "document.addEventListener('visibilitychange', () => { if (!raf) raf = requestAnimationFrame(tick); });"].join("\n") }; }],
     ["Guard-clause refactor", ["validate", "save", "send", "load"], function (n) { return { lang: "js", nodes: ["Before", "Refactor", "After"], code: ["// before: nested ifs", "function " + n + "(u) { if (u) { if (u.ok) { if (u.id) { return u.id; } } } return null; }", "// after: guard clauses", "function " + n + "2(u) { if (!u || !u.ok || !u.id) return null; return u.id; }"].join("\n") }; }]
   ];
@@ -168,7 +170,7 @@
     var loop = Gov.loop("matrix", function () { c.fillStyle = "rgba(6,7,10,.12)"; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = col; c.font = "13px monospace"; for (var k = 0; k < cols; k++) { c.fillText(String.fromCharCode(0x30a0 + Math.random() * 60 | 0), k * 14, y[k] * 14); y[k] = y[k] * 14 > cv.height && Math.random() > .975 ? 0 : y[k] + 1; } }, { fps: 14 * (speed || 1), liteFps: 8 });
     loop.start(); MX = { cv: cv, loop: loop }; return "matrix on (" + col + ")";
   }
-  cmd("matrix-on", "Matrix rain overlay (cyan)", function () { return matrix(true, "#06b6d4", 1); }); cmd("matrix-off", "Stop the matrix overlay", function () { return matrix(false); }); cmd("matrix-cyan", "Matrix rain, cyan", function () { return matrix(true, "#06b6d4", 1); }); cmd("matrix-violet", "Matrix rain, violet", function () { return matrix(true, "#8b5cf6", 1); }); cmd("matrix-fast", "Matrix rain, fast", function () { return matrix(true, "#06b6d4", 2.5); }); cmd("matrix-slow", "Matrix rain, slow", function () { return matrix(true, "#8b5cf6", 0.5); });
+  cmd("matrix-on", "Matrix rain overlay (cyan)", function () { return matrix(true, ACC.s.hex, 1); }); cmd("matrix-off", "Stop the matrix overlay", function () { return matrix(false); }); cmd("matrix-cyan", "Matrix rain, cyan", function () { return matrix(true, ACC.s.hex, 1); }); cmd("matrix-violet", "Matrix rain, violet", function () { return matrix(true, ACC.v.hex, 1); }); cmd("matrix-fast", "Matrix rain, fast", function () { return matrix(true, ACC.s.hex, 2.5); }); cmd("matrix-slow", "Matrix rain, slow", function () { return matrix(true, ACC.v.hex, 0.5); });
   var AU = { a11y: function () { var i = document.querySelectorAll("img:not([alt])").length, b = Array.prototype.filter.call(document.querySelectorAll("button"), function (x) { return !x.textContent.trim() && !x.getAttribute("aria-label"); }).length; return "images without alt: " + i + ", unlabeled buttons: " + b; }, contrast: function () { return "use the contrast widgets in the Feature Explorer (E02)"; }, alt: function () { return document.querySelectorAll("img:not([alt])").length + " images missing alt"; }, lang: function () { return "html lang=" + (document.documentElement.lang || "(missing)"); }, title: function () { return "title: " + document.title; }, meta: function () { return "meta tags: " + document.querySelectorAll("meta").length; }, links: function () { return Array.prototype.filter.call(document.querySelectorAll("a"), function (a) { return !a.textContent.trim() && !a.getAttribute("aria-label"); }).length + " links without text"; }, tabindex: function () { return document.querySelectorAll("[tabindex]:not([tabindex='-1']):not([tabindex='0'])").length + " positive tabindex values"; } };
   Object.keys(AU).forEach(function (k) { cmd("audit-" + k, "Audit: " + k, AU[k]); });
   ["on", "off"].forEach(function (x) { cmd("sfx-" + x, "Sound effects " + x, function () { return F().ACTS.sfx(x); }); }); ["lite", "full", "auto"].forEach(function (x) { cmd("perf-" + x, "Performance mode " + x, function () { return F().ACTS.perf(x); }); });
@@ -183,11 +185,11 @@
 
   /* ---- E09: 100 visual presets (10 combinable categories x 10) ---- */
   var VP = [
-    ["Accent palette", ["#06b6d4|#8b5cf6", "#22d3ee|#a78bfa", "#34d399|#06b6d4", "#f472b6|#8b5cf6", "#fbbf24|#f97316", "#60a5fa|#c084fc", "#2dd4bf|#38bdf8", "#f87171|#fb923c", "#a3e635|#34d399", "#e879f9|#22d3ee"], function (v) { var a = v.split("|"); return { "--cy": a[0], "--vi": a[1], "--star": a[0], "--nebula": a[1] }; }],
+    ["Accent palette", ["" + ACC.s.hex + "|" + ACC.v.hex + "", "" + ACC.s.hex + "|" + ACC.v.hex + "", "" + ACC.v.hex + "|" + ACC.s.hex + "", "#f472b6|" + ACC.v.hex + "", "" + ACC.v.hex + "|" + ACC.v.hex + "", "#60a5fa|#c084fc", "" + ACC.s.hex + "|" + ACC.s.hex + "", "" + ACC.s.hex + "|" + ACC.v.hex + "", "#a3e635|" + ACC.v.hex + "", "#e879f9|" + ACC.s.hex + ""], function (v) { var a = v.split("|"); return { "--cy": a[0], "--vi": a[1], "--star": a[0], "--nebula": a[1] }; }],
     ["Grid density", [0, 16, 20, 24, 32, 40, 48, 64, 80, 96], function (v) { return v ? { grid: 1, "--fx-grid": v + "px" } : { grid: 0 }; }],
     ["Scanlines", [0, .04, .06, .08, .1, .12, .15, .18, .22, .28], function (v, i) { return v ? { scan: 1, "--fx-scan": v, "--fx-scan-gap": (2 + (i % 3)) + "px" } : { scan: 0 }; }],
     ["Glass blur", [0, 2, 4, 6, 8, 10, 12, 16, 20, 24], function (v) { return { "--glass": v + "px" }; }],
-    ["Canvas glow", [0, 2, 4, 6, 8, 10, 12, 14, 16, 18], function (v) { return { "--ec-glow": v ? "drop-shadow(0 0 " + v + "px rgba(6,182,212,.45))" : "none" }; }],
+    ["Canvas glow", [0, 2, 4, 6, 8, 10, 12, 14, 16, 18], function (v) { return { "--ec-glow": v ? "drop-shadow(0 0 " + v + "px rgba(" + ACC.s.rgb + ",.45))" : "none" }; }],
     ["Type scale", [.85, .9, .95, 1, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3], function (v) { return { fs: v * 100 + "%" }; }],
     ["Corner radius", [0, 4, 8, 12, 16, 20, 24, 28, 32, 40], function (v) { return { "--fx-r": v + "px" }; }],
     ["Glow intensity", [0, .25, .5, .75, 1, 1.25, 1.5, 1.75, 2, 2.5], function (v) { return { "--fx-glow": v }; }],

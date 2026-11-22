@@ -166,7 +166,8 @@
     '<div class="w2-act"><button type="button" class="w2-go" id="w2Gen">Generate pass</button><button type="button" class="w2-go alt" id="w2Dl" disabled>Download PNG</button></div></dialog>');
   document.body.appendChild(dlg);
   function paintList() {
-    $("#w2List").innerHTML = ACH.map(function (a) { return '<li class="' + (got[a[0]] ? "ok" : "") + '"><i>' + (got[a[0]] ? "✓" : "·") + "</i><b>" + a[1] + "</b><span>" + a[2] + "</span></li>"; }).join("");
+    var list = $("#w2List"); if (!list) return; // the dialog is built later; the list is painted when it opens
+    list.innerHTML = ACH.map(function (a) { return '<li class="' + (got[a[0]] ? "ok" : "") + '"><i>' + (got[a[0]] ? "✓" : "·") + "</i><b>" + a[1] + "</b><span>" + a[2] + "</span></li>"; }).join("");
   }
   paintBadge(); paintList();
   badge.addEventListener("click", function () { paintList(); if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", ""); sfx("tick"); });
@@ -196,13 +197,13 @@
     c.fillStyle = "#9aa7b8"; c.font = '500 20px ui-monospace, Menlo, monospace'; c.fillText("HANDLE", 60, 220);
     for (var i = 0; i < 5; i++) { // achievement pips
       var on = !!got[ACH[i][0]], px = 60 + i * 64;
-      c.beginPath(); c.arc(px + 22, 372, 22, 0, 7); c.fillStyle = on ? "#06b6d4" : "rgba(255,255,255,.06)"; c.fill();
-      c.lineWidth = 2; c.strokeStyle = on ? "#8b5cf6" : "#1d2433"; c.stroke();
+      c.beginPath(); c.arc(px + 22, 372, 22, 0, 7); c.fillStyle = on ? ACC.s.hex : "rgba(255,255,255,.06)"; c.fill();
+      c.lineWidth = 2; c.strokeStyle = on ? ACC.v.hex : "#1d2433"; c.stroke();
       c.fillStyle = on ? "#06070a" : "#4b5567"; c.font = "700 22px system-ui"; c.textAlign = "center"; c.fillText(on ? "✓" : String(i + 1), px + 22, 380); c.textAlign = "left";
     }
     c.fillStyle = "#9aa7b8"; c.font = '500 18px ui-monospace, Menlo, monospace'; c.fillText("PASS ID  " + id, 60, 490); c.fillText(new Date().toISOString().slice(0, 10), 60, 520);
     var fmv = window.__fm, role = store("persona"); // registry progress and the persona you browsed as
-    c.fillStyle = "#06b6d4"; c.fillText("FEATURES " + (fmv ? fmv.runs + " run · " + fmv.unlocked + " milestones" : "0 run") + (role && role !== "all" ? " · VIEW " + role.toUpperCase() : ""), 60, 552);
+    c.fillStyle = ACC.s.hex; c.fillText("FEATURES " + (fmv ? fmv.runs + " run · " + fmv.unlocked + " milestones" : "0 run") + (role && role !== "all" ? " · VIEW " + role.toUpperCase() : ""), 60, 552);
     var h = hash(id); c.fillStyle = "#e8f7fb"; // barcode from the id
     for (var b = 0, bx = 560; b < 44; b++) { h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; var w = 2 + (h & 3); if (h & 8) c.fillRect(bx, 470, w, 70); bx += w + 3; if (bx > 940) break; }
     $("#w2Dl").disabled = false; return name;
