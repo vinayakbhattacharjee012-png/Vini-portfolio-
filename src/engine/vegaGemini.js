@@ -22,9 +22,12 @@
       .then(function (j) { sh.state = j && j.configured ? "ready" : "down"; }, function () { sh.state = "down"; })
       .then(paint);
   }
+  // Model choice for the shared answers. Empty means the server's default order.
+  var tier = ""; try { tier = localStorage.getItem("vegaTier") || ""; } catch (e) {}
+  if (["", "fast", "balanced", "smart"].indexOf(tier) < 0) tier = "";
   function askShared(question, history) {
     var h = (history || []).map(function (m) { return { role: m.role === "model" ? "model" : "user", text: (m.parts && m.parts[0] && m.parts[0].text) || "" }; });
-    return fetch(PROXY + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: question, history: h }), signal: timeout(30000) })
+    return fetch(PROXY + "/ask", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: question, history: h, model: tier || undefined }), signal: timeout(30000) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (r.ok && j.answer) return j.answer; throw new Error(j.error || "Gemini is busy right now."); }); },
         function (e) { throw new Error(e && e.name === "AbortError" ? "That took too long. Try again." : "I can't answer right now."); });
   }
@@ -89,6 +92,10 @@
       '<div class="holo-ai-row"><button class="holo-btn" type="button" id="holoAiSave">Save and test</button><button class="holo-btn" type="button" id="holoAiOff">Remove key</button></div><p class="holo-ai-msg" id="holoAiMsg" aria-live="polite"></p>';
     form.parentNode.insertBefore(panel, $("holoPrivacy"));
     kb.addEventListener("click", function () { panel.hidden = !panel.hidden; if (!panel.hidden) $("holoAiKey").focus(); });
+    var tierSel = document.createElement("select"); tierSel.id = "holoAiTier"; tierSel.className = "holo-btn"; tierSel.setAttribute("aria-label", "Answer model");
+    tierSel.innerHTML = '<option value="">Auto</option><option value="fast">Fast</option><option value="balanced">Balanced</option><option value="smart">Smart</option>';
+    tierSel.value = tier; form.appendChild(tierSel);
+    tierSel.addEventListener("change", function () { tier = tierSel.value; try { localStorage.setItem("vegaTier", tier); } catch (e) {} });
     b.addEventListener("click", function () {
       if (st.on && st.key) { st.on = false; save(); paint(); return; }          // own key on -> off
       if (sh.state === "ready") { sh.on = !sh.on; save(); paint(); return; }   // shared on <-> off

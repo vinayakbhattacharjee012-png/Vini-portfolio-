@@ -43,6 +43,11 @@ fake.listen(0, async () => {
       const nn = seenNative.at(-1); assert.ok(nn.tools && nn.tools[0].google_search !== undefined, "search tool sent");
       assert.strictEqual(nn.key, "test-key", "key sent in the header, not the URL");
       assert.ok(nn.systemInstruction.parts[0].text.includes("You can search the web"), "search instructions when searching");
+      // tier choice: the chosen tier is tried first; an unknown name falls back to balanced
+      mode = "ok"; await ask({ question: "tier test", model: "smart" });
+      await ask({ question: "tier test 2", model: "not-a-model" }); // unknown names are ignored
+      const tierCalls = seen.filter((x) => x.messages && x.messages.some((m) => m.content === "tier test")).map((x) => x.model);
+      assert.strictEqual(tierCalls[0], "gemini-pro-latest", "smart tier tried first");
       // fallback path: search fails, the plain endpoint answers and is told it cannot search
       mode = "ok"; j = await (await ask({ question: "What is the capital of Delhi?" })).json(); assert.strictEqual(j.answer, "answer from m1");
       const fb = seen.at(-1).messages[0].content; assert.ok(fb.includes("cannot search the web"), "fallback says it cannot search");

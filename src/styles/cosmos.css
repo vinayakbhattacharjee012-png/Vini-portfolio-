@@ -108,3 +108,8 @@ html[style*="--fx-hud"] .w2-badge, html[style*="--fx-hud"] .tele, html[style*="-
 .think-dots::after { content: ""; display: inline-block; width: 1.4em; text-align: left; animation: thinkDots 1.2s steps(4, end) infinite; }
 @keyframes thinkDots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
 @media (prefers-reduced-motion: reduce) { .think-dots::after { animation: none; content: "..."; } }
+/* VEGA ask bar: the text box takes a full row, the buttons and model picker wrap below it */
+#holoAsk { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#holoAsk > input { flex: 1 1 100%; min-width: 0; height: 42px; }
+#holoAsk > button, #holoAsk > select { flex: 0 0 auto; height: 38px; }
+#holoAsk > select { padding: 0 10px; border-radius: 999px; color: inherit; background: rgba(0, 0, 0, .25); border: 1px solid rgba(var(--holo-c), .4); font: 600 .78rem ui-monospace, monospace; }

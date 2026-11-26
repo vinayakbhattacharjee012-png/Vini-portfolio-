@@ -87,14 +87,21 @@ function capReached() { const d = new Date().toISOString().slice(0, 10); if (day
 /* ---------- Gemini (OpenAI-compatible endpoint, Bearer = the AI Studio key) ---------- */
 const NATIVE = process.env.GEMINI_NATIVE_URL || "https://generativelanguage.googleapis.com/v1beta/models/";
 const GROUNDING = (process.env.GROUNDING || "on") !== "off";
+// Model tiers a visitor can choose. Only these names are accepted; the chosen tier is tried first, then the rest.
+const TIERS = { fast: "gemini-3.5-flash-lite", balanced: "gemini-flash-latest", smart: "gemini-pro-latest" };
+function pickModels(list, sel) {
+  if (!TIERS[sel]) return list;
+  const first = TIERS[sel];
+  return [first, ...list.filter((m) => m !== first)];
+}
 const GROUND_MODELS = (process.env.GROUND_MODELS || "gemini-flash-latest,gemini-3.5-flash,gemini-3.5-flash-lite").split(",").map((x) => x.trim());
 let lastPath = "";
 // Google Search grounding through the native endpoint. Any failure returns null and the plain endpoint answers instead.
-async function grounded(messages) {
+async function grounded(messages, sel) {
   if (!GROUNDING) return null;
   const sys = messages.find((m) => m.role === "system");
   const contents = messages.filter((m) => m.role !== "system").map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
-  for (const model of GROUND_MODELS) {
+  for (const model of pickModels(GROUND_MODELS, sel)) {
     try {
       const r = await fetch(NATIVE + model + ":generateContent", {
         method: "POST", headers: { "content-type": "application/json", "x-goog-api-key": KEY },
@@ -109,9 +116,9 @@ async function grounded(messages) {
   }
   return null;
 }
-async function gemini(messages) {
+async function gemini(messages, sel) {
   let last = "busy";
-  for (const model of MODELS) {
+  for (const model of pickModels(MODELS, sel)) {
     let r;
     try {
       r = await fetch(API, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + KEY }, body: JSON.stringify({ model, messages, max_tokens: 320, temperature: 0.4 }), signal: AbortSignal.timeout(20000) });
@@ -152,6 +159,8 @@ const server = http.createServer(async (req, res) => {
   let raw = "";
   for await (const chunk of req) { raw += chunk; if (raw.length > 16000) return send(res, 413, { error: "That message is too long." }, origin); }
   let body; try { body = JSON.parse(raw); } catch (e) { return send(res, 400, { error: "Bad request." }, origin); }
+  // visitors may pick a tier; only these names are accepted, anything else uses the default
+  const sel = TIERS[body.model] ? body.model : null; // null keeps the default order
   const q = typeof body.question === "string" ? body.question.trim().slice(0, 500) : "";
   if (!q) return send(res, 400, { error: "Ask a question." }, origin);
   const history = (Array.isArray(body.history) ? body.history : []).slice(-6)
@@ -162,7 +171,7 @@ const server = http.createServer(async (req, res) => {
   const sysFor = (g) => ({ role: "system", content: system(text, g) });
   const convo = [...history, { role: "user", content: q }];
   // search first (its own instructions say so); if that fails, answer without search and say so
-  const out = (await grounded([sysFor(true), ...convo])) || (await gemini([sysFor(false), ...convo]));
+  const out = (await grounded([sysFor(true), ...convo], sel)) || (await gemini([sysFor(false), ...convo], sel));
   console.log("ask", out.error || "ok", out.answer ? (lastPath.startsWith("web:") && out.answer ? lastPath : "plain") : "", "day", day.n); // path only, never the question
   if (out.answer) return send(res, 200, { answer: out.answer }, origin);
   const e = ERR[out.error] || ERR.busy;
