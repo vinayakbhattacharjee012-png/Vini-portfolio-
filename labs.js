@@ -357,8 +357,9 @@
     var P = [
       ["Polo", "Health AI app", "In progress", "Structured wellness workflows with clinical safety guardrails designed in.", "projects/polo.html"],
       ["Nova 3.0 Ultimate", "Discord bot", "Live", "Verification views, leveling, anti-spam and AFK tracking in live communities.", "projects/nova.html"],
-      ["Eclipse", "discord.py bot", "In progress", "Moderation, anti-raid, XP and verification in six self-contained cogs, on a free Render web service.", "projects/eclipse.html"],
-      ["Apex", "AI co-pilot", "Prototype", "A single-file co-pilot that runs a builder-focused system prompt on the Anthropic API.", "projects/apex.html"]
+      ["Eclipse", "discord.py bot", "In progress", "Moderation, automod, anti-nuke, economy, games and tickets in 21 self-contained cogs, on a free Render web service.", "projects/eclipse.html"],
+      ["Apex", "AI co-pilot", "Prototype", "A single-file co-pilot that runs a builder-focused system prompt on the Anthropic API.", "projects/apex.html"],
+      ["Weather", "Web app", "New", "City search, °C/°F, a 24-hour and 7-day forecast and pinned places, on live Open-Meteo data with no key.", "weather/"]
     ];
     box.innerHTML = P.map(function (p) {
       return '<article class="panel cy"><span class="kick">' + esc(p[1]) + " · " + esc(p[2]) + '</span><h2 style="margin-top:8px">' + esc(p[0]) + '</h2><p class="note" style="margin-top:8px;color:var(--tx-2)">' + esc(p[3]) + '</p><p style="margin-top:12px"><a href="' + esc(p[4]) + '" style="color:var(--cy)">Case study →</a></p></article>';
