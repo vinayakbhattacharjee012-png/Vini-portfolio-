@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Weather · Vini</title>
+<meta name="description" content="A small, fast weather app. Live forecasts from Open-Meteo, no account or API key." />
+<link rel="icon" href="../favicon-64.png" type="image/png" />
+<meta name="theme-color" content="#08080b" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+<link rel="preconnect" href="https://api.open-meteo.com" crossorigin />
+<style>
+  :root { --bg:#f5f5f7; --surface:#fff; --surface-2:#ececf0; --ink:#121216; --muted:#55555f; --line:#dcdce2; --accent:#1f5fbf; --err:#a8262e; --err-bg:#fbeaea; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#08080b; --surface:#121217; --surface-2:#1b1b22; --ink:#ececf1; --muted:#a3a3b0; --line:#2a2a33; --accent:#7fb0ff; --err:#ff9a9f; --err-bg:#2a1216; color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left)); display: grid; gap: 14px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 1.15rem; margin: 0; letter-spacing: -.01em; }
+  h1 a { color: inherit; text-decoration: none; }
+  h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 8px; font-weight: 600; }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .units { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+  .units button { border: 0; background: none; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+  .units button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  form { display: flex; gap: 8px; }
+  form input { flex: 1; min-width: 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .btn { padding: 10px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-weight: 600; }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .results, .pins { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .results button, .pin { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; }
+  .pin-item { display: inline-flex; align-items: center; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; }
+  .pin-item .pin { border: 0; background: none; padding-right: 4px; }
+  .pin-item .unpin { border: 0; background: none; padding: 6px 10px 6px 4px; color: var(--muted); }
+  .status:empty { display: none; }
+  .status { padding: 10px 14px; border-radius: 12px; background: var(--surface-2); display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .status.error { background: var(--err-bg); color: var(--err); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; min-width: 0; }
+  main { display: grid; gap: 14px; transition: opacity .2s ease; }
+  main[aria-busy="true"] { opacity: .55; }
+  main.empty { display: none; }
+  .now-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .place { font-size: 1.25rem; font-weight: 650; margin: 0; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0; }
+  .now-main { display: flex; align-items: center; gap: 14px; margin: 14px 0 10px; }
+  .icon { font-size: 2.6rem; line-height: 1; }
+  .temp { font-size: 3.4rem; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0; }
+  .facts div { display: flex; gap: 6px; }
+  .facts dt { color: var(--muted); } .facts dd { margin: 0; font-weight: 600; }
+  .pin-toggle[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .hours { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin: 0; list-style: none; padding-left: 0; scroll-snap-type: x proximity; }
+  .hours li { flex: none; width: 66px; text-align: center; padding: 10px 4px; border-radius: 12px; background: var(--surface-2); scroll-snap-align: start; }
+  .hours .t { font-size: .8rem; color: var(--muted); } .hours .i { font-size: 1.3rem; } .hours .v { font-weight: 650; } .hours .p { font-size: .78rem; color: var(--accent); }
+  .days { list-style: none; margin: 0; padding: 0; }
+  .days li { display: grid; grid-template-columns: 4.5em 1.8em minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+  .days li:first-child { border-top: 0; }
+  .days .c { color: var(--muted); font-size: .9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .days .hl { font-weight: 650; white-space: nowrap; } .days .lo { color: var(--muted); font-weight: 500; }
+  .days .p { color: var(--accent); font-size: .8rem; margin-left: 6px; }
+  footer { color: var(--muted); font-size: .8rem; }
+  footer a { color: inherit; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><a href="../">Vini</a> · Weather</h1>
+    <div class="units" role="group" aria-label="Temperature unit">
+      <button type="button" data-unit="c" aria-pressed="true">°C</button>
+      <button type="button" data-unit="f" aria-pressed="false">°F</button>
+    </div>
+  </header>
+
+  <form id="search" role="search">
+    <label class="sr" for="q">Search for a city</label>
+    <input id="q" name="q" type="search" placeholder="Search a city, e.g. Kolkata" autocomplete="off" enterkeyhint="search" />
+    <button class="btn primary" type="submit">Search</button>
+  </form>
+  <ul class="results" id="results" aria-label="Search results"></ul>
+
+  <section aria-labelledby="pinsH" id="pinsBox" hidden>
+    <h2 id="pinsH">Pinned</h2>
+    <ul class="pins" id="pins"></ul>
+  </section>
+
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <main id="main" class="empty" aria-busy="false">
+    <section class="card" aria-labelledby="place">
+      <div class="now-top">
+        <div>
+          <p class="place" id="place"></p>
+          <p class="sub" id="localTime"></p>
+        </div>
+        <button class="btn pin-toggle" type="button" id="pinBtn" aria-pressed="false">Pin</button>
+      </div>
+      <div class="now-main">
+        <span class="icon" id="nowIcon" aria-hidden="true"></span>
+        <div>
+          <div class="temp" id="nowTemp"></div>
+          <div class="sub" id="nowCond"></div>
+        </div>
+      </div>
+      <dl class="facts">
+        <div><dt>Humidity</dt><dd id="nowHum"></dd></div>
+        <div><dt>Wind</dt><dd id="nowWind"></dd></div>
+      </dl>
+    </section>
+
+    <section class="card" aria-labelledby="hoursH">
+      <h2 id="hoursH">Next 24 hours</h2>
+      <ol class="hours" id="hours" tabindex="0" aria-label="Hourly forecast, scroll sideways"></ol>
+    </section>
+
+    <section class="card" aria-labelledby="daysH">
+      <h2 id="daysH">7 days</h2>
+      <ol class="days" id="days"></ol>
+    </section>
+  </main>
+
+  <footer>Forecast data from <a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a>. No account or key needed.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var FORECAST = "https://api.open-meteo.com/v1/forecast";
+  var GEOCODE = "https://geocoding-api.open-meteo.com/v1/search";
+  var HOME = { name: "Siliguri", admin1: "West Bengal", country: "India", lat: 26.7271, lon: 88.3953 };
+  var MAX_PINS = 8, TIMEOUT_MS = 10000;
+
+  // WMO weather codes, as documented by Open-Meteo.
+  var CODES = {
+    0: ["Clear sky", "☀️", "🌙"], 1: ["Mainly clear", "🌤️", "🌙"], 2: ["Partly cloudy", "⛅", "☁️"], 3: ["Overcast", "☁️"],
+    45: ["Fog", "🌫️"], 48: ["Freezing fog", "🌫️"],
+    51: ["Light drizzle", "🌦️"], 53: ["Drizzle", "🌦️"], 55: ["Heavy drizzle", "🌧️"], 56: ["Freezing drizzle", "🌧️"], 57: ["Heavy freezing drizzle", "🌧️"],
+    61: ["Light rain", "🌦️"], 63: ["Rain", "🌧️"], 65: ["Heavy rain", "🌧️"], 66: ["Freezing rain", "🌧️"], 67: ["Heavy freezing rain", "🌧️"],
+    71: ["Light snow", "🌨️"], 73: ["Snow", "🌨️"], 75: ["Heavy snow", "❄️"], 77: ["Snow grains", "🌨️"],
+    80: ["Light showers", "🌦️"], 81: ["Showers", "🌧️"], 82: ["Violent showers", "⛈️"], 85: ["Snow showers", "🌨️"], 86: ["Heavy snow showers", "❄️"],
+    95: ["Thunderstorm", "⛈️"], 96: ["Thunderstorm with hail", "⛈️"], 99: ["Thunderstorm with heavy hail", "⛈️"]
+  };
+  function cond(code, isDay) { var c = CODES[code] || ["Unknown", "❔"]; return { text: c[0], icon: isDay === 0 && c[2] ? c[2] : c[1] }; }
+
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode: still works, just not remembered */ } }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var unit = store.get("wx.unit", "c") === "f" ? "f" : "c";
+  var pins = Array.isArray(store.get("wx.pins", [])) ? store.get("wx.pins", []) : [];
+  var place = HOME, data = null, retry = null, reqId = 0, clock = 0;
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function label(p) { return [p.name, p.admin1, p.country].filter(Boolean).join(", "); }
+  function same(a, b) { return Math.abs(a.lat - b.lat) < 0.01 && Math.abs(a.lon - b.lon) < 0.01; }
+  function temp(c) { return Math.round(unit === "f" ? c * 9 / 5 + 32 : c) + "°"; }
+  function wind(kmh) { return unit === "f" ? Math.round(kmh * 0.621371) + " mph" : Math.round(kmh) + " km/h"; }
+  // Open-Meteo returns local times without an offset; format them as-is.
+  function fmtLocal(iso, opts) { var d = new Date(iso + (iso.length === 10 ? "T00:00Z" : "Z")); return isNaN(d) ? iso : d.toLocaleString(undefined, Object.assign({ timeZone: "UTC" }, opts)); }
+
+  function setStatus(kind, text, canRetry) {
+    var s = $("status"); s.textContent = ""; s.className = "status" + (kind === "error" ? " error" : "");
+    s.setAttribute("role", kind === "error" ? "alert" : "status");
+    if (!text) return;
+    s.appendChild(el("span", "", text));
+    if (canRetry && retry) { var b = el("button", "btn", "Retry"); b.type = "button"; b.addEventListener("click", function () { retry(); }); s.appendChild(b); }
+  }
+
+  function errorText(e) {
+    if (navigator.onLine === false) return "You're offline. Reconnect, then press Retry.";
+    if (e && e.name === "AbortError") return "The weather service took too long to answer.";
+    if (e && /^HTTP/.test(e.message)) return "The weather service had a problem (" + e.message + ").";
+    return "Couldn't reach the weather service. Check your connection.";
+  }
+
+  function getJSON(url) {
+    if (navigator.onLine === false) return Promise.reject(new Error("offline"));
+    var ac = new AbortController(), t = setTimeout(function () { ac.abort(); }, TIMEOUT_MS);
+    return fetch(url, { signal: ac.signal }).then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).finally(function () { clearTimeout(t); });
+  }
+
+  function load(p) {
+    retry = function () { load(p); };
+    var id = ++reqId;
+    $("main").setAttribute("aria-busy", "true");
+    setStatus("info", "Loading weather for " + label(p) + "…");
+    var q = new URLSearchParams({
+      latitude: p.lat, longitude: p.lon, timezone: "auto", forecast_days: "7",
+      current: "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day",
+      hourly: "temperature_2m,precipitation_probability,weather_code",
+      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"
+    });
+    getJSON(FORECAST + "?" + q).then(function (d) {
+      if (id !== reqId) return;
+      if (!d || !d.current || !d.hourly || !d.daily) throw new Error("unexpected data");
+      place = p; data = d; render(); setStatus("", "");
+    }).catch(function (e) {
+      if (id !== reqId) return;
+      setStatus("error", errorText(e) + (data ? " Showing the last weather that loaded." : ""), true);
+    }).finally(function () { if (id === reqId) $("main").setAttribute("aria-busy", "false"); });
+  }
+
+  function search(name) {
+    retry = function () { search(name); };
+    var id = ++reqId, list = $("results");
+    list.textContent = "";
+    setStatus("info", "Searching for “" + name + "”…");
+    getJSON(GEOCODE + "?" + new URLSearchParams({ name: name, count: "5", language: "en", format: "json" })).then(function (d) {
+      if (id !== reqId) return;
+      var res = (d && d.results) || [];
+      if (!res.length) { setStatus("error", "No place found for “" + name + "”. Check the spelling, or try a nearby larger city.", false); return; }
+      setStatus("", "");
+      res.forEach(function (r) {
+        var p = { name: r.name, admin1: r.admin1 || "", country: r.country || "", lat: r.latitude, lon: r.longitude };
+        var li = el("li"), b = el("button", "", label(p)); b.type = "button";
+        b.addEventListener("click", function () { list.textContent = ""; load(p); });
+        li.appendChild(b); list.appendChild(li);
+      });
+      list.querySelector("button").focus();
+    }).catch(function (e) { if (id === reqId) setStatus("error", errorText(e), true); });
+  }
+
+  function renderClock() {
+    if (!data) return;
+    var opts = { weekday: "long", hour: "numeric", minute: "2-digit" };
+    var text;
+    try { text = new Date().toLocaleString(undefined, Object.assign({ timeZone: data.timezone }, opts)); }
+    catch (e) { text = new Date(Date.now() + data.utc_offset_seconds * 1000).toLocaleString(undefined, Object.assign({ timeZone: "UTC" }, opts)); }
+    $("localTime").textContent = "Local time: " + text + (data.timezone_abbreviation ? " (" + data.timezone_abbreviation + ")" : "");
+  }
+
+  function render() {
+    var c = data.current, now = cond(c.weather_code, c.is_day);
+    $("main").classList.remove("empty");
+    $("place").textContent = label(place);
+    $("nowIcon").textContent = now.icon;
+    $("nowTemp").textContent = temp(c.temperature_2m);
+    $("nowCond").textContent = now.text;
+    $("nowHum").textContent = Math.round(c.relative_humidity_2m) + "%";
+    $("nowWind").textContent = wind(c.wind_speed_10m);
+    renderClock();
+    var pinned = pins.some(function (p) { return same(p, place); });
+    $("pinBtn").setAttribute("aria-pressed", String(pinned));
+    $("pinBtn").textContent = pinned ? "Pinned ✓" : "Pin";
+
+    var h = data.hourly, hourStart = c.time.slice(0, 13) + ":00", start = h.time.findIndex(function (t) { return t >= hourStart; }), hours = $("hours");
+    hours.textContent = "";
+    if (start < 0) start = 0;
+    for (var i = start; i < Math.min(start + 24, h.time.length); i++) {
+      var hc = cond(h.weather_code[i]), li = el("li");
+      li.appendChild(el("div", "t", i === start ? "Now" : fmtLocal(h.time[i], { hour: "numeric" })));
+      var ic = el("div", "i", hc.icon); ic.setAttribute("aria-hidden", "true"); li.appendChild(ic);
+      li.appendChild(el("div", "v", temp(h.temperature_2m[i])));
+      var pp = h.precipitation_probability[i];
+      li.appendChild(el("div", "p", pp == null ? "–" : pp + "%"));
+      li.setAttribute("aria-label", fmtLocal(h.time[i], { hour: "numeric" }) + ": " + temp(h.temperature_2m[i]) + ", " + hc.text + (pp == null ? "" : ", " + pp + "% chance of rain"));
+      hours.appendChild(li);
+    }
+
+    var dd = data.daily, days = $("days");
+    days.textContent = "";
+    dd.time.forEach(function (t, j) {
+      var dc = cond(dd.weather_code[j]), li = el("li");
+      li.appendChild(el("span", "", j === 0 ? "Today" : fmtLocal(t, { weekday: "short" })));
+      var ic = el("span", "", dc.icon); ic.setAttribute("aria-hidden", "true"); li.appendChild(ic);
+      var cc = el("span", "c", dc.text), pr = dd.precipitation_probability_max[j];
+      if (pr != null) cc.appendChild(el("span", "p", pr + "%"));
+      li.appendChild(cc);
+      var hl = el("span", "hl", temp(dd.temperature_2m_max[j]) + " ");
+      hl.appendChild(el("span", "lo", temp(dd.temperature_2m_min[j])));
+      li.appendChild(hl);
+      li.setAttribute("aria-label", (j === 0 ? "Today" : fmtLocal(t, { weekday: "long" })) + ": " + dc.text + ", high " + temp(dd.temperature_2m_max[j]) + ", low " + temp(dd.temperature_2m_min[j]) + (pr == null ? "" : ", " + pr + "% chance of rain"));
+      days.appendChild(li);
+    });
+  }
+
+  function renderPins() {
+    var list = $("pins"); list.textContent = "";
+    $("pinsBox").hidden = !pins.length;
+    pins.forEach(function (p, i) {
+      var li = el("li", "pin-item"), go = el("button", "pin", p.name), x = el("button", "unpin", "×");
+      go.type = x.type = "button";
+      go.title = label(p);
+      go.addEventListener("click", function () { load(p); });
+      x.setAttribute("aria-label", "Unpin " + p.name);
+      x.addEventListener("click", function () { pins.splice(i, 1); store.set("wx.pins", pins); renderPins(); if (data) render(); });
+      li.appendChild(go); li.appendChild(x); list.appendChild(li);
+    });
+  }
+
+  function setUnit(u) {
+    unit = u; store.set("wx.unit", u);
+    document.querySelectorAll("[data-unit]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.unit === u)); });
+    if (data) render();
+  }
+
+  document.querySelectorAll("[data-unit]").forEach(function (b) { b.addEventListener("click", function () { setUnit(b.dataset.unit); }); });
+  $("search").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("q").value.trim();
+    if (name.length < 2) { setStatus("error", "Type at least two letters of a place name.", false); return; }
+    search(name);
+  });
+  $("pinBtn").addEventListener("click", function () {
+    if (!data) return;
+    var i = pins.findIndex(function (p) { return same(p, place); });
+    if (i > -1) pins.splice(i, 1);
+    else { pins.unshift({ name: place.name, admin1: place.admin1, country: place.country, lat: place.lat, lon: place.lon }); pins.length = Math.min(pins.length, MAX_PINS); }
+    store.set("wx.pins", pins); renderPins(); render();
+  });
+  window.addEventListener("online", function () { if (retry && $("status").classList.contains("error")) retry(); });
+  clock = setInterval(renderClock, 30000);
+
+  setUnit(unit); renderPins(); load(HOME);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "vega-gemini-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Keeps the Gemini key on the server so every visitor can talk to VEGA/Jarvis on the portfolio.",
+  "main": "server.js",
+  "scripts": { "start": "node server.js", "test": "node test.js" },
+  "engines": { "node": ">=18" }
+}
