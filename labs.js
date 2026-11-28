@@ -359,6 +359,7 @@
       ["Nova 3.0 Ultimate", "Discord bot", "Live", "Verification views, leveling, anti-spam and AFK tracking in live communities.", "projects/nova.html"],
       ["Eclipse", "discord.py bot", "In progress", "Moderation, automod, anti-nuke, economy, games and tickets in 21 self-contained cogs, on a free Render web service.", "projects/eclipse.html"],
       ["Apex", "AI co-pilot", "Prototype", "A single-file co-pilot that runs a builder-focused system prompt on the Anthropic API.", "projects/apex.html"],
+      ["AI football commentator", "AI web app", "New", "Turns a described football moment into live-style commentary, read aloud over a synthesised crowd.", "commentator/"],
       ["Weather", "Web app", "New", "City search, °C/°F, a 24-hour and 7-day forecast and pinned places, on live Open-Meteo data with no key.", "weather/"]
     ];
     box.innerHTML = P.map(function (p) {

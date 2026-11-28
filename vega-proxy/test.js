@@ -52,6 +52,14 @@ fake.listen(0, async () => {
       mode = "ok"; j = await (await ask({ question: "What is the capital of Delhi?" })).json(); assert.strictEqual(j.answer, "answer from m1");
       const fb = seen.at(-1).messages[0].content; assert.ok(fb.includes("cannot search the web"), "fallback says it cannot search");
       assert.ok(fb.includes("Answer ANY question"), "general questions allowed");
+      // commentary mode: its own instructions, no site facts, no search, livelier settings
+      const nativeBefore = seenNative.length; mode = "grounded";
+      j = await (await ask({ question: "Last minute volley from 25 yards", mode: "commentary" })).json();
+      assert.strictEqual(j.answer, "answer from m1", "commentary uses the plain endpoint");
+      assert.strictEqual(seenNative.length, nativeBefore, "commentary never uses web search");
+      const cm = seen.at(-1); assert.ok(cm.messages[0].content.includes("football (soccer) TV commentator"), "commentator instructions");
+      assert.ok(!cm.messages[0].content.includes("FACT-MARKER"), "no site facts in commentary");
+      assert.strictEqual(cm.temperature, 0.9); assert.strictEqual(cm.max_tokens, 400);
       mode = "ok"; r = await ask("x".repeat(17000)); assert.strictEqual(r.status, 413);
       // the per-visitor limit (30 per 10 min in this test): keep asking until it refuses
       let refused = 0; for (let i = 0; i < 40 && !refused; i++) { const q2 = await ask({ question: "x" }); if (q2.status === 429) refused = q2.status; }

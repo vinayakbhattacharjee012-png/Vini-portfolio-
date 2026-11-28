@@ -8,7 +8,8 @@
      DAILY_CAP        max Gemini calls per UTC day for everyone together (default 400)
      MODELS           comma list tried in order (default gemini-3.5-flash-lite,gemini-flash-lite-latest,gemini-3.5-flash)
 
-   Routes: GET /health -> { ok, configured }   POST /ask { question, history:[{role:"user"|"model", text}] } -> { answer } | { error } */
+   Routes: GET /health -> { ok, configured }   POST /ask { question, history:[{role:"user"|"model", text}], mode? } -> { answer } | { error }
+   mode "commentary" = the football commentator page: its own instructions, no site facts, no search. */
 "use strict";
 const http = require("http");
 
@@ -116,12 +117,13 @@ async function grounded(messages, sel) {
   }
   return null;
 }
-async function gemini(messages, sel) {
+async function gemini(messages, sel, gen) {
+  gen = gen || { max_tokens: 320, temperature: 0.4 };
   let last = "busy";
   for (const model of pickModels(MODELS, sel)) {
     let r;
     try {
-      r = await fetch(API, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + KEY }, body: JSON.stringify({ model, messages, max_tokens: 320, temperature: 0.4 }), signal: AbortSignal.timeout(20000) });
+      r = await fetch(API, { method: "POST", headers: { "content-type": "application/json", authorization: "Bearer " + KEY }, body: JSON.stringify({ model, messages, ...gen }), signal: AbortSignal.timeout(20000) });
     } catch (e) { last = "timeout"; continue; }
     if (r.status === 401 || r.status === 403) return { error: "key" };
     if (r.status === 400) { const t = await r.text().catch(() => ""); if (/api key|permission|referer/i.test(t)) return { error: "key" }; last = "busy"; continue; }
@@ -133,6 +135,12 @@ async function gemini(messages, sel) {
   }
   return { error: last };
 }
+// Commentary mode: the AI football commentator page. No site facts, no web search, livelier output.
+const COMMENTARY = "You are an energetic football (soccer) TV commentator. Turn the user's description of a moment into live " +
+  "commentary of 60 to 120 words: present tense, building to a climax, short punchy sentences, a few ellipses for pauses and " +
+  "one or two shouts in capitals (for example GOAL!). Use only the names, teams and details the user gives. Do not invent real " +
+  "scores, records, dates or facts about real people. No emojis, no markdown, no stage directions. If the request is not about " +
+  "a football moment, reply with one short sentence asking for a football moment instead.";
 const ERR = { key: ["I can't answer right now.", 502], rate: ["I'm getting a lot of questions right now. Try again in a minute.", 503], timeout: ["That took too long. Try again.", 504], busy: ["I'm busy right now. Try again in a moment.", 503], empty: ["I didn't get an answer to that. Try rephrasing it.", 502] };
 
 /* ---------- HTTP ---------- */
@@ -166,6 +174,14 @@ const server = http.createServer(async (req, res) => {
   const history = (Array.isArray(body.history) ? body.history : []).slice(-6)
     .filter((m) => m && (m.role === "user" || m.role === "model") && typeof m.text === "string")
     .map((m) => ({ role: m.role === "model" ? "assistant" : "user", content: m.text.slice(0, 800) }));
+  if (body.mode === "commentary") {
+    day.n++;
+    const out = await gemini([{ role: "system", content: COMMENTARY }, { role: "user", content: q }], sel, { max_tokens: 400, temperature: 0.9 });
+    console.log("ask", out.error || "ok", "commentary", "day", day.n); // never the text
+    if (out.answer) return send(res, 200, { answer: out.answer }, origin);
+    const e = ERR[out.error] || ERR.busy;
+    return send(res, e[1], { error: e[0] }, origin);
+  }
   const text = await getFacts();
   day.n++;
   const sysFor = (g) => ({ role: "system", content: system(text, g) });
