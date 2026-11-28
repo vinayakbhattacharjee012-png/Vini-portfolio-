@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: eclipse-bot
+    name: eclipse-discord
     runtime: node
     plan: free
     rootDir: eclipse
