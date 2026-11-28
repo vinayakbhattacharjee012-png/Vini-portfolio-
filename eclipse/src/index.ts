@@ -7,6 +7,8 @@ import { HOOK_MODULES, loadModule } from './core/modules.js';
 import { autoDefer, direct, exec, findEntry, respond, resolveRun } from './core/dispatch.js';
 import { startScheduler } from './core/scheduler.js';
 import type { Deps } from './core/types.js';
+import { registerCommands } from './core/register.js';
+import { createServer } from 'node:http';
 
 const env = getEnv();
 if (!env.token) { console.error('DISCORD_TOKEN is not set. Copy .env.example to .env and fill it in.'); process.exit(1); }
@@ -20,7 +22,11 @@ const client = new Client({
 });
 const deps: Deps = { client, store: new Store(`${env.dataDir}/eclipse.json`), limiter: new Limiter() };
 
+// Web hosts (e.g. Render free web service) need an open port and a URL for an uptime pinger.
+if (process.env.PORT) createServer((_, r) => r.end('eclipse ok')).listen(Number(process.env.PORT));
+
 client.once('clientReady', async () => {
+  if (process.env.AUTO_REGISTER_COMMANDS === '1') console.log(await registerCommands().catch((e) => `command registration failed: ${e.message}`));
   for (const m of HOOK_MODULES) (await loadModule(m)).hook?.(deps);
   startScheduler(deps);
   console.log(`Eclipse ready as ${client.user!.tag} · ${catalog.size.toLocaleString()} indexed entries · ${catalog.bases.length} handlers`);

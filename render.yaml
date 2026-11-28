@@ -1,18 +1,19 @@
 services:
-  - type: worker
+  - type: web
     name: eclipse-bot
     runtime: node
-    plan: starter
+    plan: free
     rootDir: eclipse
     branch: ccr-1408b662-o9y5ql
     buildCommand: npm ci --include=dev
     startCommand: npm start
-    disk: { name: eclipse-data, mountPath: /data, sizeGB: 1 }
+    healthCheckPath: /
     envVars:
       - { key: NODE_VERSION, value: "22" }
-      - { key: DATA_DIR, value: /data }
+      - { key: DATA_DIR, value: ./data }
       - { key: DISCORD_TOKEN, sync: false }
       - { key: CLIENT_ID, sync: false }
+      - { key: AUTO_REGISTER_COMMANDS, value: "1" }
       - { key: AI_API_URL, sync: false }
       - { key: AI_API_KEY, sync: false }
       - { key: AI_MODEL, sync: false }
