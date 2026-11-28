@@ -1,0 +1,16 @@
+{
+  "name": "eclipse-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "verify": "tsx scripts/verify.ts",
+    "deploy": "tsx scripts/deploy-commands.ts",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": { "discord.js": "14.28.1" },
+  "devDependencies": { "@types/node": "^22.20.7", "tsx": "^4.23.15", "typescript": "^5.9.0" }
+}
